@@ -168,7 +168,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             .finally(() => toolbox.loading(false));
     };
 
-    const loop = (blueprintId: string, timestamp: string, items: ScanningItem[]) => {
+    const loop = (blueprintId: string, timestamp: string | undefined, items: ScanningItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
@@ -214,9 +214,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         });
     };
 
-    const timestamp: string = data.blueprintTree.timestamp ?? '';
-    const blueprintTreeChildren: ScanningItem[] = data.blueprintTree.children ?? [];
-
     return (
         <div>
             {!_.isEmpty(data.blueprintId) ? (
@@ -236,7 +233,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     </Label>
                                 }
                             >
-                                {loop(data.blueprintId, timestamp, blueprintTreeChildren)}
+                                {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
                                 <NodesTree.Node
@@ -261,7 +258,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                                 </Label>
                                             }
                                         >
-                                            {loop(data.importedBlueprintIds[index], tree.timestamp!, tree.children!)}
+                                            {loop(data.importedBlueprintIds[index], tree.timestamp, tree.children)}
                                         </NodesTree.Node>
                                     ))}
                                 </NodesTree.Node>
