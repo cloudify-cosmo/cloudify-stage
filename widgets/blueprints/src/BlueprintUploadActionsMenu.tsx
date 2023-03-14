@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import { isEqual, map } from 'lodash';
 
 const { Dropdown } = Stage.Basic;
 const { Menu, Item } = Dropdown;
 const { useBoolean } = Stage.Hooks;
-const { TerraformModal } = Stage.Common;
+const { HelmModal, TerraformModal } = Stage.Common;
 const { drilldownPage } = Stage.Common.Consts;
 const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
 
@@ -27,6 +27,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 }) => {
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
     const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
+    const [helmModalVisible, showHelmModal, hideHelmModal] = useBoolean();
 
     const redirectToMarketplacePage = () => {
         const widget = toolbox.getWidget();
@@ -39,6 +40,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
         const baseMenuItems = {
             uploadFromMarketplace: redirectToMarketplacePage,
             uploadFromPackage: showUploadModal,
+            uploadFromHelmChart: showHelmModal,
             uploadFromTerraformTemplate: showTerraformModal
         };
 
@@ -61,6 +63,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
             </Dropdown>
             {uploadModalVisible && <UploadBlueprintModal open onHide={hideUploadModal} toolbox={toolbox} />}
             {terraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
+            {helmModalVisible && <HelmModal onHide={hideHelmModal} toolbox={toolbox} />}
         </>
     );
 };
