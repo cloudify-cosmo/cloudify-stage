@@ -214,6 +214,9 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         });
     };
 
+    const timestamp: string = data.blueprintTree.timestamp ?? '';
+    const blueprintTreeChildren: ScanningItem[] = data.blueprintTree.children ?? [];
+
     return (
         <div>
             {!_.isEmpty(data.blueprintId) ? (
@@ -233,7 +236,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     </Label>
                                 }
                             >
-                                {loop(data.blueprintId, data.blueprintTree.timestamp!, data.blueprintTree.children!)}
+                                {loop(data.blueprintId, timestamp, blueprintTreeChildren)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
                                 <NodesTree.Node
