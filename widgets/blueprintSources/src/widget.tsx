@@ -4,10 +4,8 @@ import BlueprintSources from './BlueprintSources';
 import './widget.css';
 
 type BlueprintSourcesParams = {
-    // eslint-disable-next-line camelcase
-    blueprint_id: string;
-    // eslint-disable-next-line camelcase
-    deployment_id: string;
+    blueprintId: string;
+    deploymentId: string;
 };
 
 type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
@@ -51,16 +49,16 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
         const deploymentIdRefined: string = Array.isArray(deploymentId) ? deploymentId[0] : deploymentId ?? '';
 
         return {
-            blueprint_id: blueprintId,
-            deployment_id: deploymentIdRefined
+            blueprintId,
+            deploymentId: deploymentIdRefined
         };
     },
 
     fetchData(_widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
-        const paramBlueprintId = params.blueprint_id;
-        const paramDeploymentId = params.deployment_id;
+        const paramBlueprintId = params.blueprintId;
+        const paramDeploymentId = params.deploymentId;
 
         let promise = Promise.resolve({ blueprint_id: paramBlueprintId });
         if (!paramBlueprintId && paramDeploymentId) {
