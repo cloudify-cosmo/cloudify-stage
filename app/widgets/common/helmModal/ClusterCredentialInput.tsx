@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import type { ClusterCredential, ClusterCredentialName } from 'backend/handler/HelmHandler.types';
 import { camelCase } from 'lodash';
 import type { Toolbox } from 'app/utils/StageAPI';
+import type { StrictLabelProps } from 'semantic-ui-react/dist/commonjs/elements/Label/Label';
 import StageUtils from '../../../utils/stageUtils';
 
 const translate = StageUtils.getT('widgets.blueprints.helmModal.credentialsSection');
@@ -12,13 +13,15 @@ interface ClusterCredentialProps {
     initialSource?: ClusterCredential['source'];
     onChange: (credential: ClusterCredential) => void;
     toolbox: Toolbox;
+    error?: StrictLabelProps;
 }
 
 export default function ClusterCredentialInput({
     clusterCredential,
     initialSource = 'secret',
     onChange,
-    toolbox
+    toolbox,
+    error
 }: ClusterCredentialProps) {
     const { Form } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common.Components;
@@ -48,7 +51,7 @@ export default function ClusterCredentialInput({
                     }}
                 />
             </Form.Field>
-            <Form.Field width={9}>
+            <Form.Field width={9} error={error}>
                 {source === 'input' ? (
                     <Form.Input value={value} onChange={setValue} />
                 ) : (

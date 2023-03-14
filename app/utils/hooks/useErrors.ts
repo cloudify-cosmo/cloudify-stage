@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { StrictLabelProps } from 'semantic-ui-react';
+import { isEmpty } from 'lodash';
 
 /**
  * Returns a stateful `errors` object and functions to manipulate it: `setErrors`, `clearErrors` and helper functions:
@@ -18,6 +19,11 @@ export default function useErrors<FieldName extends string = string>() {
         setMessageAsError: (err: { message: string }) => setErrors({ errors: err.message }),
         clearErrors: () => setErrors({}),
         setErrors,
-        createEmptyErrors: () => ({} as FieldErrors)
+        performValidations: (executelValidations: (validationErrors: FieldErrors) => void, onSuccess: () => void) => {
+            const validationErrors: FieldErrors = {};
+            executelValidations(validationErrors);
+            setErrors(validationErrors);
+            if (isEmpty(validationErrors)) onSuccess();
+        }
     };
 }
