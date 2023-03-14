@@ -1,4 +1,4 @@
-import type { EnvironmentRenderParams } from '../handler/EnvironmentHandler.types';
+import type { EnvironmentRenderParams } from '../../handler/EnvironmentHandler.types';
 
 export type PostEnvironmentBlueprintRequestBody = EnvironmentRenderParams;
 

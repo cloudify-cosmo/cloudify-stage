@@ -3,7 +3,7 @@ import request from 'supertest';
 import { size } from 'lodash';
 import type { Blueprint } from 'cloudify-ui-common-backend';
 import app from '../../../app';
-import type { PostHelmBlueprintRequestBody } from '../../../routes/Helm.types';
+import type { PostHelmBlueprintRequestBody } from '../../../routes/blueprints/Helm.types';
 import type { ClusterCredentialName } from '../../../handler/HelmHandler.types';
 import { assertGetInput, assertGetSecret, assertIntrinsicFunction } from './common';
 

@@ -1,4 +1,4 @@
-import type { TerraformBlueprintData, TerraformParserResult } from '../handler/TerraformHandler.types';
+import type { TerraformBlueprintData, TerraformParserResult } from '../../handler/TerraformHandler.types';
 
 export type PostTerraformResourcesResponse = string[];
 
