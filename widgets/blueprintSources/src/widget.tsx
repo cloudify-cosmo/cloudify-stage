@@ -45,13 +45,10 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
         const blueprintId = toolbox.getContext().getValue('blueprintId') ?? '';
 
         // TODO(RD-2130): Use common utility function to get only the first ID
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        const deploymentIdRefined: string = Array.isArray(deploymentId) ? deploymentId[0] : deploymentId ?? '';
+        const rawDeploymentId = toolbox.getContext().getValue('deploymentId');
+        const deploymentId: string = Array.isArray(rawDeploymentId) ? rawDeploymentId[0] : rawDeploymentId ?? '';
 
-        return {
-            blueprintId,
-            deploymentId: deploymentIdRefined
-        };
+        return { blueprintId, deploymentId };
     },
 
     fetchData(_widget, toolbox, params) {
