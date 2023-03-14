@@ -1,4 +1,3 @@
-import { isEmptyWidgetData } from 'app/utils/StageAPI';
 import type { GetSourceBrowseBlueprintArchiveResponse } from 'backend/routes/SourceBrowser.types';
 import Actions from './actions';
 import BlueprintSources from './BlueprintSources';
@@ -101,7 +100,7 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (isEmptyWidgetData(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
