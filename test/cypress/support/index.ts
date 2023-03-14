@@ -19,7 +19,7 @@ import '@cypress/code-coverage/support';
 import './commands';
 // use `Cypress` instead of `cy` so this persists across all tests
 Cypress.on('window:before:load', window => {
-    // @ts-expect-error: The operand of a 'delete' operator must be optional
+    // @ts-ignore: The operand of a 'delete' operator must be optional
     delete window.fetch;
     cy.stub(window, 'open');
 });
