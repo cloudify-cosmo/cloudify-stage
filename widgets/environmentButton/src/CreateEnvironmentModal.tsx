@@ -3,7 +3,7 @@ import type { Toolbox } from 'app/utils/StageAPI';
 import type {
     PostEnvironmentBlueprintRequestBody,
     PostEnvironmentBlueprintResponse
-} from 'backend/routes/Environment.types';
+} from 'backend/routes/blueprints/Environment.types';
 import { find, isEmpty, map, pick, set } from 'lodash';
 import type { DefaultableLabel } from 'widgets/environmentButton/src/widget.types';
 import CapabilityBlueprintDefaultInput from './CapabilityBlueprintDefaultInput';
