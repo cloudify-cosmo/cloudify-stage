@@ -290,6 +290,11 @@ describe('Deployments widget', () => {
                     });
                 cy.contains('button', 'Yes').click();
 
+                cy.contains('Upload from HELM').click();
+                cy.contains('Create Blueprint from HELM Chart')
+                    .parent()
+                    .within(() => cy.clickButton('Cancel'));
+
                 cy.contains('Create new Deployment').click();
                 cy.contains('Blueprint Marketplace').should('be.visible');
             });

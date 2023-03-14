@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
 import { StyledIcon, StyledLabel } from './styles';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
+import helmLogo from '../../../../app/images/helm.svg';
 
 const {
     Hooks: { useBoolean },
-    Common: { TerraformModal },
+    Common: { HelmModal, TerraformModal },
     Utils: { getT },
     Basic: { Grid }
 } = Stage;
@@ -46,6 +47,7 @@ interface FirstUserJourneyButtonsProps {
 
 const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
     const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
+    const [isHelmModalVisible, showHelmModal, hideHelmModal] = useBoolean();
 
     const handleDeploymentsClick = () => {
         const widget = toolbox.getWidget();
@@ -79,9 +81,11 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
                     image={terraformLogo}
                     label={t('buttons.uploadFromTerraform')}
                 />
+                <FirstUserJourneyButton onClick={showHelmModal} image={helmLogo} label={t('buttons.uploadFromHelm')} />
             </RowWrapper>
 
             {isTerraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
+            {isHelmModalVisible && <HelmModal onHide={hideHelmModal} toolbox={toolbox} />}
         </Wrapper>
     );
 };

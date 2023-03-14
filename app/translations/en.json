@@ -2344,7 +2344,8 @@
                 "header": "No Deployments Yet",
                 "buttons": {
                     "createDeployment": "Create new Deployment",
-                    "uploadFromTerraform": "Upload from Terraform"
+                    "uploadFromTerraform": "Upload from Terraform",
+                    "uploadFromHelm": "Upload from HELM"
                 }
             },
             "configuration": {
