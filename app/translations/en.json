@@ -856,6 +856,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
+                    "uploadFromHelmChart": "Upload from HELM chart",
                     "uploadFromTerraformTemplate": "Upload from Terraform module",
                     "generateInComposer": "Generate in the Composer"
                 }
@@ -1055,6 +1056,27 @@
                 "hideFailedBlueprints": "Hide failed blueprints",
                 "showComposerOptions": "Show Composer options",
                 "labelFilterRules": "Label filter rules"
+            },
+            "helmModal": {
+                "header": "Create Blueprint from HELM Chart",
+                "mainSection": {
+                    "header": "HELM chart and blueprint details",
+                    "helmRepo": "HELM repository",
+                    "helmChart": "HELM chart",
+                    "blueprintName": "Blueprint name",
+                    "blueprintDescription": "Blueprint description"
+                },
+                "credentialsSection": {
+                    "header": "Cluster credentials",
+                    "host": "Cluster hostname",
+                    "apiKey": "Cluster API key",
+                    "sslCaCert": "Certificate",
+                    "source": {
+                        "input": "Input",
+                        "secret": "Secret"
+                    }
+                },
+                "submit": "Create"
             },
             "terraformModal": {
                 "header": "Create blueprint from Terraform",

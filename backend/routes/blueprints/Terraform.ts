@@ -5,8 +5,8 @@ import { STATUS_CODES } from 'http';
 import multer from 'multer';
 import path from 'path';
 
-import { getLogger } from '../handler/LoggerHandler';
-import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
+import { getLogger } from '../../handler/LoggerHandler';
+import checkIfFileUploaded from '../../middleware/checkIfFileUploadedMiddleware';
 import {
     checkIfFileBuffer,
     fileDebase64,
@@ -17,7 +17,7 @@ import {
     getTerraformJsonMergedFromFileBufferList,
     getTfFileBufferListFromGitRepositoryUrl,
     renderTerraformBlueprint
-} from '../handler/TerraformHandler';
+} from '../../handler/TerraformHandler';
 import type {
     PostTerraformBlueprintArchiveRequestBody,
     PostTerraformBlueprintArchiveResponse,
@@ -31,7 +31,7 @@ import type {
     PostTerraformResourcesQueryParams,
     PostTerraformResourcesResponse
 } from './Terraform.types';
-import type { GenericErrorResponse } from '../types';
+import type { GenericErrorResponse } from '../../types';
 
 const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
 const logger = getLogger('Terraform');

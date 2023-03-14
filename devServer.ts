@@ -41,6 +41,7 @@ const options: WebpackDevServer.Configuration = {
         [`${CONTEXT_PATH}/file`]: stageBackendOptions,
         [`${CONTEXT_PATH}/filters`]: stageBackendOptions,
         [`${CONTEXT_PATH}/github`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/helm`]: stageBackendOptions,
         [`${CONTEXT_PATH}/maps`]: stageBackendOptions,
         [`${CONTEXT_PATH}/plugins`]: stageBackendOptions,
         [`${CONTEXT_PATH}/source`]: stageBackendOptions,

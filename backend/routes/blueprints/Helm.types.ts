@@ -1,4 +1,4 @@
-import type { HelmRenderParams } from '../handler/HelmHandler.types';
+import type { HelmRenderParams } from '../../handler/HelmHandler.types';
 
 export type PostHelmBlueprintRequestBody = HelmRenderParams;
 
