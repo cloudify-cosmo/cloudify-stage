@@ -8,7 +8,7 @@ type BlueprintSourcesParams = {
     deploymentId: string;
 };
 
-type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
+export type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
 
 export type BlueprintSourcesData = {
     blueprintId: string;

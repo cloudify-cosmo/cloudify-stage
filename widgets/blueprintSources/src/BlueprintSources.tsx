@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import type { ScanningItem } from 'backend/handler/SourceHandler.types';
 import type { WidgetData } from 'app/utils/StageAPI';
 import Actions from './actions';
-import type { BlueprintSourcesData } from './widget';
+import type { BlueprintSourcesData, BlueprintTree } from './widget';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
@@ -186,7 +186,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     </NodesTree.Node>
                 );
             }
-            const blueprintRootDirectory = data.blueprintTree.children![0].key;
+            const blueprintTreeChildren: BlueprintTree[] = data.blueprintTree.children ?? [];
+            const blueprintRootDirectory = blueprintTreeChildren[0].key;
             const mainYamlFilePath = `${blueprintRootDirectory}/${data.yamlFileName}`;
             const label =
                 mainYamlFilePath === item.key ? (
