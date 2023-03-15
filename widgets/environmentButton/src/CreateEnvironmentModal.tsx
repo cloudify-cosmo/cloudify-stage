@@ -30,7 +30,7 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
     const { ApproveButton, CancelButton, Form, GenericField, Modal, Header, LoadingOverlay, Confirm } = Stage.Basic;
     const { useInput, useBoolean, useErrors } = Stage.Hooks;
     const [submitInProgress, startSubmit, stopSubmit] = useBoolean();
-    const { errors, setErrors, getContextError, createEmptyErrors } = useErrors<
+    const { errors, setErrors, getContextError, performValidations } = useErrors<
         'name' | 'blueprintName' | 'capabilities'
     >();
 
@@ -77,47 +77,41 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
     const [generatingBlueprintName, showGeneratingBluepringName, hideGeneratingBlueprintName] = useBoolean();
     const [confirmCancelModalOpen, openConfirmCancelModal, closeConfirmCancelModal] = useBoolean();
 
+    const { Consts } = Stage.Common;
+
     function handleSubmit() {
-        const { Consts } = Stage.Common;
-
-        const validationErrors = createEmptyErrors();
-
-        if (!blueprintName) {
-            validationErrors.blueprintName = translateError('blueprintNameMissing');
-        } else if (!blueprintName.match(Consts.idRegex)) {
-            validationErrors.blueprintName = translateError('blueprintNameInvalid');
-        }
-
-        if (!deploymentName) {
-            validationErrors.name = translateError('nameMissing');
-        }
-
-        capabilities.forEach((capability, index) => {
-            function getErrorsForRow() {
-                validationErrors.capabilities = validationErrors.capabilities ?? {};
-                validationErrors.capabilities[index] = validationErrors.capabilities[index] ?? {};
-                return validationErrors.capabilities[index];
+        performValidations(validationErrors => {
+            if (!blueprintName) {
+                validationErrors.blueprintName = translateError('blueprintNameMissing');
+            } else if (!blueprintName.match(Consts.idRegex)) {
+                validationErrors.blueprintName = translateError('blueprintNameInvalid');
             }
 
-            if (!capability.name) {
-                getErrorsForRow().name = translateError('capabilityNameMissing');
-            } else if (find(capabilities.slice(0, index), pick(capability, 'name'))) {
-                getErrorsForRow().name = translateError('capabilityNameDuplicated');
+            if (!deploymentName) {
+                validationErrors.name = translateError('nameMissing');
             }
 
-            if (!capability.source) {
-                getErrorsForRow().source = translateError('capabilitySourceMissing');
-            }
-            if (!capability.value && capability.source === 'secret') {
-                getErrorsForRow().value = translateError('capabilityValueMissing');
-            }
-        });
+            capabilities.forEach((capability, index) => {
+                function getErrorsForRow() {
+                    validationErrors.capabilities = validationErrors.capabilities ?? {};
+                    validationErrors.capabilities[index] = validationErrors.capabilities[index] ?? {};
+                    return validationErrors.capabilities[index];
+                }
 
-        if (!isEmpty(validationErrors)) {
-            setErrors(validationErrors);
-            return;
-        }
+                if (!capability.name) {
+                    getErrorsForRow().name = translateError('capabilityNameMissing');
+                } else if (find(capabilities.slice(0, index), pick(capability, 'name'))) {
+                    getErrorsForRow().name = translateError('capabilityNameDuplicated');
+                }
 
+                if (!capability.source) {
+                    getErrorsForRow().source = translateError('capabilitySourceMissing');
+                }
+            });
+        }, performSubmit);
+    }
+
+    function performSubmit() {
         startSubmit();
 
         const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
