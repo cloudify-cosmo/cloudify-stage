@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import type { ClusterCredential, ClusterCredentialName } from 'backend/handler/HelmHandler.types';
 import { camelCase } from 'lodash';
 import type { Toolbox } from 'app/utils/StageAPI';
-import type { StrictLabelProps } from 'semantic-ui-react/dist/commonjs/elements/Label/Label';
+import type { StrictLabelProps } from 'semantic-ui-react';
 import StageUtils from '../../../utils/stageUtils';
 
 const translate = StageUtils.getT('widgets.blueprints.helmModal.credentialsSection');
