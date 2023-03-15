@@ -1,5 +1,5 @@
 import type { Label } from 'app/widgets/common/labels/types';
-import type { PostEnvironmentBlueprintRequestBody } from 'backend/routes/Environment.types';
+import type { PostEnvironmentBlueprintRequestBody } from 'backend/routes/blueprints/Environment.types';
 
 export interface DefaultableLabel extends Label {
     blueprintDefault: boolean;

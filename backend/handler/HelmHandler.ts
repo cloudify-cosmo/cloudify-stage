@@ -27,7 +27,10 @@ export const renderHelmBlueprint = (renderParams: HelmRenderParams) => {
         };
     }
 
-    const helmInstallRelationship = { target: 'helm_install', type: 'cloudify.helm.relationships.run_on_host' };
+    function createHelmInstallRelationship() {
+        return { target: 'helm_install', type: 'cloudify.helm.relationships.run_on_host' };
+    }
+
     const name = createGetSysCall('deployment', 'id');
 
     const blueprintModel: Blueprint = {
@@ -55,7 +58,7 @@ export const renderHelmBlueprint = (renderParams: HelmRenderParams) => {
                         repo_url: renderParams.repository
                     }
                 },
-                relationships: [helmInstallRelationship]
+                relationships: [createHelmInstallRelationship()]
             },
             release: {
                 type: 'cloudify.nodes.helm.Release',
@@ -66,7 +69,10 @@ export const renderHelmBlueprint = (renderParams: HelmRenderParams) => {
                         chart: renderParams.chart
                     }
                 },
-                relationships: [helmInstallRelationship, { target: 'repo', type: 'cloudify.relationships.depends_on' }]
+                relationships: [
+                    createHelmInstallRelationship(),
+                    { target: 'repo', type: 'cloudify.relationships.depends_on' }
+                ]
             },
             svc: {
                 type: 'cloudify.kubernetes.resources.Service',
