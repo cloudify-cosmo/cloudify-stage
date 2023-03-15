@@ -19,9 +19,9 @@ export default function useErrors<FieldName extends string = string>() {
         setMessageAsError: (err: { message: string }) => setErrors({ errors: err.message }),
         clearErrors: () => setErrors({}),
         setErrors,
-        performValidations: (executelValidations: (validationErrors: FieldErrors) => void, onSuccess: () => void) => {
+        performValidations: (executeValidations: (validationErrors: FieldErrors) => void, onSuccess: () => void) => {
             const validationErrors: FieldErrors = {};
-            executelValidations(validationErrors);
+            executeValidations(validationErrors);
             setErrors(validationErrors);
             if (isEmpty(validationErrors)) onSuccess();
         }
