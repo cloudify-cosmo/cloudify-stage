@@ -36,7 +36,15 @@ router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/fi
 
 router.get('/browse/:blueprintId/archive', (req, res: Response<GetSourceBrowseBlueprintArchiveResponse>, next) => {
     browseArchiveTree(req)
-        .then(data => res.send(data))
+        .then(data =>
+            res.send({
+                timestamp: data.timestamp ?? '',
+                key: data.key ?? '',
+                title: data.title ?? '',
+                isDir: data.isDir ?? false,
+                children: data.children ?? []
+            })
+        )
         .catch(next);
 });
 
