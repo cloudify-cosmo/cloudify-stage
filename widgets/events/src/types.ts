@@ -1,5 +1,7 @@
 import EventUtils from 'app/widgets/common/utils/EventUtils';
 
+/* eslint-disable camelcase */
+
 interface ClodifyEventPart {
     type: 'cloudify_event';
     event_type: string;
@@ -11,7 +13,6 @@ interface CloudifyLogEventPart {
 }
 
 export type Event = {
-    // eslint-disable-next-line camelcase
     error_causes: { message: string; traceback: string; type: string }[];
     message: any;
     id: string;
@@ -24,9 +25,10 @@ export type Event = {
     node_instance_id: string;
     workflow_id: string;
     operation: string;
-    // eslint-disable-next-line camelcase
 } & (ClodifyEventPart | CloudifyLogEventPart);
 
 export function isEventType(event: Event): event is Event & ClodifyEventPart {
     return event.type === EventUtils.eventType;
 }
+
+/* eslint-enable camelcase */

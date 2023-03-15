@@ -1,4 +1,5 @@
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { Event } from './types';
 import EventsTable from './EventsTable';
 import './widget.css';
 
@@ -48,12 +49,12 @@ export interface EventsWidgetParams {
 }
 
 export interface EventsWidgetData {
-    items: {
+    items: ({
         /* eslint-disable camelcase */
         _storage_id: string;
         reported_timestamp: string;
         /* eslint-enable camelcase */
-    }[];
+    } & Event)[];
 }
 
 Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfiguration>({

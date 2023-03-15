@@ -238,12 +238,7 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
                                         {eventOptions.iconChar}
                                     </i>
                                 ) : (
-                                    <Icon
-                                        name={eventOptions.icon}
-                                        color={eventOptions.color}
-                                        circular
-                                        inverted
-                                    />
+                                    <Icon name={eventOptions.icon} color={eventOptions.color} circular inverted />
                                 )}
                             </span>
                         );
