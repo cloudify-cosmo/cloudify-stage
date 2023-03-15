@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import type { ScanningItem } from 'backend/handler/SourceHandler.types';
 import type { WidgetData } from 'app/utils/StageAPI';
 import Actions from './actions';
-import type { BlueprintSourcesData, BlueprintTree } from './widget';
+import type { BlueprintSourcesData } from './widget';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
@@ -168,8 +168,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             .finally(() => toolbox.loading(false));
     };
 
-    const loop = (blueprintId: string, timestamp: string | undefined, tree: BlueprintTree) => {
-        const items: ScanningItem[] = tree.children ?? [];
+    const loop = (blueprintId: string, timestamp: string, items: ScanningItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
@@ -183,12 +182,11 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                             </span>
                         }
                     >
-                        {loop(blueprintId, timestamp, item)}
+                        {loop(blueprintId, timestamp, item.children)}
                     </NodesTree.Node>
                 );
             }
-            const blueprintTreeChildren: BlueprintTree[] = data.blueprintTree.children ?? [];
-            const blueprintRootDirectory = blueprintTreeChildren[0].key;
+            const blueprintRootDirectory = data.blueprintTree.children[0].key;
             const mainYamlFilePath = `${blueprintRootDirectory}/${data.yamlFileName}`;
             const label =
                 mainYamlFilePath === item.key ? (
@@ -234,7 +232,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     </Label>
                                 }
                             >
-                                {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree)}
+                                {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
                                 <NodesTree.Node
@@ -259,7 +257,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                                 </Label>
                                             }
                                         >
-                                            {loop(data.importedBlueprintIds[index], tree.timestamp, tree)}
+                                            {loop(data.importedBlueprintIds[index], tree.timestamp, tree.children)}
                                         </NodesTree.Node>
                                     ))}
                                 </NodesTree.Node>
