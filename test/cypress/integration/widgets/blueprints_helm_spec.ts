@@ -3,6 +3,12 @@ describe('Blueprints widget should open upload from HELM chart modal and', () =>
         cy.activate().useWidgetWithDefaultConfiguration('blueprints');
     });
 
+    beforeEach(() => {
+        cy.visitTestPage();
+        cy.contains(/Upload$/).click();
+        cy.contains('Upload from HELM chart').click();
+    });
+
     it('creates blueprint on submit', () => {
         const blueprintId = 'helm_test_blueprint';
         const secretKey = 'heml_test_secret';
@@ -15,8 +21,6 @@ describe('Blueprints widget should open upload from HELM chart modal and', () =>
         const description = 'desc';
         const input = 'inputName';
 
-        cy.contains(/Upload$/).click();
-        cy.contains('Upload from HELM chart').click();
         cy.typeToFieldInput('HELM repository', repository);
         cy.typeToFieldInput('HELM chart', chart);
         cy.typeToFieldInput('Blueprint name', blueprintId);
@@ -43,5 +47,20 @@ describe('Blueprints widget should open upload from HELM chart modal and', () =>
         });
 
         cy.contains('.breadcrumb', blueprintId);
+    });
+
+    it('validates form data', () => {
+        cy.clickButton('Create');
+        cy.contains('Please provide HELM repository').should('be.visible');
+        cy.contains('Please provide blueprint name').should('be.visible');
+        cy.contains('.fields', 'Cluster hostname').contains('Please provide input name');
+        cy.contains('.fields', 'Cluster API key').contains('Please provide secret key');
+        cy.contains('.fields', 'Certificate').contains('Please provide secret key');
+
+        cy.typeToFieldInput('HELM repository', 'invalid');
+        cy.typeToFieldInput('Blueprint name', '!@#$%^');
+        cy.clickButton('Create');
+        cy.contains('Please provide valid HELM repository URL').scrollIntoView().should('be.visible');
+        cy.contains('Please provide valid blueprint name').should('be.visible');
     });
 });
