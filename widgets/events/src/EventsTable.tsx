@@ -2,20 +2,14 @@ import type { FetchDataFunction } from 'cloudify-ui-components';
 import type { EventsWidgetConfiguration } from 'widgets/events/src/widget';
 import DetailsIcon from './DetailsIcon';
 import DetailsModal from './DetailsModal';
+import type { Event } from './types';
+import { isEventType } from './types';
 
 const translate = Stage.Utils.getT('widgets.events');
 
 export interface EventsTableProps {
     data: {
-        items: {
-            id: string;
-            timestamp: string;
-            isSelected: boolean;
-            // eslint-disable-next-line camelcase
-            _storage_id: string;
-            // eslint-disable-next-line camelcase
-            reported_timestamp: string;
-        }[];
+        items: Event[];
         total: any;
         blueprintId: string[] | undefined;
         deploymentId: string[] | undefined;
@@ -225,18 +219,18 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
                         show={fieldsToShow.includes(translate('columns.message'))}
                     />
                     {data.items.map(item => {
-                        const isEventType = item.type === EventUtils.eventType;
                         const messageText = Json.stringify(item.message, false);
                         const showDetailsIcon = !_.isEmpty(item.error_causes) || messageText.length > maxMessageLength;
 
-                        const eventOptions = isEventType
+                        const eventOptions = isEventType(item)
                             ? EventUtils.getEventTypeOptions(item.event_type)
                             : EventUtils.getLogLevelOptions(item.level);
                         const eventName =
-                            eventOptions.text || _.capitalize(_.lowerCase(isEventType ? item.event_type : item.level));
+                            eventOptions.text ||
+                            _.capitalize(_.lowerCase(isEventType(item) ? item.event_type : item.level));
                         const EventIcon = () => (
                             <span style={{ color: '#2c4b68', lineHeight: 1 }}>
-                                {isEventType ? (
+                                {'iconChar' in eventOptions ? (
                                     <i
                                         style={{ fontFamily: 'cloudify', fontSize: 26 }}
                                         className={`icon ${eventOptions.iconClass}`}
@@ -249,7 +243,6 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
                                         color={eventOptions.color}
                                         circular
                                         inverted
-                                        className={eventOptions.class}
                                     />
                                 )}
                             </span>
