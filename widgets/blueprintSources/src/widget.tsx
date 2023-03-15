@@ -12,7 +12,7 @@ type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
 
 export type BlueprintSourcesData = {
     blueprintId: string;
-    blueprintTree: BlueprintTree | {};
+    blueprintTree: BlueprintTree;
     importedBlueprintIds: string[];
     importedBlueprintTrees?: BlueprintTree[];
     yamlFileName: string;
@@ -88,7 +88,13 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
                     );
             }
             return {
-                blueprintTree: {},
+                blueprintTree: {
+                    timestamp: '',
+                    children: [],
+                    key: '',
+                    title: '',
+                    isDir: false
+                },
                 importedBlueprintTrees: [],
                 blueprintId: '',
                 importedBlueprintIds: [],
