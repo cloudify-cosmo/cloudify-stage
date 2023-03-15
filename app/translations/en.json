@@ -1076,7 +1076,15 @@
                         "secret": "Secret"
                     }
                 },
-                "submit": "Create"
+                "submit": "Create",
+                "errors": {
+                    "noRepositoryUrl": "Please provide HELM repository",
+                    "invalidRepositoryUrl": "Please provide valid HELM repository URL",
+                    "noBlueprintName": "Please provide blueprint name",
+                    "invalidBlueprintName": "Please provide valid blueprint name. It should start with a letter and contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
+                    "inputMissing": "Please provide input name",
+                    "secretMissing": "Please provide secret key"
+                }
             },
             "terraformModal": {
                 "header": "Create blueprint from Terraform",
