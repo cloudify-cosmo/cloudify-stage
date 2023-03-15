@@ -48,7 +48,8 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
     const item: ScanningItem = {
         key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
         title: name,
-        isDir: false
+        isDir: false,
+        children: []
     };
 
     if (stats.isFile()) {
