@@ -95,7 +95,7 @@ const RightPane = ({
 };
 
 interface BlueprintSourcesProps {
-    data: Exclude<WidgetData<BlueprintSourcesData>, undefined>;
+    data: NonNullable<WidgetData<BlueprintSourcesData>>;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
