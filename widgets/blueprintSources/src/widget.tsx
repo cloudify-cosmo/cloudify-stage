@@ -12,7 +12,7 @@ type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
 
 export type BlueprintSourcesData = {
     blueprintId: string;
-    blueprintTree: BlueprintTree;
+    blueprintTree: BlueprintTree | {};
     importedBlueprintIds: string[];
     importedBlueprintTrees?: BlueprintTree[];
     yamlFileName: string;
