@@ -2,7 +2,7 @@ const { EventUtils } = Stage.Common;
 
 /* eslint-disable camelcase */
 
-interface ClodifyEventPart {
+interface CloudifyEventPart {
     type: 'cloudify_event';
     event_type: string;
 }
@@ -25,9 +25,9 @@ export type Event = {
     node_instance_id: string;
     workflow_id: string;
     operation: string;
-} & (ClodifyEventPart | CloudifyLogEventPart);
+} & (CloudifyEventPart | CloudifyLogEventPart);
 
-export function isEventType(event: Event): event is Event & ClodifyEventPart {
+export function isEventType(event: Event): event is Event & CloudifyEventPart {
     return event.type === EventUtils.eventType;
 }
 
