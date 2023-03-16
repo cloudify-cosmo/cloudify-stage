@@ -8,6 +8,7 @@ import nock from 'nock';
 import yaml from 'js-yaml';
 import { size } from 'lodash';
 import type { Blueprint } from 'cloudify-ui-common-backend';
+import { assertGetInput, assertGetSecret, assertIntrinsicFunction } from './common';
 
 const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
 const getInputs = (id: 'full' | 'minimal' | 'fetch-data-file' | 'fetch-data') =>
@@ -57,19 +58,6 @@ describe('/terraform/blueprint endpoint', () => {
     }
 
     it(`generates Terraform blueprint - all parameters provided`, async () => {
-        function assertIntrinsicFunction(propertyValue: any, intrinsicFunction: string, argument: any) {
-            expect(size(propertyValue)).toEqual(1);
-            expect(propertyValue[intrinsicFunction]).toEqual(argument);
-        }
-
-        function assertGetInput(propertyValue: any, argument: any) {
-            assertIntrinsicFunction(propertyValue, 'get_input', argument);
-        }
-
-        function assertGetSecret(propertyValue: any, argument: any) {
-            assertIntrinsicFunction(propertyValue, 'get_secret', argument);
-        }
-
         function assertOutputs(name: 'outputs' | 'capabilities', outputName: string, mappedOutputName: string) {
             const outputs = generatedBlueprint[name];
             expect(size(outputs)).toEqual(1);
