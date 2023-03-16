@@ -1,4 +1,4 @@
-import EventUtils from 'app/widgets/common/utils/EventUtils';
+const { EventUtils } = Stage.Common;
 
 /* eslint-disable camelcase */
 
