@@ -1,4 +1,4 @@
-interface ClusterCredential {
+export interface ClusterCredential {
     source: 'input' | 'secret';
     value: string;
 }
