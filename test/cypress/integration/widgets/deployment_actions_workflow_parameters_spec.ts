@@ -1,4 +1,4 @@
-describe('Deployment Action Buttons widget provides Execute Workflow modal and handles parameters', () => {
+describe('Deployment Action Buttons widget provides Execute Workflow modal and handles', () => {
     const resourcePrefix = 'workflow_parameters_test_';
 
     const types = [
@@ -11,12 +11,15 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         'operation_name'
     ];
 
-    const openWorkflowParametersModal = (type: string) => {
-        const deploymentName = `${resourcePrefix}${type}_type_deployment`;
+    const openWorkflowParametersModal = (deploymentName: string, workflowName: string) => {
         cy.clearDeploymentContext().setDeploymentContext(deploymentName);
         cy.contains('Execute workflow').click();
         cy.contains('Script').click();
-        cy.contains('Test parameters').click();
+        cy.contains(workflowName).click();
+    };
+
+    const openWorkflowParametersModalForType = (type: string) => {
+        openWorkflowParametersModal(`${resourcePrefix}${type}_type_deployment`, 'Test parameters');
     };
 
     const verifyMultipleDropdown = () => {
@@ -49,12 +52,12 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
     });
 
     afterEach(() => {
-        cy.contains('button', 'Cancel').click();
+        cy.clickButton('Cancel');
     });
 
-    describe('of type', () => {
+    describe('parameters of type', () => {
         it('node_id', () => {
-            openWorkflowParametersModal('node_id');
+            openWorkflowParametersModalForType('node_id');
             cy.getField('node1').within(() => {
                 verifyNumberOfOptions(2);
             });
@@ -67,7 +70,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
 
         it('node_type', () => {
-            openWorkflowParametersModal('node_type');
+            openWorkflowParametersModalForType('node_type');
             cy.getField('node_type_all').within(() => {
                 verifyNumberOfOptions(2);
             });
@@ -80,7 +83,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
 
         it('node_instance', () => {
-            openWorkflowParametersModal('node_instance');
+            openWorkflowParametersModalForType('node_instance');
             cy.getField('node_instance_all').within(() => {
                 verifyNumberOfOptions(3);
             });
@@ -93,7 +96,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
 
         it('scaling_group', () => {
-            openWorkflowParametersModal('scaling_group');
+            openWorkflowParametersModalForType('scaling_group');
             cy.getField('scaling_group_all').within(() => {
                 verifyNumberOfOptions(3);
             });
@@ -106,7 +109,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
 
         it('node_id list', () => {
-            openWorkflowParametersModal('node_id_list');
+            openWorkflowParametersModalForType('node_id_list');
             cy.getField('node1').within(() => {
                 verifyNumberOfOptions(2);
                 verifyMultipleDropdown();
@@ -118,7 +121,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
 
         it('node_instance list', () => {
-            openWorkflowParametersModal('node_instance_list');
+            openWorkflowParametersModalForType('node_instance_list');
             cy.getField('node_instance_all').within(() => {
                 verifyNumberOfOptions(3);
                 verifyMultipleDropdown();
@@ -130,7 +133,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
 
         it('operation_name', () => {
-            openWorkflowParametersModal('operation_name');
+            openWorkflowParametersModalForType('operation_name');
             cy.get('.modal').within(() => {
                 cy.getField('operation').within(() => {
                     verifyNumberOfOptions(46);
@@ -139,7 +142,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
     });
 
-    it('sorting', () => {
+    it('parameters sorting', () => {
         function caseInsensitiveCompareFn(a: string, b: string) {
             return a.toLowerCase().localeCompare(b.toLowerCase());
         }
@@ -169,7 +172,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         const parametersLabelsInAscendingOrder = [...parametersLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
         const parametersLabelsInDescendingOrder = [...parametersLabelsInAscendingOrder].reverse();
 
-        openWorkflowParametersModal('scaling_group');
+        openWorkflowParametersModalForType('scaling_group');
         openSortOrderDropdown();
         cy.get('[title="Original order"]').click();
         waitForParametersLabelsToBeReordered();
@@ -184,5 +187,29 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         cy.get('[title="Descending alphabetical order"]').click();
         waitForParametersLabelsToBeReordered();
         verifyParametersLabels(parametersLabelsInDescendingOrder);
+    });
+
+    it('optional/required parameters', () => {
+        const testBlueprint = `${resourcePrefix}optional_required`;
+        const testDeployment = `${testBlueprint}_deployment`;
+
+        cy.deleteDeployments(testDeployment, true)
+            .deleteBlueprints(testBlueprint, true)
+            .uploadBlueprint('blueprints/workflow_parameters.zip', testBlueprint, {
+                yamlFile: 'optional_required.yaml'
+            })
+            .deployBlueprint(testBlueprint, testDeployment);
+
+        openWorkflowParametersModal(testDeployment, 'Optional required');
+
+        cy.get('.modal').within(() => {
+            cy.getField('optional_parameter').should('not.have.class', 'required');
+            cy.getField('required_parameter').should('have.class', 'required');
+
+            cy.clickButton('Execute');
+
+            cy.getField('optional_parameter').contains('Please provide optional_parameter').should('not.exist');
+            cy.getField('required_parameter').contains('Please provide required_parameter').should('exist');
+        });
     });
 });
