@@ -34,7 +34,11 @@ export function getToken(basicAuth: string) {
 }
 
 export function getUser(token: string): Promise<UserResponse> {
-    return jsonRequest('GET', '/user?_get_data=true', getHeadersWithAuthenticationToken(token));
+    return jsonRequest(
+        'GET',
+        '/user?_get_data=true',
+        getHeadersWithAuthenticationToken(token, { 'X-Bypass-Maintenance': true })
+    );
 }
 
 export function isProductLicensed(version: VersionResponse) {

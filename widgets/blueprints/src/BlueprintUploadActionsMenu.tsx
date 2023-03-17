@@ -27,7 +27,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 }) => {
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
     const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
-    const [helmModalVisible, showHelmModal, hideHelmModal] = useBoolean();
+    const [helmModalVisible, hideHelmModal] = useBoolean();
 
     const redirectToMarketplacePage = () => {
         const widget = toolbox.getWidget();
@@ -40,7 +40,6 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
         const baseMenuItems = {
             uploadFromMarketplace: redirectToMarketplacePage,
             uploadFromPackage: showUploadModal,
-            uploadFromHelmChart: showHelmModal,
             uploadFromTerraformTemplate: showTerraformModal
         };
 

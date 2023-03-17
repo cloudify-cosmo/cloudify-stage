@@ -118,8 +118,7 @@ const cookieAuthenticatedApiRoutes: Record<string, Router> = {
     terraform: Terraform,
     ua: UserApp,
     wb: WidgetBackend,
-    widgets: Widgets,
-    snapshots: Snapshots
+    widgets: Widgets
 };
 Object.entries(cookieAuthenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithCookie, router)
