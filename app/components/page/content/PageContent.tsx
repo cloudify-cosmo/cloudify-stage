@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty, noop, wrap } from 'lodash';
+import { isEmpty, map, noop, wrap } from 'lodash';
 import i18n from 'i18next';
 import WidgetsList from './widgets/WidgetsList';
 import { Confirm } from '../../basic';
@@ -77,10 +77,10 @@ export default function PageContent({
                                         onLayoutSectionAdded(
                                             {
                                                 type: Consts.LAYOUT_TYPE.TABS,
-                                                content: new Array(2).fill({
+                                                content: map(new Array(2), () => ({
                                                     name: i18n.t('editMode.tabs.newTab'),
                                                     widgets: []
-                                                })
+                                                }))
                                             },
                                             layoutSectionIdx
                                         )
@@ -154,10 +154,10 @@ export default function PageContent({
                             onLayoutSectionAdded(
                                 {
                                     type: Consts.LAYOUT_TYPE.TABS,
-                                    content: new Array(2).fill({
+                                    content: map(new Array(2), () => ({
                                         name: i18n.t('editMode.tabs.newTab'),
                                         widgets: []
-                                    })
+                                    }))
                                 },
                                 page.layout.length
                             )
