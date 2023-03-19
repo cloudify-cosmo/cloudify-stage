@@ -14,7 +14,7 @@ import { isYamlFile } from '../sharedUtils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
-import type { ScanningItem, ScanningFile } from './SourceHandler.types';
+import type { ScanningItem, ScanningFile, ScanningDir } from './SourceHandler.types';
 
 const logger = getLogger('SourceHandler');
 
@@ -96,10 +96,14 @@ export function browseArchiveTree(req: Request, timestamp = Date.now().toString(
             const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
             const extractedDir = pathlib.join(data.archiveFolder, blueprintExtractDir);
 
-            return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => ({
-                ...scanArchive(extractedDir),
-                timestamp
-            }));
+            return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => {
+                const archive = scanArchive(extractedDir);
+                if (archive === null) return null;
+                return {
+                    ...(archive as ScanningDir),
+                    timestamp
+                };
+            });
         });
 }
 
