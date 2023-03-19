@@ -96,20 +96,59 @@
                         "page": "services",
                         "filterId": "csys-terraform-filter"
                     }
-                },
-                {
-                    "name": "Blueprints",
-                    "definition": "blueprints",
-                    "width": 12,
-                    "height": 29,
-                    "x": 0,
-                    "y": 11,
-                    "configuration": {
-                        "displayStyle": "catalog",
-                        "fieldsToShow": ["Creator", "State", "Deployments"]
-                    }
                 }
             ]
-        }
+        },
+        {
+            "type": "tabs",
+            "content": [
+                {
+                    "name": "Services",
+                    "widgets": [
+                        {
+                            "name": "Blueprints",
+                            "definition": "blueprints",
+                            "width": 12,
+                            "height": 29,
+                            "x": 0,
+                            "y": 11,
+                            "configuration": {
+                                "displayStyle": "catalog",
+                                "fieldsToShow": ["Creator", "State", "Deployments"],
+                                "filterRules": [{
+                                    "key": "csys-obj-type",
+                                    "values": ["environment"],
+                                    "operator": "is_not",
+                                    "type": "label"
+                                  }]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Environments",
+                    "widgets": [
+                        {
+                            "name": "Blueprints",
+                            "definition": "blueprints",
+                            "width": 12,
+                            "height": 29,
+                            "x": 0,
+                            "y": 11,
+                            "configuration": {
+                                "displayStyle": "catalog",
+                                "fieldsToShow": ["Creator", "State", "Deployments"],
+                                "filterRules": [{
+                                    "key": "csys-obj-type",
+                                    "operator": "any_of",
+                                    "type": "label",
+                                    "values": ["environment"]
+                                  }]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }       
     ]
 }

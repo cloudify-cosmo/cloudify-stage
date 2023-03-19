@@ -77,7 +77,10 @@ export default function PageContent({
                                         onLayoutSectionAdded(
                                             {
                                                 type: Consts.LAYOUT_TYPE.TABS,
-                                                content: new Array(2).map(() => ({ name: 'New Tab', widgets: [] }))
+                                                content: map(new Array(2), () => ({
+                                                    name: i18n.t('editMode.tabs.newTab'),
+                                                    widgets: []
+                                                }))
                                             },
                                             layoutSectionIdx
                                         )
