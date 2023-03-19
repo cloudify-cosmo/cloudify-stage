@@ -1,8 +1,8 @@
-import type { ScanningItem } from '../handler/SourceHandler.types';
+import type { ScanningDir } from '../handler/SourceHandler.types';
 
 export type GetSourceBrowseBlueprintFileResponse = string;
 
-export type GetSourceBrowseBlueprintArchiveResponse = ScanningItem & {
+export type GetSourceBrowseBlueprintArchiveResponse = ScanningDir & {
     timestamp: string;
 };
 

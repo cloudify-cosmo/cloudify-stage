@@ -171,7 +171,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
     const loop = (blueprintId: string, timestamp: string, items: ScanningItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
-            if (item.children) {
+            if (item.isDir) {
                 return (
                     <NodesTree.Node
                         key={key}
