@@ -14,7 +14,7 @@ import { isYamlFile } from '../sharedUtils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
-import type { ScanningItem } from './SourceHandler.types';
+import type { ScanningItem, ScanningDir, ScanningFile } from './SourceHandler.types';
 
 const logger = getLogger('SourceHandler');
 
@@ -45,15 +45,14 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
         return null;
     }
 
-    const item: ScanningItem = {
-        key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
-        title: name,
-        isDir: false,
-        children: []
-    };
+    const itemKey = toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath));
 
     if (stats.isFile()) {
-        return item;
+        return {
+            key: itemKey,
+            title: name,
+            isDir: false
+        } as ScanningFile;
     }
     if (stats.isDirectory()) {
         const scannedDir = scannedFileOrDirPath;
@@ -63,10 +62,12 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
                 .map(child => scanRecursive(rootDir, pathlib.join(scannedDir, child)))
                 .filter(e => !!e) as ScanningItem[];
 
-            item.isDir = true;
-            item.children = _.sortBy(children, i => !i.isDir);
-
-            return item;
+            return {
+                key: itemKey,
+                title: name,
+                isDir: true,
+                children: _.sortBy(children, i => !i.isDir)
+            };
         } catch (error: any) {
             if (error.code === 'EACCES') {
                 logger.debug('cannot access directory, ignoring');

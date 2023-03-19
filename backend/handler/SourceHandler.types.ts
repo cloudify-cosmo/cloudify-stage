@@ -1,11 +1,11 @@
-interface ScanningDir {
+export interface ScanningDir {
     key: string;
     title: string;
     isDir: true;
     children: ScanningItem[];
 }
 
-interface ScanningFile {
+export interface ScanningFile {
     key: string;
     title: string;
     isDir: false;
