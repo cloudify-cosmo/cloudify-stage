@@ -93,7 +93,7 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
                     children: [],
                     key: '',
                     title: '',
-                    isDir: false
+                    isDir: true
                 },
                 importedBlueprintTrees: [],
                 blueprintId: '',
