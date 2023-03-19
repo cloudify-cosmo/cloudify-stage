@@ -14,7 +14,7 @@ import { isYamlFile } from '../sharedUtils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
-import type { ScanningItem, ScanningDir, ScanningFile } from './SourceHandler.types';
+import type { ScanningItem, ScanningFile } from './SourceHandler.types';
 
 const logger = getLogger('SourceHandler');
 
