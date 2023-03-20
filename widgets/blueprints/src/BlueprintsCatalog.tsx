@@ -134,9 +134,12 @@ export default function BlueprintsCatalog({
                         )}
                     </Grid>
                     {Blueprints.Actions.isCompleted(item) && (
-                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem' }}>
-                            <Grid.Row>
-                                <Grid.Column textAlign="center" className="actionButtons">
+                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem', justifyContent: 'center' }}>
+                            <Grid.Column
+                                style={{ display: 'flex', flexDirection: 'column', width: '280px' }}
+                                className="actionButtons"
+                            >
+                                <div style={{ display: 'flex' }}>
                                     <Button
                                         icon="trash"
                                         content={translateBlueprintsButtons('delete')}
@@ -145,6 +148,7 @@ export default function BlueprintsCatalog({
                                             event.stopPropagation();
                                             onDeleteBlueprint(item);
                                         }}
+                                        style={{ flex: 1 }}
                                     />
                                     {Blueprints.Actions.isUploaded(item) && (
                                         <>
@@ -155,26 +159,29 @@ export default function BlueprintsCatalog({
                                                     event.stopPropagation();
                                                     onCreateDeployment(item);
                                                 }}
+                                                style={{ flex: 1 }}
                                             />
-
-                                            {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
-                                                <Button
-                                                    icon="external share"
-                                                    content={translateBlueprintsButtons('editInComposer')}
-                                                    onClick={event => {
-                                                        event.stopPropagation();
-                                                        new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
-                                                            id,
-                                                            mainFileName
-                                                        );
-                                                    }}
-                                                    style={{ width: '247px' }}
-                                                />
-                                            )}
                                         </>
                                     )}
-                                </Grid.Column>
-                            </Grid.Row>
+                                </div>
+                                {Blueprints.Actions.isUploaded(item) && (
+                                    <>
+                                        {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
+                                            <Button
+                                                icon="external share"
+                                                content={translateBlueprintsButtons('editInComposer')}
+                                                onClick={event => {
+                                                    event.stopPropagation();
+                                                    new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
+                                                        id,
+                                                        mainFileName
+                                                    );
+                                                }}
+                                            />
+                                        )}
+                                    </>
+                                )}
+                            </Grid.Column>
                         </Grid>
                     )}
                 </DataSegment.Item>
