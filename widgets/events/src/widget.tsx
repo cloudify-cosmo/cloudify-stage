@@ -100,12 +100,12 @@ Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfigurati
         const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
         const blueprintId = toolbox.getContext().getValue('blueprintId');
-        if (!_.isEmpty(blueprintId) && blueprintId) {
+        if (blueprintId && !_.isEmpty(blueprintId)) {
             params.blueprint_id = _.castArray(blueprintId);
         }
 
         const deploymentId = toolbox.getContext().getValue('deploymentId');
-        if (!_.isEmpty(deploymentId) && deploymentId) {
+        if (deploymentId && !_.isEmpty(deploymentId)) {
             params.deployment_id = _.castArray(deploymentId);
         }
 

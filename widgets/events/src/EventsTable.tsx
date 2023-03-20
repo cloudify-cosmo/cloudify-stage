@@ -23,7 +23,6 @@ export interface EventsTableProps {
 }
 
 export interface EventsTableState {
-    error: null;
     event?: Event;
     showDetailsModal: boolean;
 }
@@ -34,7 +33,6 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
         super(props, context);
 
         this.state = {
-            error: null,
             showDetailsModal: false
         };
     }
@@ -117,10 +115,10 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
     }
 
     render() {
-        const { error, event } = this.state;
+        const { event } = this.state;
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Events/Logs available. Probably there's no deployment created, yet.";
-        const { DataTable, ErrorMessage, Icon, Popup } = Stage.Basic;
+        const { DataTable, Icon, Popup } = Stage.Basic;
         const { EventUtils } = Stage.Common;
         const { Json } = Stage.Utils;
         const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
@@ -131,8 +129,6 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <DataTable
                     fetchData={this.fetchGridData}
                     totalSize={data.total}
