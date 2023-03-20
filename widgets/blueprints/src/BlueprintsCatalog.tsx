@@ -143,14 +143,16 @@ export default function BlueprintsCatalog({
                         )}
                     </Grid>
                     {Blueprints.Actions.isCompleted(item) && (
-                        <BlueprintsCatalogActionButtons
-                            manager={manager}
-                            widget={widget}
-                            onCreateDeployment={handleCreateDeployment}
-                            onDeleteBlueprint={handleDeleteBlueprint}
-                            onEditInComposer={handleEditInComposer}
-                            isBlueprintUploaded={Blueprints.Actions.isUploaded(item)}
-                        />
+                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem', justifyContent: 'center' }}>
+                            <BlueprintsCatalogActionButtons
+                                manager={manager}
+                                widget={widget}
+                                onCreateDeployment={handleCreateDeployment}
+                                onDeleteBlueprint={handleDeleteBlueprint}
+                                onEditInComposer={handleEditInComposer}
+                                isBlueprintUploaded={Blueprints.Actions.isUploaded(item)}
+                            />
+                        </Grid>
                     )}
                 </DataSegment.Item>
             </div>
