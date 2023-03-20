@@ -24,6 +24,7 @@ router.get('/layout/:blueprintId', (req, res: Response<GetBlueprintUserDataLayou
                 return res.send(blueprintData.layout);
             }
             return browseArchiveTree(req).then(data => {
+                if (data === null) return res.status(500).send({});
                 const layoutFilePath = _.chain(data)
                     .get('children[0].children')
                     // @ts-ignore FIXME: Property 'find' does not exist on type 'LoDashExplicitWrapper<any>'
