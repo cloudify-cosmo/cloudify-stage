@@ -17,6 +17,7 @@ export default function BlueprintsTable({
     widget
 }: BlueprintsViewProps) {
     const { DataTable, Icon, ResourceVisibility, Label } = Stage.Basic;
+    const { shouldHideComposerLink } = Stage.Utils;
     const { Blueprints } = Stage.Common;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
     const manager = toolbox.getManager();
@@ -113,19 +114,21 @@ export default function BlueprintsTable({
                             <>
                                 {Blueprints.Actions.isUploaded(item) && (
                                     <>
-                                        {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
-                                            <Icon
-                                                name="external share"
-                                                title={translateBlueprintsIcons('editInComposer')}
-                                                onClick={(event: Event) => {
-                                                    event.stopPropagation();
-                                                    new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
-                                                        item.id,
-                                                        item.main_file_name
-                                                    );
-                                                }}
-                                            />
-                                        )}
+                                        {!manager.isCommunityEdition() &&
+                                            widget.configuration.showComposerOptions &&
+                                            !shouldHideComposerLink(toolbox.getManagerState()) && (
+                                                <Icon
+                                                    name="external share"
+                                                    title={translateBlueprintsIcons('editInComposer')}
+                                                    onClick={(event: Event) => {
+                                                        event.stopPropagation();
+                                                        new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
+                                                            item.id,
+                                                            item.main_file_name
+                                                        );
+                                                    }}
+                                                />
+                                            )}
                                         <Icon
                                             name="rocket"
                                             link

@@ -199,6 +199,10 @@ export default class StageUtils {
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 
+    static shouldHideComposerLink(managerData: ManagerData) {
+        return !StageUtils.isUserAuthorized('blueprint_upload', managerData);
+    }
+
     static isWidgetPermitted(widgetSupportedEditions: WidgetDefinition['supportedEditions'], managerData: any) {
         // Don't check the supported editions and keep backwards compatibility
         if (_.isEmpty(widgetSupportedEditions)) {

@@ -18,6 +18,7 @@ export default function BlueprintsCatalog({
 }: BlueprintsViewProps) {
     const { DataSegment, Grid, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { Blueprints } = Stage.Common;
+    const { shouldHideComposerLink } = Stage.Utils;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
     const { TextEllipsis } = Stage.Shared;
     const { GridWrapper } = Stage.Common.Components;
@@ -157,20 +158,21 @@ export default function BlueprintsCatalog({
                                                 }}
                                             />
 
-                                            {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
-                                                <Button
-                                                    icon="external share"
-                                                    content={translateBlueprintsButtons('editInComposer')}
-                                                    onClick={event => {
-                                                        event.stopPropagation();
-                                                        new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
-                                                            id,
-                                                            mainFileName
-                                                        );
-                                                    }}
-                                                    style={{ width: '247px' }}
-                                                />
-                                            )}
+                                            {!manager.isCommunityEdition() &&
+                                                widget.configuration.showComposerOptions &&
+                                                !shouldHideComposerLink(toolbox.getManagerState()) && (
+                                                    <Button
+                                                        icon="external share"
+                                                        content={translateBlueprintsButtons('editInComposer')}
+                                                        onClick={event => {
+                                                            event.stopPropagation();
+                                                            new Stage.Common.Blueprints.Actions(
+                                                                toolbox
+                                                            ).doEditInComposer(id, mainFileName);
+                                                        }}
+                                                        style={{ width: '247px' }}
+                                                    />
+                                                )}
                                         </>
                                     )}
                                 </Grid.Column>
