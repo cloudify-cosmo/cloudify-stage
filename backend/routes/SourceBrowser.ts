@@ -34,21 +34,14 @@ router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/fi
     }
 });
 
-router.get('/browse/:blueprintId/archive', (req, res: Response<GetSourceBrowseBlueprintArchiveResponse>, next) => {
-    browseArchiveTree(req)
-        .then(
-            data =>
-                data &&
-                res.send({
-                    timestamp: data.timestamp ?? '',
-                    key: data.key ?? '',
-                    title: data.title ?? '',
-                    isDir: true,
-                    children: data.children ?? []
-                })
-        )
-        .catch(next);
-});
+router.get(
+    '/browse/:blueprintId/archive',
+    (req, res: Response<GetSourceBrowseBlueprintArchiveResponse | null>, next) => {
+        browseArchiveTree(req)
+            .then(data => res.send(data))
+            .catch(next);
+    }
+);
 
 router.put<never, PutSourceListYamlResponse, never, PutSourceListYamlQueryParams>('/list/yaml', (req, res, next) => {
     listYamlFiles(req)
