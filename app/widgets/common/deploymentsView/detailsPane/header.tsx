@@ -14,7 +14,6 @@ import { TextEllipsis } from '../../../../components/shared';
 const HeaderWrapper = styled.div`
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
     flex-wrap: wrap;
 
     // NOTE: adds a gap between the tabs headers when the items in the header wrap
