@@ -200,7 +200,7 @@ export default class StageUtils {
     }
 
     static shouldHideComposerLink(managerData: ManagerData) {
-        return !StageUtils.isUserAuthorized('blueprint_upload', managerData);
+        return !StageUtils.isUserAuthorized('widget_composerLink', managerData);
     }
 
     static isWidgetPermitted(widgetSupportedEditions: WidgetDefinition['supportedEditions'], managerData: any) {
