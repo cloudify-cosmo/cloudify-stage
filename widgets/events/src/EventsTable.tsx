@@ -24,7 +24,6 @@ export interface EventsTableProps {
 
 export interface EventsTableState {
     event?: Event;
-    showDetailsModal: boolean;
 }
 export default class EventsTable extends React.Component<EventsTableProps, EventsTableState> {
     static MAX_MESSAGE_LENGTH = 200;
@@ -32,9 +31,7 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
     constructor(props: EventsTableProps, context: unknown) {
         super(props, context);
 
-        this.state = {
-            showDetailsModal: false
-        };
+        this.state = {};
     }
 
     componentDidMount() {
