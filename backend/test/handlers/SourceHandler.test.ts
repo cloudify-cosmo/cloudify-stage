@@ -26,7 +26,7 @@ describe('SourceHandler', () => {
     it('generates archive tree', () => {
         // @ts-ignore Passing mocked request
         return browseArchiveTree({ params: {} }).then(archiveTree => {
-            const tree = archiveTree && archiveTree?.children?.[0];
+            const tree = archiveTree?.children?.[0];
             expect(tree?.isDir && tree.children[0].key).toEqual('subdir/fileNameSpecial%3F%23Characters');
         });
     });
