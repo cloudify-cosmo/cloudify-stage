@@ -31,11 +31,9 @@ router.get('/layout/:blueprintId', (req, res: Response<GetBlueprintUserDataLayou
                         .find({ title: 'info.yaml' })
                         .get('key')
                         .value();
-                    if (layoutFilePath) {
-                        return getArchiveFileContent(req, data.timestamp, layoutFilePath)
-                            .then(yaml.load)
-                            .then(layout => res.send(layout));
-                    }
+                    return getArchiveFileContent(req, data.timestamp, layoutFilePath)
+                        .then(yaml.load)
+                        .then(layout => res.send(layout));
                 }
                 return res.status(404).send({});
             });
