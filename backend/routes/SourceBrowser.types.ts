@@ -2,9 +2,11 @@ import type { ScanningDir } from '../handler/SourceHandler.types';
 
 export type GetSourceBrowseBlueprintFileResponse = string;
 
-export interface GetSourceBrowseBlueprintArchiveResponse extends ScanningDir {
+interface ScanningDirWithTimestamp extends ScanningDir {
     timestamp: string;
 }
+
+export type GetSourceBrowseBlueprintArchiveResponse = ScanningDirWithTimestamp | null;
 
 export interface PutSourceListYamlQueryParams {
     includeFilename?: string;

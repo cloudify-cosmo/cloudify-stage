@@ -88,13 +88,7 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
                     );
             }
             return {
-                blueprintTree: {
-                    timestamp: '',
-                    children: [],
-                    key: '',
-                    title: '',
-                    isDir: true
-                },
+                blueprintTree: null,
                 importedBlueprintTrees: [],
                 blueprintId: '',
                 importedBlueprintIds: [],
