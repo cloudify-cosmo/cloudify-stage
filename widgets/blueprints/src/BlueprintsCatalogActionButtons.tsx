@@ -29,6 +29,9 @@ const BlueprintsCatalogActionButtons = ({
     onDeleteBlueprint,
     onEditInComposer
 }: BlueprintsCatalogActionButtonsProps) => {
+    const showEditInComposerButton =
+        isBlueprintUploaded && !manager.isCommunityEdition() && widget.configuration.showComposerOptions;
+
     return (
         <ActionButtonWrapper className="actionButtons">
             <div style={{ display: 'flex' }}>
@@ -56,19 +59,15 @@ const BlueprintsCatalogActionButtons = ({
                     </>
                 )}
             </div>
-            {isBlueprintUploaded && (
-                <>
-                    {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
-                        <Button
-                            icon="external share"
-                            content={translate('editInComposer')}
-                            onClick={event => {
-                                event.stopPropagation();
-                                onEditInComposer();
-                            }}
-                        />
-                    )}
-                </>
+            {showEditInComposerButton && (
+                <Button
+                    icon="external share"
+                    content={translate('editInComposer')}
+                    onClick={event => {
+                        event.stopPropagation();
+                        onEditInComposer();
+                    }}
+                />
             )}
         </ActionButtonWrapper>
     );
