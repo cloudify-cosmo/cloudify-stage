@@ -1,7 +1,6 @@
 interface ScanningItemCommon {
     key: string;
     title: string;
-    isDir: boolean;
 }
 
 export interface ScanningDir extends ScanningItemCommon {
