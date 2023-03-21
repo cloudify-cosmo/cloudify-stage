@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
+import type { Event } from './types';
 
 interface DetailsModalProps {
-    // eslint-disable-next-line camelcase
-    event: { error_causes: { message: string; traceback: string; type: string }[]; message: any };
+    event: Event;
     onClose: () => void;
 }
 
