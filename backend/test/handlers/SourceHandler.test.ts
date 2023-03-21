@@ -26,8 +26,6 @@ describe('SourceHandler', () => {
     it('generates archive tree', () => {
         // @ts-ignore Passing mocked request
         return browseArchiveTree({ params: {} }).then(archiveTree => {
-            expect(archiveTree).not.toBeNull();
-            expect(archiveTree && archiveTree?.children?.[0].isDir).toBeTruthy();
             expect(
                 archiveTree && archiveTree?.children?.[0].isDir && archiveTree?.children?.[0]?.children?.[0].key
             ).toEqual('subdir/fileNameSpecial%3F%23Characters');
