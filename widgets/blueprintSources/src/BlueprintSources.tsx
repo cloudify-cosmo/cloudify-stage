@@ -186,7 +186,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     </NodesTree.Node>
                 );
             }
-            const blueprintRootDirectory = data.blueprintTree.children[0].key;
+            const blueprintRootDirectory = data.blueprintTree!.children[0].key;
             const mainYamlFilePath = `${blueprintRootDirectory}/${data.yamlFileName}`;
             const label =
                 mainYamlFilePath === item.key ? (
@@ -232,7 +232,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     </Label>
                                 }
                             >
-                                {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
+                                {loop(data.blueprintId, data.blueprintTree!.timestamp, data.blueprintTree!.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
                                 <NodesTree.Node
@@ -257,7 +257,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                                 </Label>
                                             }
                                         >
-                                            {loop(data.importedBlueprintIds[index], tree.timestamp, tree.children)}
+                                            {loop(data.importedBlueprintIds[index], tree!.timestamp, tree!.children)}
                                         </NodesTree.Node>
                                     ))}
                                 </NodesTree.Node>
