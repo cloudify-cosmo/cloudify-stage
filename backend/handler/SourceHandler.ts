@@ -48,11 +48,12 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
     const itemKey = toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath));
 
     if (stats.isFile()) {
-        return {
+        const scannedFile: ScanningFile = {
             key: itemKey,
             title: name,
             isDir: false
-        } as ScanningFile;
+        };
+        return scannedFile;
     }
     if (stats.isDirectory()) {
         const scannedDir = scannedFileOrDirPath;
@@ -81,7 +82,8 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
 
 function scanArchive(archivePath: string) {
     logger.debug('scaning archive', archivePath);
-    return scanRecursive(archivePath, archivePath);
+    const rootDir = scanRecursive(archivePath, archivePath) as ScanningDir | null;
+    return rootDir;
 }
 
 export function browseArchiveTree(req: Request, timestamp = Date.now().toString()) {
@@ -97,10 +99,10 @@ export function browseArchiveTree(req: Request, timestamp = Date.now().toString(
             const extractedDir = pathlib.join(data.archiveFolder, blueprintExtractDir);
 
             return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => {
-                const archive = scanArchive(extractedDir);
+                const archive: ScanningDir | null = scanArchive(extractedDir);
                 if (archive === null) return null;
                 return {
-                    ...(archive as ScanningDir),
+                    ...archive,
                     timestamp
                 };
             });
