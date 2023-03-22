@@ -32,6 +32,9 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
         displayName: deploymentName
     };
 
+    // eslint-disable-next-line
+    console.log(environmentToDeployOn);
+
     switch (activeAction) {
         case actions.manageLabels:
             return <ManageLabelsModal {...commonProps} />;
