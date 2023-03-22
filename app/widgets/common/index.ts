@@ -16,7 +16,6 @@ import NodeInstancesConsts from './nodes/NodeInstancesConsts';
 import Plugins from './plugins';
 import Roles from './roles';
 import TerraformModal from './terraformModal';
-import HelmModal from './helmModal';
 import Secrets from './secrets';
 import Tenants from './tenants';
 import EventUtils from './utils/EventUtils';
@@ -40,7 +39,6 @@ const StageCommon = {
     Roles,
     Secrets,
     TerraformModal,
-    HelmModal,
     Tenants,
     EventUtils,
     Consts
