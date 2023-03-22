@@ -12,6 +12,10 @@ const ActionButtonWrapper = styled(Grid.Column)`
     width: 280px;
 `;
 
+const ButtonsWrapper = styled.div`
+    display: flex;
+`;
+
 export interface BlueprintsCatalogActionButtonsProps {
     isBlueprintUploaded: boolean;
     widget: BlueprintsViewProps['widget'];
@@ -34,7 +38,7 @@ const BlueprintsCatalogActionButtons = ({
 
     return (
         <ActionButtonWrapper className="actionButtons">
-            <div style={{ display: 'flex' }}>
+            <ButtonsWrapper>
                 <Button
                     icon="trash"
                     content={translate('delete')}
@@ -58,16 +62,19 @@ const BlueprintsCatalogActionButtons = ({
                         />
                     </>
                 )}
-            </div>
+            </ButtonsWrapper>
             {showEditInComposerButton && (
-                <Button
-                    icon="external share"
-                    content={translate('editInComposer')}
-                    onClick={event => {
-                        event.stopPropagation();
-                        onEditInComposer();
-                    }}
-                />
+                <ButtonsWrapper>
+                    <Button
+                        icon="external share"
+                        content={translate('editInComposer')}
+                        onClick={event => {
+                            event.stopPropagation();
+                            onEditInComposer();
+                        }}
+                        style={{ flex: 1 }}
+                    />
+                </ButtonsWrapper>
             )}
         </ActionButtonWrapper>
     );
