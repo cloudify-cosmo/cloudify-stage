@@ -24,18 +24,17 @@ router.get('/layout/:blueprintId', (req, res: Response<GetBlueprintUserDataLayou
                 return res.send(blueprintData.layout);
             }
             return browseArchiveTree(req).then(data => {
-                const layoutFilePath = _.chain(data)
-                    .get('children[0].children')
-                    // @ts-ignore FIXME: Property 'find' does not exist on type 'LoDashExplicitWrapper<any>'
-                    .find({ title: 'info.yaml' })
-                    .get('key')
-                    .value();
-                if (layoutFilePath) {
+                if (data !== null) {
+                    const layoutFilePath = _.chain(data)
+                        .get('children[0].children')
+                        // @ts-ignore FIXME: Property 'find' does not exist on type 'LoDashExplicitWrapper<any>'
+                        .find({ title: 'info.yaml' })
+                        .get('key')
+                        .value();
                     return getArchiveFileContent(req, data.timestamp, layoutFilePath)
                         .then(yaml.load)
                         .then(layout => res.send(layout));
                 }
-
                 return res.status(404).send({});
             });
         })
