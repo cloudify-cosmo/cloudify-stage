@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { capitalize, map, isEqual } from 'lodash';
 import getTemplateForDataType from './utils/getTemplateForDataType';
 import ParameterValue from '../components/parameter/ParameterValue';
-import { CancelButton, Header, Icon, Modal, Popup, Segment, Table } from '../../../components/basic';
+import { CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
 import translateInputs from './utils/translateInputs';
 import type { BlueprintPlan } from '../blueprints/BlueprintActions';
 
@@ -125,14 +125,11 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
                 <Popup
                     content={buttonTitle}
                     trigger={
-                        <Icon
-                            name="code"
+                        <span
+                            className="dds__icon dds__icon--metadata"
                             onClick={this.onOpen}
-                            color="blue"
-                            size="large"
-                            link
                             aria-label={buttonTitle}
-                        />
+                        ></span>
                     }
                 />
 
