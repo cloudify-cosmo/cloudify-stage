@@ -2,12 +2,10 @@ import React, { useMemo } from 'react';
 import { isEmpty } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import { Icon } from 'semantic-ui-react';
-import type { FetchedBlueprint } from './EnvironmentDropdown.types';
+import type { FetchedBlueprint } from './SuggestedBlueprintDropdown.types';
 import StageUtils from '../../../../utils/stageUtils';
 
-const translate = StageUtils.getT(
-    'widgets.common.deployments.deployModal.inputs.deploymentIdToDeployOn.environmentList'
-);
+const translate = StageUtils.getT('widgets.common.deployments.deployModal.inputs.deploymentIdToDeployOn.blueprintList');
 
 enum DataState {
     LOADING,
@@ -15,33 +13,33 @@ enum DataState {
     ITEM_LIST
 }
 
-export interface EnvironmentDropdownItemListProps {
-    environments: FetchedBlueprint[];
-    onItemClick: (environment: FetchedBlueprint) => void;
-    activeEnvironmentId?: string;
+export interface BlueprintDropdownItemListProps {
+    blueprints: FetchedBlueprint[];
+    onItemClick: (blueprint: FetchedBlueprint) => void;
+    activeBlueprintId?: string;
     isSuggestedList?: boolean;
     loading?: boolean;
 }
 
-const EnvironmentDropdownItemList = ({
-    environments,
+const BlueprintDropdownItemList = ({
+    blueprints,
     onItemClick,
-    activeEnvironmentId,
+    activeBlueprintId,
     isSuggestedList,
     loading
-}: EnvironmentDropdownItemListProps) => {
+}: BlueprintDropdownItemListProps) => {
     const listTitle = isSuggestedList ? translate('title.suggested') : translate('title.others');
     const dataState = useMemo<DataState>(() => {
         if (loading) {
             return DataState.LOADING;
         }
 
-        if (isEmpty(environments)) {
+        if (isEmpty(blueprints)) {
             return DataState.EMPTY_LIST;
         }
 
         return DataState.ITEM_LIST;
-    }, [environments, loading]);
+    }, [blueprints, loading]);
 
     return (
         <>
@@ -59,14 +57,14 @@ const EnvironmentDropdownItemList = ({
             )}
 
             {dataState === DataState.ITEM_LIST &&
-                environments.map(environment => {
+                blueprints.map(blueprint => {
                     return (
                         <Form.Dropdown.Item
-                            key={environment.id}
-                            active={environment.id === activeEnvironmentId}
-                            value={environment.id}
-                            onClick={() => onItemClick(environment)}
-                            text={environment.id}
+                            key={blueprint.id}
+                            active={blueprint.id === activeBlueprintId}
+                            value={blueprint.id}
+                            onClick={() => onItemClick(blueprint)}
+                            text={blueprint.id}
                         />
                     );
                 })}
@@ -74,4 +72,4 @@ const EnvironmentDropdownItemList = ({
     );
 };
 
-export default EnvironmentDropdownItemList;
+export default BlueprintDropdownItemList;

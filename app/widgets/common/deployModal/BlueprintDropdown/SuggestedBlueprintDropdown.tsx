@@ -2,18 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean } from '../../../../utils/hooks';
-import { useFetchTrigger } from './EnvironmentDropdown.utils';
+import { useFetchTrigger } from './SuggestedBlueprintDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
-import type { FetchedBlueprint, FilteredEnvironments } from './EnvironmentDropdown.types';
-import EnvironmentDropdownItemList from './EnvironmentDropdownItemList';
-import type { EnvironmentDropdownItemListProps } from './EnvironmentDropdownItemList';
-import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
+import type { FetchedBlueprint, FilteredBlueprints } from './SuggestedBlueprintDropdown.types';
+import BlueprintDropdownItemList from './BlueprintDropdownItemList';
+import type { BlueprintDropdownItemListProps } from './BlueprintDropdownItemList';
+import { defaultBlueprintList } from './BlueprintDropdown.consts';
 import type { FilterRule } from '../../filters/types';
 
 interface SuggestedBlueprintDropdownProps {
     value: string;
     name: DropdownProps['name'];
-    onChange: (environmentId: string) => void;
+    onChange: (blueprintId: string) => void;
     toolbox: Stage.Types.Toolbox;
     filterRules: FilterRule[];
 }
@@ -28,9 +28,9 @@ const SuggestedBlueprintDropdown = ({
     const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [shouldFetchEnvironments, triggerEnvironmentsFetching, blockEnvironmentsFetching] = useBoolean();
-    const [environmentList, setEnvironmentList] = useState<FilteredEnvironments>(defaultEnvironmentList);
-    const [selectedEnvironment, setSelectedEnvironment] = useState<FetchedBlueprint | undefined>();
+    const [shouldFetchBlueprints, triggerBlueprintsFetching, blockBlueprintsFetching] = useBoolean();
+    const [blueprintList, setBlueprintList] = useState<FilteredBlueprints>(defaultBlueprintList);
+    const [selectedBlueprint, setSelectedBlueprint] = useState<FetchedBlueprint | undefined>();
     const blurForcingElementRef = useRef<HTMLSpanElement>(null);
 
     const handleSearchChange: DropdownProps['onSearchChange'] = (_event, data) => {
@@ -45,7 +45,7 @@ const SuggestedBlueprintDropdown = ({
         blurForcingElementRef.current?.click();
     };
 
-    const fetchEnvironments = () => {
+    const fetchBlueprints = () => {
         setLoading();
 
         searchActions
@@ -55,32 +55,32 @@ const SuggestedBlueprintDropdown = ({
             })
             .then(data => {
                 const filteredBlueprints = {
-                    suggestedEnvironments: data.items,
-                    notSuggestedEnvironments: []
+                    suggestedBlueprints: data.items,
+                    notSuggestedBlueprints: []
                 };
-                // const filteredEnvironments = filterEnvironments(mappedEnvironments, filterRules);
-                setEnvironmentList(filteredBlueprints);
+                // const FilteredBlueprints = filterBlueprints(mappedBlueprints, filterRules);
+                setBlueprintList(filteredBlueprints);
             })
             .finally(() => {
-                blockEnvironmentsFetching();
+                blockBlueprintsFetching();
                 unsetLoading();
             });
     };
 
-    const handleDropdownItemClick: EnvironmentDropdownItemListProps['onItemClick'] = environment => {
-        setSelectedEnvironment(environment);
-        onChange(environment.id);
+    const handleDropdownItemClick: BlueprintDropdownItemListProps['onItemClick'] = blueprint => {
+        setSelectedBlueprint(blueprint);
+        onChange(blueprint.id);
         forceDropdownBlur();
     };
 
     useEffect(() => {
-        if (shouldFetchEnvironments) {
-            fetchEnvironments();
+        if (shouldFetchBlueprints) {
+            fetchBlueprints();
         }
-    }, [shouldFetchEnvironments]);
+    }, [shouldFetchBlueprints]);
 
     useFetchTrigger(() => {
-        triggerEnvironmentsFetching();
+        triggerBlueprintsFetching();
     }, [searchQuery]);
 
     return (
@@ -90,7 +90,7 @@ const SuggestedBlueprintDropdown = ({
                 fluid
                 loading={isLoading}
                 value={value}
-                text={selectedEnvironment?.id}
+                text={selectedBlueprint?.id}
                 search
                 selection
                 selectOnBlur={false}
@@ -98,17 +98,17 @@ const SuggestedBlueprintDropdown = ({
                 onBlur={resetSearch}
             >
                 <Dropdown.Menu>
-                    <EnvironmentDropdownItemList
-                        environments={environmentList.suggestedEnvironments}
+                    <BlueprintDropdownItemList
+                        blueprints={blueprintList.suggestedBlueprints}
                         onItemClick={handleDropdownItemClick}
-                        activeEnvironmentId={value}
+                        activeBlueprintId={value}
                         isSuggestedList
                         loading={isLoading}
                     />
-                    <EnvironmentDropdownItemList
-                        environments={environmentList.notSuggestedEnvironments}
+                    <BlueprintDropdownItemList
+                        blueprints={blueprintList.notSuggestedBlueprints}
                         onItemClick={handleDropdownItemClick}
-                        activeEnvironmentId={value}
+                        activeBlueprintId={value}
                         loading={isLoading}
                     />
                 </Dropdown.Menu>
