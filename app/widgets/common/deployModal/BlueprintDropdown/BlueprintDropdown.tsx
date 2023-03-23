@@ -1,5 +1,5 @@
 import React from 'react';
-import SuggestedBlueprintsDropdown from './SuggestedBlueprintsDropdown';
+import SuggestedBlueprintDropdown from './SuggestedBlueprintDropdown';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { FilterRule } from '../../filters/types';
 import type { DropdownValue } from '../../types';
@@ -18,11 +18,18 @@ const BlueprintDropdown = ({
     value,
     onChange,
     toolbox,
-    filterRules,
+    filterRules = [],
     showSuggestions
 }: BlueprintDropdownProps) => {
     return showSuggestions ? (
-        <SuggestedBlueprintsDropdown name={name} value={value} toolbox={toolbox} onChange={onChange} />
+        // TODO: We have to download deployment capabilities, to be able to match them
+        <SuggestedBlueprintDropdown
+            name={name}
+            value={value}
+            toolbox={toolbox}
+            filterRules={filterRules}
+            onChange={onChange}
+        />
     ) : (
         <DynamicDropdown
             name={name}

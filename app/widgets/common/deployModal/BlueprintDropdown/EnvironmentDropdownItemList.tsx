@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { isEmpty } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import { Icon } from 'semantic-ui-react';
-import type { Environment } from './EnvironmentDropdown.types';
+import type { FetchedBlueprint } from './EnvironmentDropdown.types';
 import StageUtils from '../../../../utils/stageUtils';
 
 const translate = StageUtils.getT(
@@ -16,8 +16,8 @@ enum DataState {
 }
 
 export interface EnvironmentDropdownItemListProps {
-    environments: Environment[];
-    onItemClick: (environment: Environment) => void;
+    environments: FetchedBlueprint[];
+    onItemClick: (environment: FetchedBlueprint) => void;
     activeEnvironmentId?: string;
     isSuggestedList?: boolean;
     loading?: boolean;
@@ -66,7 +66,7 @@ const EnvironmentDropdownItemList = ({
                             active={environment.id === activeEnvironmentId}
                             value={environment.id}
                             onClick={() => onItemClick(environment)}
-                            text={environment.displayName}
+                            text={environment.id}
                         />
                     );
                 })}

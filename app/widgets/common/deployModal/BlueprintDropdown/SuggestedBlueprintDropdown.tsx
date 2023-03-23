@@ -2,36 +2,35 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean } from '../../../../utils/hooks';
-import { filterEnvironments, mapFetchedEnvironments, useFetchTrigger } from './EnvironmentDropdown.utils';
+import { useFetchTrigger } from './EnvironmentDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
-import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.types';
+import type { FetchedBlueprint, FilteredEnvironments } from './EnvironmentDropdown.types';
 import EnvironmentDropdownItemList from './EnvironmentDropdownItemList';
 import type { EnvironmentDropdownItemListProps } from './EnvironmentDropdownItemList';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
-import { deploymentTypeFilterRule } from '../../deploymentsView/detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
+import type { FilterRule } from '../../filters/types';
 
-interface SuggestedBlueprintsDropdownProps {
+interface SuggestedBlueprintDropdownProps {
     value: string;
     name: DropdownProps['name'];
     onChange: (environmentId: string) => void;
     toolbox: Stage.Types.Toolbox;
-    capabilitiesToMatch?: BlueprintRequirements['parent_capabilities'];
+    filterRules: FilterRule[];
 }
 
-const SuggestedBlueprintsDropdown = ({
+const SuggestedBlueprintDropdown = ({
     value,
     name,
     onChange,
     toolbox,
-    capabilitiesToMatch = []
-}: SuggestedBlueprintsDropdownProps) => {
+    filterRules
+}: SuggestedBlueprintDropdownProps) => {
     const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [shouldFetchEnvironments, triggerEnvironmentsFetching, blockEnvironmentsFetching] = useBoolean();
     const [environmentList, setEnvironmentList] = useState<FilteredEnvironments>(defaultEnvironmentList);
-    const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | undefined>();
+    const [selectedEnvironment, setSelectedEnvironment] = useState<FetchedBlueprint | undefined>();
     const blurForcingElementRef = useRef<HTMLSpanElement>(null);
 
     const handleSearchChange: DropdownProps['onSearchChange'] = (_event, data) => {
@@ -50,14 +49,17 @@ const SuggestedBlueprintsDropdown = ({
         setLoading();
 
         searchActions
-            .doListAllDeployments([deploymentTypeFilterRule.environments], {
-                _include: 'id,display_name,capabilities',
-                _search: searchQuery
+            .doListBlueprints<keyof FetchedBlueprint>(filterRules, {
+                _search: searchQuery,
+                _include: 'id,requirements'
             })
             .then(data => {
-                const mappedEnvironments = mapFetchedEnvironments(data.items);
-                const filteredEnvironments = filterEnvironments(mappedEnvironments, capabilitiesToMatch);
-                setEnvironmentList(filteredEnvironments);
+                const filteredBlueprints = {
+                    suggestedEnvironments: data.items,
+                    notSuggestedEnvironments: []
+                };
+                // const filteredEnvironments = filterEnvironments(mappedEnvironments, filterRules);
+                setEnvironmentList(filteredBlueprints);
             })
             .finally(() => {
                 blockEnvironmentsFetching();
@@ -88,7 +90,7 @@ const SuggestedBlueprintsDropdown = ({
                 fluid
                 loading={isLoading}
                 value={value}
-                text={selectedEnvironment?.displayName}
+                text={selectedEnvironment?.id}
                 search
                 selection
                 selectOnBlur={false}
@@ -117,4 +119,4 @@ const SuggestedBlueprintsDropdown = ({
     );
 };
 
-export default SuggestedBlueprintsDropdown;
+export default SuggestedBlueprintDropdown;
