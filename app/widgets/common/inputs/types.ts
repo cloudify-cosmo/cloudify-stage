@@ -22,4 +22,6 @@ export interface Input {
     required?: boolean;
 }
 
+export type Origin = 'deployment' | 'workflow';
+
 export type OnChange = ((event: SyntheticEvent<HTMLElement> | null, field: any) => void) | undefined;

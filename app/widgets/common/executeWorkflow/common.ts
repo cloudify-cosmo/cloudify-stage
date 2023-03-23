@@ -64,7 +64,7 @@ export const executeWorkflow = ({
         return Promise.reject(t('errors.missingWorkflow'));
     }
 
-    const inputsWithoutValue = getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
+    const inputsWithoutValue = getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState, 'workflow');
     addErrors(inputsWithoutValue, validationErrors);
 
     if (schedule && !isValidScheduledTime(scheduledTime)) {
