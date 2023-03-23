@@ -105,6 +105,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 errorsState={errors}
                 toolbox={toolbox}
                 sortOrder={sortOrder}
+                origin="workflow"
             />
             {showInstallOptions && (
                 <>
