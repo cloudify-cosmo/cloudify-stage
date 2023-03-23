@@ -15,6 +15,9 @@ export const DeploymentsViewHeaderContainer = styled.div`
     margin-bottom: 1em;
     display: flex;
     justify-content: flex-end;
+    position: absolute;
+    right: 0;
+    z-index: 1;
 `;
 
 export const DeploymentsMapLayoutContainer = styled.div<{ height: number }>`

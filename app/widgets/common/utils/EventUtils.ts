@@ -1,4 +1,5 @@
 import { icons } from 'cloudify-ui-common-frontend';
+import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 
 type EventTypeOptions = Record<
     string,
@@ -12,17 +13,17 @@ type EventTypeOptions = Record<
 type LogLevelOptions = Record<
     string,
     {
-        icon: string;
-        color: string;
+        icon: SemanticICONS;
+        color: SemanticCOLORS;
         rowClass?: string;
         text: string;
     }
 >;
 
 export default class EventUtils {
-    static eventType = 'cloudify_event';
+    static eventType = 'cloudify_event' as const;
 
-    static logType = 'cloudify_log';
+    static logType = 'cloudify_log' as const;
 
     static typesOptions = [
         { text: '', value: '' },
@@ -157,6 +158,6 @@ export default class EventUtils {
     }
 
     static getLogLevelOptions(log: keyof typeof EventUtils.logLevelOptions) {
-        return { ...{ icon: 'question', color: 'orange' }, ...EventUtils.logLevelOptions[log] };
+        return { ...{ icon: 'question', color: 'orange' as const }, ...EventUtils.logLevelOptions[log] };
     }
 }

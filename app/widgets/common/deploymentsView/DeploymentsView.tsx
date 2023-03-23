@@ -158,18 +158,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     return (
         <DeploymentsViewContainer>
-            <DeploymentsViewHeaderContainer>
-                <DeploymentsViewHeader
-                    mapOpen={mapOpen}
-                    toggleMap={toggleMap}
-                    toolbox={toolbox}
-                    onFilterChange={setUserFilterRules}
-                    filterRules={finalFilterRules}
-                    disableBulkActions={disableBulkActions}
-                    selectedDeployment={selectedOrFallbackDeployment}
-                />
-            </DeploymentsViewHeaderContainer>
-
             {mapOpen && (
                 <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
                     <DeploymentsMapContainer
@@ -192,6 +180,17 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     style={{ position: 'relative' }}
                 >
                     <DeploymentsTableContainer>
+                        <DeploymentsViewHeaderContainer>
+                            <DeploymentsViewHeader
+                                mapOpen={mapOpen}
+                                toggleMap={toggleMap}
+                                toolbox={toolbox}
+                                onFilterChange={setUserFilterRules}
+                                filterRules={finalFilterRules}
+                                disableBulkActions={disableBulkActions}
+                                selectedDeployment={selectedOrFallbackDeployment}
+                            />
+                        </DeploymentsViewHeaderContainer>
                         <DeploymentsTable
                             setGridParams={setGridParams}
                             toolbox={toolbox}

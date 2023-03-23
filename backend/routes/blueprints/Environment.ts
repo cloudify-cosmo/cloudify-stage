@@ -1,5 +1,5 @@
 import express from 'express';
-import { renderEnvironmentBlueprint } from '../handler/EnvironmentHandler';
+import { renderEnvironmentBlueprint } from '../../handler/EnvironmentHandler';
 import type { PostEnvironmentBlueprintRequestBody, PostEnvironmentBlueprintResponse } from './Environment.types';
 
 const router = express.Router();

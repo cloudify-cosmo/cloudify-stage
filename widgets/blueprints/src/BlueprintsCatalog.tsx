@@ -1,9 +1,6 @@
-import { translateBlueprints } from './widget.utils';
-
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
-
-const translateBlueprintsButtons = Stage.Utils.composeT(translateBlueprints, 'buttons');
+import BlueprintsCatalogActionButtons from './BlueprintsCatalogActionButtons';
 
 export default function BlueprintsCatalog({
     data,
@@ -16,7 +13,7 @@ export default function BlueprintsCatalog({
     widget,
     toolbox
 }: BlueprintsViewProps) {
-    const { DataSegment, Grid, Button, Label, ResourceVisibility, Header } = Stage.Basic;
+    const { DataSegment, Grid, Label, ResourceVisibility, Header } = Stage.Basic;
     const { Blueprints } = Stage.Common;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
     const { TextEllipsis } = Stage.Shared;
@@ -36,6 +33,18 @@ export default function BlueprintsCatalog({
             depCount,
             main_file_name: mainFileName
         } = item;
+
+        const handleDeleteBlueprint = () => {
+            onDeleteBlueprint(item);
+        };
+
+        const handleCreateDeployment = () => {
+            onCreateDeployment(item);
+        };
+
+        const handleEditInComposer = () => {
+            new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(id, mainFileName);
+        };
 
         return (
             <div key={id} data-testid={id}>
@@ -134,47 +143,15 @@ export default function BlueprintsCatalog({
                         )}
                     </Grid>
                     {Blueprints.Actions.isCompleted(item) && (
-                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem' }}>
-                            <Grid.Row>
-                                <Grid.Column textAlign="center" className="actionButtons">
-                                    <Button
-                                        icon="trash"
-                                        content={translateBlueprintsButtons('delete')}
-                                        basic
-                                        onClick={event => {
-                                            event.stopPropagation();
-                                            onDeleteBlueprint(item);
-                                        }}
-                                    />
-                                    {Blueprints.Actions.isUploaded(item) && (
-                                        <>
-                                            <Button
-                                                icon="rocket"
-                                                content={translateBlueprintsButtons('deploy')}
-                                                onClick={event => {
-                                                    event.stopPropagation();
-                                                    onCreateDeployment(item);
-                                                }}
-                                            />
-
-                                            {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
-                                                <Button
-                                                    icon="external share"
-                                                    content={translateBlueprintsButtons('editInComposer')}
-                                                    onClick={event => {
-                                                        event.stopPropagation();
-                                                        new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
-                                                            id,
-                                                            mainFileName
-                                                        );
-                                                    }}
-                                                    style={{ width: '247px' }}
-                                                />
-                                            )}
-                                        </>
-                                    )}
-                                </Grid.Column>
-                            </Grid.Row>
+                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem', justifyContent: 'center' }}>
+                            <BlueprintsCatalogActionButtons
+                                manager={manager}
+                                widget={widget}
+                                onCreateDeployment={handleCreateDeployment}
+                                onDeleteBlueprint={handleDeleteBlueprint}
+                                onEditInComposer={handleEditInComposer}
+                                isBlueprintUploaded={Blueprints.Actions.isUploaded(item)}
+                            />
                         </Grid>
                     )}
                 </DataSegment.Item>

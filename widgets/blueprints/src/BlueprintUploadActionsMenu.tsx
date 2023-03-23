@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import { isEqual, map } from 'lodash';
 
 const { Dropdown } = Stage.Basic;
