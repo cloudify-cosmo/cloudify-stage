@@ -5,8 +5,8 @@ import { useBoolean } from '../../../../utils/hooks';
 import { useFetchTrigger, filterBlueprints } from './SuggestedBlueprintDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
 import type { FetchedBlueprint, FilteredBlueprints } from './SuggestedBlueprintDropdown.types';
-import BlueprintDropdownItemList from './BlueprintDropdownItemList';
-import type { BlueprintDropdownItemListProps } from './BlueprintDropdownItemList';
+import BlueprintDropdownItemList from './SuggestedBlueprintDropdownItemList';
+import type { SuggestedBlueprintDropdownItemListProps } from './SuggestedBlueprintDropdownItemList';
 import { defaultBlueprintList } from './BlueprintDropdown.consts';
 import type { FilterRule } from '../../filters/types';
 import type { FullDeploymentData } from '../../deployments/DeploymentActions';
@@ -67,7 +67,7 @@ const SuggestedBlueprintDropdown = ({
             });
     };
 
-    const handleDropdownItemClick: BlueprintDropdownItemListProps['onItemClick'] = blueprint => {
+    const handleDropdownItemClick: SuggestedBlueprintDropdownItemListProps['onItemClick'] = blueprint => {
         setSelectedBlueprint(blueprint);
         onChange(blueprint.id);
         forceDropdownBlur();

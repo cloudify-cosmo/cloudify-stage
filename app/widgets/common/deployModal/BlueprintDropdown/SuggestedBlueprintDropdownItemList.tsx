@@ -13,7 +13,7 @@ enum DataState {
     ITEM_LIST
 }
 
-export interface BlueprintDropdownItemListProps {
+export interface SuggestedBlueprintDropdownItemListProps {
     blueprints: FetchedBlueprint[];
     onItemClick: (blueprint: FetchedBlueprint) => void;
     activeBlueprintId?: string;
@@ -21,13 +21,13 @@ export interface BlueprintDropdownItemListProps {
     loading?: boolean;
 }
 
-const BlueprintDropdownItemList = ({
+const SuggestedBlueprintDropdownItemList = ({
     blueprints,
     onItemClick,
     activeBlueprintId,
     isSuggestedList,
     loading
-}: BlueprintDropdownItemListProps) => {
+}: SuggestedBlueprintDropdownItemListProps) => {
     const listTitle = isSuggestedList ? translate('title.suggested') : translate('title.others');
     const dataState = useMemo<DataState>(() => {
         if (loading) {
@@ -72,4 +72,4 @@ const BlueprintDropdownItemList = ({
     );
 };
 
-export default BlueprintDropdownItemList;
+export default SuggestedBlueprintDropdownItemList;
