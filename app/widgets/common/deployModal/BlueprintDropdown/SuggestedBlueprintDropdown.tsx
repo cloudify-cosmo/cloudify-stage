@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean } from '../../../../utils/hooks';
-import { useFetchTrigger } from './SuggestedBlueprintDropdown.utils';
+import { useFetchTrigger, filterBlueprints } from './SuggestedBlueprintDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
 import type { FetchedBlueprint, FilteredBlueprints } from './SuggestedBlueprintDropdown.types';
 import BlueprintDropdownItemList from './BlueprintDropdownItemList';
@@ -17,6 +17,7 @@ export interface SuggestedBlueprintDropdownProps {
     onChange: (blueprintId: string) => void;
     toolbox: Stage.Types.Toolbox;
     filterRules: FilterRule[];
+    // TODO Norbert: Rethinkg if it would be worth to mark it as required prop
     environmentCapabilities?: FullDeploymentData['capabilities'];
 }
 
@@ -57,15 +58,7 @@ const SuggestedBlueprintDropdown = ({
                 _include: 'id,requirements'
             })
             .then(data => {
-                const filteredBlueprints = {
-                    suggestedBlueprints: data.items,
-                    notSuggestedBlueprints: []
-                };
-                // eslint-disable-next-line
-                console.log('environments');
-                // eslint-disable-next-line
-                console.log(environmentCapabilities);
-                // const FilteredBlueprints = filterBlueprints(mappedBlueprints, filterRules);
+                const filteredBlueprints = filterBlueprints(data.items, environmentCapabilities);
                 setBlueprintList(filteredBlueprints);
             })
             .finally(() => {

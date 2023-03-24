@@ -1,9 +1,9 @@
 import type { DependencyList } from 'react';
 import { useCallback, useEffect } from 'react';
 import { cloneDeep, debounce } from 'lodash';
-import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import { defaultBlueprintList } from './BlueprintDropdown.consts';
 import type { FetchedBlueprint, FilteredBlueprints } from './SuggestedBlueprintDropdown.types';
+import type { FullDeploymentData } from '../../deployments/DeploymentActions';
 
 export function useFetchTrigger(fetchTrigger: () => void, fetchDeps: DependencyList) {
     const delayMs = 500;
@@ -14,13 +14,14 @@ export function useFetchTrigger(fetchTrigger: () => void, fetchDeps: DependencyL
     }, fetchDeps);
 }
 
-const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabilities']): string[] => {
-    return capabilities.map(innerCapabilities => innerCapabilities[0]);
-};
+const isBlueprintSuggested = (
+    blueprint: FetchedBlueprint,
+    environmentCapabilities: FullDeploymentData['capabilities']
+): boolean => {
+    const blueprintCapabilities =
+        blueprint.requirements?.parent_capabilities.map(parentCapability => parentCapability[0]) || [];
 
-const isBlueprintSuggested = (blueprint: FetchedBlueprint, simplifiedCapabilities: string[]): boolean => {
-    const blueprintCapabilities = Object.keys((blueprint as any).capabilities as any);
-    const isSuggested = simplifiedCapabilities.every(
+    const isSuggested = Object.keys(environmentCapabilities).every(
         capability =>
             !!blueprintCapabilities.find(
                 blueprintCapability => blueprintCapability.toUpperCase() === capability.toUpperCase()
@@ -32,20 +33,18 @@ const isBlueprintSuggested = (blueprint: FetchedBlueprint, simplifiedCapabilitie
 
 export const filterBlueprints = (
     blueprints: FetchedBlueprint[],
-    capabilities: BlueprintRequirements['parent_capabilities']
+    environmentCapabilities: FullDeploymentData['capabilities']
 ) => {
-    const capabilitiesToMatch = simplifyCapabilities(capabilities);
-
-    return blueprints.reduce<FilteredBlueprints>((FilteredBlueprints, blueprint) => {
-        const isSuggestedOption = isBlueprintSuggested(blueprint, capabilitiesToMatch);
+    return blueprints.reduce<FilteredBlueprints>((filteredBlueprints, blueprint) => {
+        const isSuggestedOption = isBlueprintSuggested(blueprint, environmentCapabilities);
 
         if (isSuggestedOption) {
-            FilteredBlueprints.suggestedBlueprints.push(blueprint);
+            filteredBlueprints.suggestedBlueprints.push(blueprint);
         } else {
-            FilteredBlueprints.notSuggestedBlueprints.push(blueprint);
+            filteredBlueprints.notSuggestedBlueprints.push(blueprint);
         }
 
-        return FilteredBlueprints;
+        return filteredBlueprints;
         // NOTE: List is being deep cloned as array mutating operations are being executed above
     }, cloneDeep(defaultBlueprintList));
 };
