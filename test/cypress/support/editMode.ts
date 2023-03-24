@@ -65,6 +65,11 @@ const commands = {
                         cy.get('@toggle').click();
                 })
         ),
+    setNumericConfigurationField: (widgetId: string, fieldName: string, value: number) =>
+        cy.editWidgetConfiguration(widgetId, () =>
+            // NOTE: after clearing the input, 0 is automatically inserted. {home}{del} removes the leading 0
+            cy.getField(fieldName).find('input').clear().type(`${value}{home}{del}`)
+        ),
     setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
         cy.editWidgetConfiguration(widgetId, () => cy.getField(fieldName).find('input').clear().type(value)),
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
