@@ -3,8 +3,9 @@ import SuggestedBlueprintDropdown from './SuggestedBlueprintDropdown';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { FilterRule } from '../../filters/types';
 import type { DropdownValue } from '../../types';
+import type { SuggestedBlueprintDropdownProps } from './SuggestedBlueprintDropdown';
 
-interface BlueprintDropdownProps {
+interface BlueprintDropdownProps extends Pick<SuggestedBlueprintDropdownProps, 'environmentCapabilities'> {
     showSuggestions?: boolean;
     name: string;
     value: string;
@@ -19,16 +20,17 @@ const BlueprintDropdown = ({
     onChange,
     toolbox,
     filterRules = [],
+    environmentCapabilities,
     showSuggestions
 }: BlueprintDropdownProps) => {
     return showSuggestions ? (
-        // TODO: We have to download deployment capabilities, to be able to match them
         <SuggestedBlueprintDropdown
             name={name}
             value={value}
             toolbox={toolbox}
             filterRules={filterRules}
             onChange={onChange}
+            environmentCapabilities={environmentCapabilities}
         />
     ) : (
         <DynamicDropdown

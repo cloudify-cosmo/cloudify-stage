@@ -18,7 +18,8 @@ export const fetchedDeploymentFields = [
     'workflows',
     'site_name',
     'latest_execution',
-    'labels'
+    'labels',
+    'capabilities'
 ] as const;
 
 export const fetchedLastExecutionFields = [

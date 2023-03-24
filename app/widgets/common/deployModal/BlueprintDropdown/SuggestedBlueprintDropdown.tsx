@@ -9,13 +9,15 @@ import BlueprintDropdownItemList from './BlueprintDropdownItemList';
 import type { BlueprintDropdownItemListProps } from './BlueprintDropdownItemList';
 import { defaultBlueprintList } from './BlueprintDropdown.consts';
 import type { FilterRule } from '../../filters/types';
+import type { FullDeploymentData } from '../../deployments/DeploymentActions';
 
-interface SuggestedBlueprintDropdownProps {
+export interface SuggestedBlueprintDropdownProps {
     value: string;
     name: DropdownProps['name'];
     onChange: (blueprintId: string) => void;
     toolbox: Stage.Types.Toolbox;
     filterRules: FilterRule[];
+    environmentCapabilities?: FullDeploymentData['capabilities'];
 }
 
 const SuggestedBlueprintDropdown = ({
@@ -23,6 +25,7 @@ const SuggestedBlueprintDropdown = ({
     name,
     onChange,
     toolbox,
+    environmentCapabilities = {},
     filterRules
 }: SuggestedBlueprintDropdownProps) => {
     const searchActions = new SearchActions(toolbox);
@@ -58,6 +61,10 @@ const SuggestedBlueprintDropdown = ({
                     suggestedBlueprints: data.items,
                     notSuggestedBlueprints: []
                 };
+                // eslint-disable-next-line
+                console.log('environments');
+                // eslint-disable-next-line
+                console.log(environmentCapabilities);
                 // const FilteredBlueprints = filterBlueprints(mappedBlueprints, filterRules);
                 setBlueprintList(filteredBlueprints);
             })

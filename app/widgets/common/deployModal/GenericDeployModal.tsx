@@ -36,6 +36,7 @@ import StageUtils from '../../../utils/stageUtils';
 import { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } from '../../../components/basic';
 import EnvironmentDropdown from './EnvironmentDropdown';
 import BlueprintDropdown from './BlueprintDropdown';
+import type { FullDeploymentData } from '../deployments/DeploymentActions';
 
 const t = StageUtils.getT('widgets.common.deployments.deployModal');
 
@@ -153,6 +154,7 @@ export type GenericDeployModalProps = {
     environmentToDeployOn?: {
         id: string;
         displayName: string;
+        capabilities: FullDeploymentData['capabilities'];
     };
 };
 
@@ -750,6 +752,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     toolbox={toolbox}
                                     filterRules={blueprintFilterRules}
                                     showSuggestions={!!environmentToDeployOn}
+                                    environmentCapabilities={environmentToDeployOn?.capabilities}
                                 />
                             </Form.Field>
                         )}
