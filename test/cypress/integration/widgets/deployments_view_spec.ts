@@ -146,14 +146,11 @@ describe('Deployments View widget', () => {
                 cy.contains(prefixedLabelName).should('not.exist');
             });
 
-            cy.log('Show a label');
-            cy.editWidgetConfiguration(widgetId, () => {
-                widgetConfigurationHelpers.toggleLabelsDropdown();
-                widgetConfigurationHelpers.getLabelsDropdown().within(() => {
-                    cy.contains('[role="listbox"]', prefixedLabelName).click();
-                });
-                widgetConfigurationHelpers.toggleLabelsDropdown();
-            });
+            cy.setSearchableDropdownConfigurationField(
+                widgetId,
+                "List of labels' keys to show in the table as columns",
+                prefixedLabelName
+            );
 
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);

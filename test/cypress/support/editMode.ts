@@ -68,7 +68,9 @@ const commands = {
     setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
         cy.editWidgetConfiguration(widgetId, () => cy.getField(fieldName).find('input').clear().type(value)),
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(fieldName, value))
+        cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(fieldName, value)),
+    setMultipleDropdownConfigurationField: (widgetId: string, fieldName: string, values: string[]) =>
+        cy.editWidgetConfiguration(widgetId, () => cy.setMultipleDropdownValues(fieldName, values))
 };
 
 addCommands(commands);
