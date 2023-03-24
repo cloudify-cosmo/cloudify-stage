@@ -5,7 +5,7 @@ import { Icon } from 'semantic-ui-react';
 import type { FetchedBlueprint } from './SuggestedBlueprintDropdown.types';
 import StageUtils from '../../../../utils/stageUtils';
 
-const translate = StageUtils.getT('widgets.common.deployments.deployModal.inputs.deploymentIdToDeployOn.blueprintList');
+const translate = StageUtils.getT('widgets.common.deployments.deployModal.inputs.blueprintName.suggestionList');
 
 enum DataState {
     LOADING,
