@@ -32,15 +32,6 @@ const YamlFileButton: FunctionComponent<Props> = ({
                 name="yamlFile"
                 showInput={false}
                 showReset={false}
-                openButtonParams={{
-                    color: 'blue',
-                    size: 'huge',
-                    basic: true,
-                    icon: {
-                        link: true,
-                        name: 'open folder'
-                    }
-                }}
                 onChange={onChange}
                 help={translate('help', { dataType })}
                 loading={fileLoading}
