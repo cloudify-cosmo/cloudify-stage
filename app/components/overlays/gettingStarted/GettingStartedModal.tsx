@@ -1,24 +1,23 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 
 import useFetchSchemas from './useFetchSchemas';
 import StageUtils from '../../../utils/stageUtils';
 import EventBus from '../../../utils/EventBus';
-import { useInput, useOpenProp, useBoolean } from '../../../utils/hooks';
-import useResettableState from '../../../utils/hooks/useResettableState';
+import { useBoolean, useInput, useOpenProp, useResettableState } from '../../../utils/hooks';
 import { Confirm, Form, Loading, Modal } from '../../basic';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
     GettingStartedEnvironmentsData,
-    GettingStartedSecretsData,
     GettingStartedSchemaItem,
-    GettingStartedSchemaSecret
+    GettingStartedSchemaSecret,
+    GettingStartedSecretsData
 } from './model';
 import { StepName } from './model';
 import ModalHeader from './ModalHeader';
