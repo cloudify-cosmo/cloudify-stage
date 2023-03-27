@@ -17,7 +17,6 @@ export interface SuggestedBlueprintDropdownProps {
     onChange: (blueprintId: string) => void;
     toolbox: Stage.Types.Toolbox;
     filterRules: FilterRule[];
-    // TODO Norbert: Rethinkg if it would be worth to mark it as required prop
     environmentCapabilities?: FullDeploymentData['capabilities'];
 }
 
