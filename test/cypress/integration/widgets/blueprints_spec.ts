@@ -317,6 +317,16 @@ describe('Blueprints widget', () => {
                 return cy.getByTestId(blueprintName);
             }
 
+            function checkActionButtonsExistance(allButtonsShouldBeExisting?: boolean) {
+                const buttonsChainerQuery = allButtonsShouldBeExisting ? 'exist' : 'not.exist';
+
+                cy.get('.actionButtons').within(() => {
+                    cy.contains('button', 'Delete');
+                    cy.contains('button', 'Deploy').should(buttonsChainerQuery);
+                    cy.contains('button', 'Edit in Composer').should(buttonsChainerQuery);
+                });
+            }
+
             cy.editWidgetConfiguration('blueprints', () =>
                 cy.get('.dropdown').contains('Catalog').click({ force: true })
             );
@@ -354,7 +364,7 @@ describe('Blueprints widget', () => {
 
             getBlueprintSegment('failed_uploading').within(() => {
                 cy.contains('Failed');
-                cy.get('.actionButtons').children().should('have.length', 1);
+                checkActionButtonsExistance();
                 cy.get('.trash');
                 cy.get('a').click({ force: true });
                 cy.get('.warning').trigger('mouseover');
@@ -364,7 +374,7 @@ describe('Blueprints widget', () => {
 
             getBlueprintSegment('failed_extracting').within(() => {
                 cy.contains('Failed');
-                cy.get('.actionButtons').children().should('have.length', 1);
+                checkActionButtonsExistance();
                 cy.get('.trash').should('exist');
                 cy.get('a').click({ force: true });
                 cy.get('.warning').trigger('mouseover');
@@ -374,7 +384,7 @@ describe('Blueprints widget', () => {
 
             getBlueprintSegment('failed_parsing').within(() => {
                 cy.contains('Failed');
-                cy.get('.actionButtons').children().should('have.length', 1);
+                checkActionButtonsExistance();
                 cy.get('.trash').should('exist');
                 cy.get('a').click({ force: true });
                 cy.get('.warning').trigger('mouseover');
@@ -384,7 +394,7 @@ describe('Blueprints widget', () => {
 
             getBlueprintSegment('invalid').within(() => {
                 cy.contains('Invalid');
-                cy.get('.actionButtons').children().should('have.length', 1);
+                checkActionButtonsExistance();
                 cy.get('.trash').should('exist');
                 cy.get('a').click({ force: true });
                 cy.get('.warning').trigger('mouseover');
@@ -396,7 +406,7 @@ describe('Blueprints widget', () => {
 
             getBlueprintSegment('uploaded').within(() => {
                 cy.contains('Uploaded');
-                cy.get('.actionButtons').children().should('have.length', 3);
+                checkActionButtonsExistance(true);
                 cy.get('.warning').should('not.exist');
                 cy.get('a').click({ force: true });
             });
