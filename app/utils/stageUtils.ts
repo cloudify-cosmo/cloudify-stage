@@ -6,6 +6,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import { marked } from 'marked';
 import { v4 } from 'uuid';
+import Consts from './consts';
 import { isYamlFile } from '../../backend/sharedUtils';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
@@ -200,7 +201,7 @@ export default class StageUtils {
     }
 
     static shouldHideComposerLink(managerData: ManagerData) {
-        return !StageUtils.isUserAuthorized('widget_composerLink', managerData);
+        return !StageUtils.isUserAuthorized(Consts.permissions.COMPOSER_LINK, managerData);
     }
 
     static isWidgetPermitted(widgetSupportedEditions: WidgetDefinition['supportedEditions'], managerData: any) {
