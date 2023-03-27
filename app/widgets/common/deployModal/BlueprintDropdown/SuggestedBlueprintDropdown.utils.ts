@@ -1,18 +1,7 @@
-import type { DependencyList } from 'react';
-import { useCallback, useEffect } from 'react';
-import { cloneDeep, debounce } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { defaultBlueprintList } from './BlueprintDropdown.consts';
 import type { FetchedBlueprint, FilteredBlueprints } from './SuggestedBlueprintDropdown.types';
 import type { FullDeploymentData } from '../../deployments/DeploymentActions';
-
-export function useFetchTrigger(fetchTrigger: () => void, fetchDeps: DependencyList) {
-    const delayMs = 500;
-    const debouncedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
-
-    useEffect(() => {
-        debouncedFetchTrigger();
-    }, fetchDeps);
-}
 
 const isBlueprintSuggested = (
     blueprint: FetchedBlueprint,
