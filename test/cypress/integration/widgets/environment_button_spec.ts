@@ -76,7 +76,7 @@ describe('Environment button widget', () => {
             cy.get('.modal').should('not.exist');
         });
 
-        it.only('passes on form data on submit', () => {
+        it('passes on form data on submit', () => {
             const deploymentName = 'Environment button test';
             cy.deleteBlueprint('environment_button_test');
 

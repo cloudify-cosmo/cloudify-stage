@@ -332,7 +332,8 @@ describe('Deployments widget', () => {
                     site_name: null,
                     updated_at: '2022-03-21T08:52:31.251Z',
                     workflows: [],
-                    visibility: 'tenant'
+                    visibility: 'tenant',
+                    capabilities: {}
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
