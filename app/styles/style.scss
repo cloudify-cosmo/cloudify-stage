@@ -5,6 +5,10 @@
 
 .icon-button:hover {
     color: $blue-dark;
+    cursor: pointer;
+}
+svg.icon-button:hover * {
+    fill: $blue-dark !important;
 }
 a:hover {
     text-decoration: underline !important;

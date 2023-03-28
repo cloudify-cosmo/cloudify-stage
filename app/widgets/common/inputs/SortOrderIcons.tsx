@@ -3,10 +3,10 @@ import { map } from 'lodash';
 import styled from 'styled-components';
 import type { HTMLProps } from 'react';
 import type { StrictIconProps } from 'semantic-ui-react';
-import { Icon, Dropdown } from '../../../components/basic';
+import { Dropdown } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
 import translateInputs from './utils/translateInputs';
-import sortIcon from './sort.svg';
+import DefaultSortIcon from './DefaultSortIcon';
 
 const translate = StageUtils.composeT(translateInputs, 'buttons.sortOrder');
 
@@ -34,7 +34,7 @@ interface SortIconProps extends SortOrderIconsProps {
 }
 
 const SortIcon = ({ sortOrder, selected, onChange, iconProps }: SortIconProps) => {
-    if (sortOrder === 'original') return <img src={sortIcon} style={{ height: 13 }} />;
+    if (sortOrder === 'original') return <DefaultSortIcon height={17} />;
     const className = sortOrder === 'ascending' ? 'dds__icon--sort-az' : 'dds__icon--sort-za';
     return (
         <span
@@ -42,6 +42,7 @@ const SortIcon = ({ sortOrder, selected, onChange, iconProps }: SortIconProps) =
             className={`icon-button dds__icon ${className}`}
             color={selected === sortOrder ? 'blue' : undefined}
             onClick={() => onChange(sortOrder)}
+            style={{ fontSize: 14, marginLeft: 8 }}
             {...iconProps}
         />
     );
@@ -56,7 +57,7 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
 
     return (
         <DropdownContainer>
-            <Dropdown trigger={<img src={sortIcon} alt={translate('dropdownLabel')} style={{ height: 13 }} />}>
+            <Dropdown trigger={<DefaultSortIcon height={13} />} className="icon-button">
                 <Dropdown.Menu direction="left">
                     <Dropdown.Header>
                         {map(sortOrderToIconPropsMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
