@@ -39,7 +39,9 @@ export const fetchedLastExecutionFields = [
 
 export type FetchedLastExecutionType = Required<Pick<Execution, typeof fetchedLastExecutionFields[number]>>;
 
-export type EnhancedDeployment = Pick<FullDeploymentData, typeof fetchedDeploymentFields[number]> & {
+export type Deployment = Pick<FullDeploymentData, typeof fetchedDeploymentFields[number]>;
+
+export type EnhancedDeployment = Deployment & {
     nodeInstancesCount: number;
     nodeInstancesStates: Record<string, number>;
     isUpdated: boolean;
