@@ -34,7 +34,7 @@ interface SortIconProps extends SortOrderIconsProps {
 }
 
 const SortIcon = ({ sortOrder, selected, onChange, iconProps }: SortIconProps) => {
-    if (sortOrder === 'original') return <img src={sortIcon} />;
+    if (sortOrder === 'original') return <img src={sortIcon} style={{ height: 13 }} />;
     const className = sortOrder === 'ascending' ? 'dds__icon--sort-az' : 'dds__icon--sort-za';
     return (
         <span
@@ -56,7 +56,7 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
 
     return (
         <DropdownContainer>
-            <Dropdown trigger={<img src={sortIcon} alt={translate('dropdownLabel')} />}>
+            <Dropdown trigger={<img src={sortIcon} alt={translate('dropdownLabel')} style={{ height: 13 }} />}>
                 <Dropdown.Menu direction="left">
                     <Dropdown.Header>
                         {map(sortOrderToIconPropsMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
