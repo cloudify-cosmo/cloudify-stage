@@ -1,4 +1,5 @@
 import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
+import type { Deployment } from 'widgets/deployments/src/types';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {
@@ -296,7 +297,7 @@ describe('Deployments widget', () => {
 
             it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
                 const displayName = 'deploymentDisplayName';
-                const mockedDeployment = {
+                const mockedDeployment: Deployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
                     created_by: 'admin',
@@ -304,8 +305,10 @@ describe('Deployments widget', () => {
                     id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
                     inputs: { webserver_port: 8000 },
                     latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
+                    labels: [],
                     site_name: null,
                     updated_at: '2022-03-21T08:52:31.251Z',
+                    workflows: [],
                     visibility: 'tenant'
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
