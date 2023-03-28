@@ -72,7 +72,7 @@ The columns can show:
     The counts and statuses in those columns are based on **all** child
     deployments (it does not matter whether they are directly or indirectly
     attached to the main deployment).
-
+8.  Deployment labels' values for selected label key (you can select labels' keys in widget configuration - "List of labels' keys to show in the table as columns" parameter)
 ### Sorting deployments
 
 Deployments in the table can be sorted by clicking a column's header.
@@ -287,6 +287,7 @@ filter.
   be refreshed, in seconds. Default: 10 seconds
 - `Map height` - the height of the map section in pixels
 - `List of fields to show in the table`
+- `List of labels' keys to show in the table as columns`
 - `Number of items to show at once in the table`
 - `Show map by default`
 - `Name of the saved filter to apply` - the name of a filter to use by default
