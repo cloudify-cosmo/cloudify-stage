@@ -24,8 +24,8 @@ cat <<EOF > /app/conf/manager.json
 {
   "ip": "${RESTSERVICE_ADDRESS}",
   "apiVersion": "v3.1",
-  "protocol" : "https",
-  "port": "53333"
+  "protocol" : "${RESTSERVICE_PROTOCOL}",
+  "port": "${RESTSERVICE_PORT}"
 }
 EOF
 
