@@ -11,6 +11,7 @@ import type { SuggestedBlueprintDropdownItemListProps } from './SuggestedBluepri
 import { defaultBlueprintList } from './BlueprintDropdown.consts';
 import type { FilterRule } from '../../filters/types';
 import type { FullDeploymentData } from '../../deployments/DeploymentActions';
+import { fetchedBlueprintFields } from './SuggestedBlueprintDropdown.consts';
 
 export interface SuggestedBlueprintDropdownProps {
     value: string;
@@ -55,7 +56,7 @@ const SuggestedBlueprintDropdown = ({
         searchActions
             .doListBlueprints<keyof FetchedBlueprint>(filterRules, {
                 _search: searchQuery,
-                _include: 'id,requirements'
+                _include: fetchedBlueprintFields.join(',')
             })
             .then(data => {
                 const filteredBlueprints = filterBlueprints(data.items, environmentCapabilities);

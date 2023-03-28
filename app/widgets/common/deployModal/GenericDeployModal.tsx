@@ -751,7 +751,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
                                     filterRules={blueprintFilterRules}
-                                    showSuggestions={!!environmentToDeployOn}
                                     environmentCapabilities={environmentToDeployOn?.capabilities}
                                 />
                             </Form.Field>

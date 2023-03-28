@@ -6,7 +6,6 @@ import type { DropdownValue } from '../../types';
 import type { SuggestedBlueprintDropdownProps } from './SuggestedBlueprintDropdown';
 
 interface BlueprintDropdownProps extends Pick<SuggestedBlueprintDropdownProps, 'environmentCapabilities'> {
-    showSuggestions?: boolean;
     name: string;
     value: string;
     onChange: (blueprintId: DropdownValue) => void;
@@ -20,9 +19,10 @@ const BlueprintDropdown = ({
     onChange,
     toolbox,
     filterRules = [],
-    environmentCapabilities,
-    showSuggestions
+    environmentCapabilities
 }: BlueprintDropdownProps) => {
+    const showSuggestions = !!environmentCapabilities;
+
     return showSuggestions ? (
         <SuggestedBlueprintDropdown
             name={name}

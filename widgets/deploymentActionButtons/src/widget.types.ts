@@ -1,9 +1,7 @@
 import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
+import type { fetchedDeploymentFields } from './widget.consts';
 
-export type FetchedDeployment = Pick<
-    FullDeploymentData,
-    'id' | 'display_name' | 'workflows' | 'labels' | 'capabilities'
->;
+export type FetchedDeployment = Pick<FullDeploymentData, typeof fetchedDeploymentFields[number]>;
 
 export type FetchedDeploymentState =
     // eslint-disable-next-line camelcase

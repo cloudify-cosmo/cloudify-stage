@@ -1,6 +1,6 @@
 import { castArray } from 'lodash';
 import DeploymentActionButtons from './DeploymentActionButtons';
-import { widgetId } from './widget.consts';
+import { fetchedDeploymentFields, widgetId } from './widget.consts';
 import { translateWidget } from './widget.utils';
 import type { FetchedDeployment, FetchedDeploymentState } from './widget.types';
 
@@ -44,7 +44,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         return actions.doGet<keyof FetchedDeployment>(
             { id },
             {
-                _include: 'id,display_name,workflows,labels,capabilities'
+                _include: fetchedDeploymentFields.join(',')
             }
         );
     },
