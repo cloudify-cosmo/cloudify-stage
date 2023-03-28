@@ -100,6 +100,7 @@ const getDeploymentSitePairs = (
     deployments: Deployment[]
 ): DeploymentSitePair[] =>
     deployments
-        .map((deployment): DeploymentSitePair => ({ deployment, site: sitesLookupTable[deployment.site_name] }))
+        .filter(deployment => deployment.site_name !== null)
+        .map((deployment): DeploymentSitePair => ({ deployment, site: sitesLookupTable[deployment.site_name!] }))
         // NOTE: additional filtering, since the site may not have a position, and thus not be in the lookup table
         .filter(({ site }) => !!site);
