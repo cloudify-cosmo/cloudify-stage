@@ -126,7 +126,7 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
                     content={buttonTitle}
                     trigger={
                         <span
-                            className="dds__icon dds__icon--metadata"
+                            className="icon-button dds__icon dds__icon--metadata"
                             onClick={this.onOpen}
                             aria-label={buttonTitle}
                         ></span>

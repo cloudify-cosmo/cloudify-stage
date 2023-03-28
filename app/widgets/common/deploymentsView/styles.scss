@@ -1,10 +1,6 @@
 @use 'sass:math';
 @import '~cloudify-ui-common-frontend/styles/colors';
 
-.dds__icon:hover {
-    color: $blue-dark;
-}
-
 $deploymentStatusColors: (
     // NOTE: use Semantic UI colors
     // See https://semantic-ui.com/usage/theming.html

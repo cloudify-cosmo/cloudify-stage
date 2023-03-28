@@ -39,7 +39,7 @@ const SortIcon = ({ sortOrder, selected, onChange, iconProps }: SortIconProps) =
     return (
         <span
             key={sortOrder}
-            className={`dds__icon ${className}`}
+            className={`icon-button dds__icon ${className}`}
             color={selected === sortOrder ? 'blue' : undefined}
             onClick={() => onChange(sortOrder)}
             {...iconProps}
