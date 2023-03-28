@@ -18,7 +18,7 @@ export interface FullDeploymentData {
     description: string | null;
     latest_execution: string;
     display_name: string;
-    site_name: string;
+    site_name: string | null;
     blueprint_id: string;
     latest_execution_status: LatestExecutionStatus;
     deployment_status: DeploymentStatus;
