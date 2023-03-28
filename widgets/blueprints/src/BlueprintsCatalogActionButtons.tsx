@@ -36,11 +36,11 @@ const BlueprintsCatalogActionButtons = ({
     onDeleteBlueprint,
     onEditInComposer
 }: BlueprintsCatalogActionButtonsProps) => {
-    const { shouldHideComposerLink } = Stage.Utils;
+    const { shouldShowComposerLink } = Stage.Utils;
 
     const showEditInComposerButton =
         isBlueprintUploaded &&
-        !shouldHideComposerLink(managerData) &&
+        shouldShowComposerLink(managerData) &&
         !manager.isCommunityEdition() &&
         widget.configuration.showComposerOptions;
 

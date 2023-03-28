@@ -200,8 +200,8 @@ export default class StageUtils {
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 
-    static shouldHideComposerLink(managerData: ManagerData) {
-        return !StageUtils.isUserAuthorized(Consts.permissions.COMPOSER_LINK, managerData);
+    static shouldShowComposerLink(managerData: ManagerData) {
+        return StageUtils.isUserAuthorized(Consts.permissions.COMPOSER_LINK, managerData);
     }
 
     static isWidgetPermitted(widgetSupportedEditions: WidgetDefinition['supportedEditions'], managerData: any) {
