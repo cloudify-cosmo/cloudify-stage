@@ -17,8 +17,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } from 'semantic-ui-react';
 import { Form, Loading, Ref } from '../../../components/basic';
-import useEventListener from '../../../utils/hooks/useEventListener';
-import useUpdateEffect from '../../../utils/hooks/useUpdateEffect';
+import { useEventListener, useUpdateEffect } from '../../../utils/hooks';
 import type { DropdownValue } from '../types';
 import type { FilterRule } from '../filters/types';
 
