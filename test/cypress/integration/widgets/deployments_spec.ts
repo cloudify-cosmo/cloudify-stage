@@ -144,7 +144,7 @@ describe('Deployments widget', () => {
                 cy.get('input').click().clear().type(value);
             };
 
-            const checkIfBlueprintIsSuggested = (blueprint: string, shouldBeSuggested?: boolean) => {
+            const checkIfBlueprintIsSuggested = (blueprint: string, shouldBeSuggested: boolean) => {
                 const listHeader = shouldBeSuggested ? 'Suggested' : 'Others';
 
                 cy.contains('.header', listHeader).next().should('have.text', blueprint);
