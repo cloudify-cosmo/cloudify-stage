@@ -126,6 +126,7 @@ export default class BlueprintActionButtons extends React.Component<
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
         const { error, force, loading } = this.state;
+        const { shouldShowComposerLink } = Stage.Utils;
         const manager = toolbox.getManager();
         const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
         const disableButtons = _.isEmpty(blueprintId) || loading;
@@ -167,32 +168,34 @@ export default class BlueprintActionButtons extends React.Component<
                             id="downloadBlueprintButton"
                         />
 
-                        {!manager.isCommunityEdition() && showEditCopyInComposerButton && (
-                            <Button
-                                className="labeled icon"
-                                color="teal"
-                                icon="external share"
-                                disabled={disableButtons}
-                                onClick={() => {
-                                    toolbox.loading(true);
-                                    this.setState({ loading: true });
-                                    blueprintActions
-                                        .doGetBlueprints({ _include: 'main_file_name', id: blueprintId })
-                                        .then(data =>
-                                            new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
-                                                // NOTE: If it was undefined, the button would be disabled
-                                                blueprintId!,
-                                                data.items[0].main_file_name
+                        {!manager.isCommunityEdition() &&
+                            shouldShowComposerLink(toolbox.getManagerState()) &&
+                            showEditCopyInComposerButton && (
+                                <Button
+                                    className="labeled icon"
+                                    color="teal"
+                                    icon="external share"
+                                    disabled={disableButtons}
+                                    onClick={() => {
+                                        toolbox.loading(true);
+                                        this.setState({ loading: true });
+                                        blueprintActions
+                                            .doGetBlueprints({ _include: 'main_file_name', id: blueprintId })
+                                            .then(data =>
+                                                new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
+                                                    // NOTE: If it was undefined, the button would be disabled
+                                                    blueprintId!,
+                                                    data.items[0].main_file_name
+                                                )
                                             )
-                                        )
-                                        .finally(() => {
-                                            toolbox.loading(false);
-                                            this.setState({ loading: false });
-                                        });
-                                }}
-                                content={t('editCopy')}
-                            />
-                        )}
+                                            .finally(() => {
+                                                toolbox.loading(false);
+                                                this.setState({ loading: false });
+                                            });
+                                    }}
+                                    content={t('editCopy')}
+                                />
+                            )}
 
                         <DeployBlueprintModal
                             open={this.isShowModal('deploy')}
