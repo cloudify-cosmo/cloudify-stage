@@ -1053,7 +1053,7 @@
                     }
                 },
                 "hideFailedBlueprints": "Hide failed blueprints",
-                "showComposerOptions": "Show Composer options",
+                "showComposerOptions": "Show Composer options for users that can access them",
                 "labelFilterRules": "Label filter rules"
             },
             "terraformModal": {
