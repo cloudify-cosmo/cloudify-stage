@@ -1,9 +1,13 @@
 import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 import EnvironmentButton from './EnvironmentButton';
+import type { WidgetData } from './widget.types';
 
 const translate = Stage.Utils.getT('widgets.environmentButton');
+const SearchActions = Stage.Common.Actions.Search;
+const FilterActions = Stage.Common.Filters.Actions;
+const environmentFilterId = 'csys-environment-filter';
 
-Stage.defineWidget<never, never, ButtonConfiguration>({
+Stage.defineWidget<never, WidgetData, ButtonConfiguration>({
     id: 'environmentButton',
     initialWidth: 2,
     initialHeight: 3,
@@ -19,7 +23,31 @@ Stage.defineWidget<never, never, ButtonConfiguration>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('environmentButton'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, _data, _error, toolbox) {
-        return <EnvironmentButton toolbox={toolbox} configuration={widget.configuration} />;
+    async fetchData(_widget, toolbox) {
+        const searchActions = new SearchActions(toolbox);
+        const filterActions = new FilterActions(toolbox);
+
+        try {
+            const filterRules = await filterActions.doGet(environmentFilterId);
+            return searchActions.doListBlueprints(filterRules.value || [], {
+                _include: 'id',
+                _size: 1
+            });
+        } catch (err) {
+            log.error(err);
+            return {};
+        }
+    },
+
+    render(widget, data, _error, toolbox) {
+        const disableEnvironmentButton = data?.items?.length === 0;
+
+        return (
+            <EnvironmentButton
+                toolbox={toolbox}
+                configuration={widget.configuration}
+                disabled={disableEnvironmentButton}
+            />
+        );
     }
 });

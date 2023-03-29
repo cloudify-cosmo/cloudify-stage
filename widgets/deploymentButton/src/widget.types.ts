@@ -1,5 +1,3 @@
-// import type { PollingTimeConfiguration, DataTableConfiguration } from '../../../app/utils/GenericConfig';
-
 import type { FullBlueprintData } from 'app/widgets/common/blueprints/BlueprintActions';
 import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 import type { FilterRule } from 'app/widgets/common/filters/types';
