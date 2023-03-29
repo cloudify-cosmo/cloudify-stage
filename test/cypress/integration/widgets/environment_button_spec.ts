@@ -107,7 +107,13 @@ describe('Environment button widget', () => {
             cy.get('.modal').within(() => {
                 cy.typeToFieldInput('Name', deploymentName);
                 cy.getField('Blueprint Description').get('textarea').type(blueprintDescription);
-                cy.contains('Location').next().find('input').type(`${siteName}{enter}`);
+
+                cy.contains('Location')
+                    .next()
+                    .within(() => {
+                        cy.get('input').type(siteName);
+                        cy.get(`div[option-value="${siteName}"]`).click();
+                    });
 
                 cy.addLabel(labelKey, labelValue);
 

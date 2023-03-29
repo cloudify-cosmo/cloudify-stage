@@ -1,8 +1,7 @@
-import type { FormEvent } from 'react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CheckboxProps, InputProps } from 'semantic-ui-react';
-import { Ref } from 'semantic-ui-react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import type { InputProps } from 'semantic-ui-react';
 import { chain, entries, get, head, isEmpty, omit, set, some } from 'lodash';
+import { Credentials, OptionalCredentialsInput } from 'cloudify-ui-components';
 import styled from 'styled-components';
 import type { Output, Variable } from 'backend/handler/TerraformHandler.types';
 import BlueprintActions from '../blueprints/BlueprintActions';
@@ -255,15 +254,13 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [terraformTemplatePackageBase64, setTerraformTemplatePackageBase64] = useState<string>();
     const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [urlAuthentication, setUrlAuthentication] = useInput(false);
-    const [username, setUsername, clearUsername] = useInput('');
-    const [password, setPassword, clearPassword] = useInput('');
+    const [credentials, setCredentials] = useInput(new Credentials());
     const [variables, setVariables] = useState<VariableRow[]>([]);
     const [environment, setEnvironment] = useState<VariableRow[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
     const [variablesDeferred, setVariablesDeferred] = useState<VariableRow[]>([]);
     const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
-    const usernameInputRef = useRef<HTMLInputElement>(null);
     const formHeaderErrors = useMemo(() => (errors ? [] : undefined), [errors]);
 
     const handleOnHideModal = useCallback(() => {
@@ -284,15 +281,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     function clearFieldError(fieldName: string) {
         setErrors(existingErrors => omit(existingErrors, fieldName));
     }
-
-    useEffect(
-        function setFocusOnUsernameInput() {
-            if (urlAuthentication && !username) {
-                usernameInputRef.current?.getElementsByTagName('input')[0].focus();
-            }
-        },
-        [urlAuthentication, username]
-    );
 
     useEffect(() => {
         if (!resourceLocation) {
@@ -327,7 +315,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         } else if (templateUrl) {
             setTemplateModulesLoading();
             new TerraformActions(toolbox)
-                .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
+                .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, credentials)
                 .then(setOutputsAndVariables);
         }
     }, [terraformTemplatePackageBase64, resourceLocation]);
@@ -483,10 +471,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         function validateUrlAuthentication() {
             if (urlAuthentication) {
-                if (!username) {
+                if (!credentials.username) {
                     setFormError('username', tError('noUsername'));
                 }
-                if (!password) {
+                if (!credentials.password) {
                     setFormError('password', tError('noPassword'));
                 }
             }
@@ -582,8 +570,18 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (urlAuthentication) {
                 const secretActions = new SecretActions(toolbox.getManager());
                 const { defaultVisibility } = Consts;
-                await secretActions.doCreate(`${blueprintName}.username`, username, defaultVisibility, false);
-                await secretActions.doCreate(`${blueprintName}.password`, password, defaultVisibility, false);
+                await secretActions.doCreate(
+                    `${blueprintName}.username`,
+                    credentials.username,
+                    defaultVisibility,
+                    false
+                );
+                await secretActions.doCreate(
+                    `${blueprintName}.password`,
+                    credentials.password,
+                    defaultVisibility,
+                    false
+                );
             }
 
             const file: Blob & { name: string } = blueprintContent;
@@ -605,14 +603,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         } catch (e: any) {
             setFieldError('template', e.message);
             stopProcess();
-        }
-    }
-
-    function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
-        setUrlAuthentication(checked);
-        if (!checked) {
-            clearUsername();
-            clearPassword();
         }
     }
 
@@ -638,14 +628,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     }
 
     function handleTemplateUrlBlur() {
-        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
+        const authenticationDataIncomplete = urlAuthentication && credentials.areIncomplete();
         if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
             return;
         }
 
         setTemplateModulesLoading();
         new TerraformActions(toolbox)
-            .doGetTemplateModulesByUrl(templateUrl, username, password)
+            .doGetTemplateModulesByUrl(templateUrl, credentials)
             .then(reloadTemplateModules)
             .catch(catchTemplateModulesLoadingError)
             .finally(unsetTemplateModulesLoading);
@@ -731,38 +721,13 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                     onChangeFile={onTerraformTemplatePackageChange}
                                 />
                             </Form.Field>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <Form.Checkbox
-                                        toggle
-                                        label={t(`urlAuthentication`)}
-                                        help={undefined}
-                                        checked={urlAuthentication}
-                                        onChange={handleUrlAuthenticationChange}
-                                    />
-                                </Form.Field>
-                                <Ref innerRef={usernameInputRef}>
-                                    <Form.Input
-                                        error={getContextError('username')}
-                                        disabled={!urlAuthentication}
-                                        value={username}
-                                        onChange={setUsername}
-                                        label={t(`username`)}
-                                        onBlur={handleTemplateUrlBlur}
-                                        required={urlAuthentication}
-                                    />
-                                </Ref>
-                                <Form.Input
-                                    error={getContextError('password')}
-                                    disabled={!urlAuthentication}
-                                    value={password}
-                                    onChange={setPassword}
-                                    label={t(`password`)}
-                                    onBlur={handleTemplateUrlBlur}
-                                    required={urlAuthentication}
-                                    type="password"
-                                />
-                            </Form.Group>
+                            <OptionalCredentialsInput
+                                onBlur={handleTemplateUrlBlur}
+                                enabled={urlAuthentication}
+                                onEnabledChange={setUrlAuthentication}
+                                onCredentialsChange={setCredentials}
+                                errorsProvider={getContextError}
+                            />
                             <Form.Field label={t(`resourceLocation`)} required error={getContextError('resource')}>
                                 <Form.Dropdown
                                     selection

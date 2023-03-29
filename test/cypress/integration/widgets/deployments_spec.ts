@@ -1,4 +1,5 @@
 import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
+import type { Deployment } from 'widgets/deployments/src/types';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {
@@ -136,7 +137,21 @@ describe('Deployments widget', () => {
             const environmentBlueprintName = `${blueprintName}_deploy_on_environment`;
             const environmentDeploymentName = `${deploymentId}_deploy_on_environment`;
             const childDeploymentName = `${environmentDeploymentName}_child_service`;
+            const suggestedBlueprint = `${blueprintName}_deploy_on_suggested_blueprint`;
+            const notSuggestedBlueprint = `${blueprintName}_deploy_on_not_suggested_blueprint`;
 
+            const typeValueToDynamicDropdown = (value: string) => {
+                cy.get('input').click().clear().type(value);
+            };
+
+            const checkIfBlueprintIsSuggested = (blueprint: string, shouldBeSuggested: boolean) => {
+                const listHeader = shouldBeSuggested ? 'Suggested' : 'Others';
+
+                cy.contains('.header', listHeader).next().should('have.text', blueprint);
+            };
+
+            cy.uploadBlueprint('blueprints/deploy_on_with_suggestion.zip', suggestedBlueprint);
+            cy.uploadBlueprint('blueprints/deploy_on_without_suggestion.zip', notSuggestedBlueprint);
             cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
                 environmentBlueprintName,
                 environmentDeploymentName
@@ -145,7 +160,16 @@ describe('Deployments widget', () => {
             executeDeploymentAction(environmentDeploymentName, environmentDeploymentName, 'Deploy On');
 
             cy.get('.modal').within(() => {
-                cy.setSearchableDropdownValue('Blueprint', environmentBlueprintName);
+                cy.getField('Blueprint').within(() => {
+                    typeValueToDynamicDropdown(notSuggestedBlueprint);
+                    checkIfBlueprintIsSuggested(notSuggestedBlueprint, false);
+
+                    typeValueToDynamicDropdown(suggestedBlueprint);
+                    checkIfBlueprintIsSuggested(suggestedBlueprint, true);
+
+                    cy.contains(suggestedBlueprint).click();
+                });
+
                 cy.typeToFieldInput('Deployment name', childDeploymentName);
                 cy.clickButton('Install');
             });
@@ -296,7 +320,7 @@ describe('Deployments widget', () => {
 
             it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
                 const displayName = 'deploymentDisplayName';
-                const mockedDeployment = {
+                const mockedDeployment: Deployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
                     created_by: 'admin',
@@ -304,9 +328,12 @@ describe('Deployments widget', () => {
                     id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
                     inputs: { webserver_port: 8000 },
                     latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
+                    labels: [],
                     site_name: null,
                     updated_at: '2022-03-21T08:52:31.251Z',
-                    visibility: 'tenant'
+                    workflows: [],
+                    visibility: 'tenant',
+                    capabilities: {}
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
