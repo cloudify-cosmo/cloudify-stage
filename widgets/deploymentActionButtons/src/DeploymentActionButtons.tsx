@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
-import type { Label } from 'app/widgets/common/labels/types';
 import type { Workflow } from '../../../app/widgets/common/executeWorkflow';
 import { translateWidget } from './widget.utils';
+import type { FetchedDeploymentState } from './widget.types';
 
 const {
     Basic: { Button },
@@ -14,12 +14,6 @@ const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
 const DeploymentActionsModals = Stage.Common.Deployments.ActionsModals;
 
 const translate = Stage.Utils.composeT(translateWidget, 'buttons');
-
-type FetchedDeploymentState =
-    // eslint-disable-next-line camelcase
-    | { status: 'success'; data: { display_name: string; workflows: Workflow[]; labels: Label[] } }
-    | { status: 'loading' }
-    | { status: 'error'; error: Error };
 
 const isDeploymentFetched = (state: FetchedDeploymentState): state is FetchedDeploymentState & { status: 'success' } =>
     state.status === 'success';
@@ -98,6 +92,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                     activeAction={activeAction}
                     deploymentId={deploymentId}
                     deploymentName={fetchedDeploymentState.data.display_name}
+                    deploymentCapabilities={fetchedDeploymentState.data.capabilities}
                     onHide={resetActiveAction}
                     toolbox={toolbox}
                     redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
