@@ -1002,7 +1002,7 @@
             "name": "Blueprint action buttons",
             "description": "Provides set of action buttons for blueprint",
             "configuration": {
-                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
+                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button for users that can access it"
             },
             "buttons": {
                 "createDeployment": "Create deployment",
