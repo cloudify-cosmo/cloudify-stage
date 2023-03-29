@@ -656,7 +656,15 @@
                         },
                         "blueprintName": {
                             "label": "Blueprint",
-                            "help": "Select the blueprint based on which this deployment will be created."
+                            "help": "Select the blueprint based on which this deployment will be created.",
+                            "suggestionList": {
+                                "title": {
+                                    "suggested": "Suggested",
+                                    "others": "Others"
+                                },
+                                "loading": "fetching blueprints",
+                                "noData": "no blueprints"
+                            }
                         },
                         "deploymentIdToDeployOn": {
                             "label": "Deploy On",

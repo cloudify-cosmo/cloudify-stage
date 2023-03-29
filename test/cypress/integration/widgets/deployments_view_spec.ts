@@ -1165,11 +1165,13 @@ describe('Deployments View widget', () => {
             const labelKey = 'label_key';
             const labelValue = 'label_value';
             const name = 'service';
+
             cy.get('.modal').within(() => {
-                cy.setSearchableDropdownValue('Blueprint', blueprintName);
-
+                cy.getField('Blueprint').within(() => {
+                    cy.get('input').type(blueprintName);
+                    cy.contains(blueprintName).click();
+                });
                 cy.getField('Name suffix').find('input').type(`${name}`);
-
                 cy.getField('Deploy On').should('not.exist');
 
                 cy.openAccordionSection('Deployment Metadata');
