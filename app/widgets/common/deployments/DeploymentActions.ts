@@ -53,8 +53,11 @@ export default class DeploymentActions {
         return _.map(labels, ({ key, value }) => ({ [key]: value }));
     }
 
-    doGet(deployment: { id: string }, params: any) {
-        return this.manager.doGet(`/deployments/${deployment.id}`, { params });
+    doGet<IncludeKeys extends keyof FullDeploymentData = keyof FullDeploymentData>(
+        deployment: { id: string },
+        params: any
+    ) {
+        return this.manager.doGet<Pick<FullDeploymentData, IncludeKeys>>(`/deployments/${deployment.id}`, { params });
     }
 
     doGetDeployments<IncludeKeys extends keyof FullDeploymentData = keyof FullDeploymentData>(params: any) {
