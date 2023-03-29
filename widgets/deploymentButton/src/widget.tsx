@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import DeploymentButton from './DeploymentButton';
 import type { DeploymentButtonWidget } from './widget.types';
 
@@ -38,7 +39,7 @@ Stage.defineWidget<unknown, DeploymentButtonWidget.Data, DeploymentButtonWidget.
 
     render(widget, data, _error, toolbox) {
         const { basic, color, icon, label, blueprintFilterRules } = widget.configuration;
-        const disableDeploymentButton = data?.items?.length === 0;
+        const disableDeploymentButton = isEmpty(data) || data!.items.length === 0;
 
         return (
             <DeploymentButton

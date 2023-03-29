@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 import EnvironmentButton from './EnvironmentButton';
 import type { WidgetData } from './widget.types';
@@ -40,7 +41,7 @@ Stage.defineWidget<never, WidgetData, ButtonConfiguration>({
     },
 
     render(widget, data, _error, toolbox) {
-        const disableEnvironmentButton = data?.items?.length === 0;
+        const disableEnvironmentButton = isEmpty(data) || data!.items.length === 0;
 
         return (
             <EnvironmentButton
