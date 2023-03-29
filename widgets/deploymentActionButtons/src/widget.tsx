@@ -1,16 +1,13 @@
 import { castArray } from 'lodash';
-import type { ComponentProps } from 'react';
 import DeploymentActionButtons from './DeploymentActionButtons';
-import { widgetId } from './widget.consts';
+import { fetchedDeploymentFields, widgetId } from './widget.consts';
 import { translateWidget } from './widget.utils';
+import type { FetchedDeployment, FetchedDeploymentState } from './widget.types';
 
 interface WidgetParams {
     id: string | null | undefined;
 }
-type UnwrapPromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
-type WidgetData =
-    | UnwrapPromise<ReturnType<InstanceType<typeof Stage.Common.Deployments.Actions>['doGetWorkflowsAndLabels']>>
-    | Error;
+type WidgetData = FetchedDeployment | Error;
 interface WidgetConfiguration {
     preventRedirectToParentPageAfterDelete?: boolean;
 }
@@ -44,7 +41,12 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         const DeploymentActions = Stage.Common.Deployments.Actions;
         const actions = new DeploymentActions(toolbox.getManager());
 
-        return actions.doGetWorkflowsAndLabels(id);
+        return actions.doGet<keyof FetchedDeployment>(
+            { id },
+            {
+                _include: fetchedDeploymentFields.join(',')
+            }
+        );
     },
 
     fetchParams(_widget, toolbox): WidgetParams {
@@ -52,10 +54,8 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
     },
 
     render(widget, data, _error, toolbox) {
-        const fetchedDeploymentState: ComponentProps<
-            typeof DeploymentActionButtons
-            // eslint-disable-next-line no-nested-ternary
-        >['fetchedDeploymentState'] = Stage.Utils.isEmptyWidgetData(data)
+        // eslint-disable-next-line no-nested-ternary
+        const fetchedDeploymentState: FetchedDeploymentState = Stage.Utils.isEmptyWidgetData(data)
             ? { status: 'loading' }
             : data instanceof Error
             ? { status: 'error', error: data }
