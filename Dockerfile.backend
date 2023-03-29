@@ -12,8 +12,10 @@ ENV POSTGRES_HOST=postgresql
 ENV POSTGRES_USER=cloudify
 ENV POSTGRES_PASSWORD=cloudify
 
-# stage backend needs to be able to reach restservice at this address, port 53333
+# stage backend needs to be able to reach restservice at this address, port & proto
 ENV RESTSERVICE_ADDRESS=localhost
+ENV RESTSERVICE_PROTOCOL=https
+ENV RESTSERVICE_PORT=443
 
 # by default, listen on all interfaces
 ENV LISTEN_HOST="0.0.0.0"

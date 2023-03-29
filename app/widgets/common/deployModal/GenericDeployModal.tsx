@@ -35,6 +35,8 @@ import { parentDeploymentLabelKey } from '../deploymentsView/common';
 import StageUtils from '../../../utils/stageUtils';
 import { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } from '../../../components/basic';
 import EnvironmentDropdown from './EnvironmentDropdown';
+import BlueprintDropdown from './BlueprintDropdown';
+import type { FullDeploymentData } from '../deployments/DeploymentActions';
 
 const t = StageUtils.getT('widgets.common.deployments.deployModal');
 
@@ -152,6 +154,7 @@ export type GenericDeployModalProps = {
     environmentToDeployOn?: {
         id: string;
         displayName: string;
+        capabilities: FullDeploymentData['capabilities'];
     };
 };
 
@@ -673,7 +676,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploySteps,
             deploymentNameLabel,
             deploymentNameHelp,
-            blueprintFilterRules
+            blueprintFilterRules,
+            environmentToDeployOn
         } = this.props;
         const {
             activeSection,
@@ -741,15 +745,13 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 required
                                 help={t('inputs.blueprintName.help')}
                             >
-                                <DynamicDropdown
+                                <BlueprintDropdown
                                     value={blueprint.id}
                                     name="blueprintName"
-                                    fetchUrl="/searches/blueprints?_include=id&state=uploaded"
-                                    clearable={false}
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
                                     filterRules={blueprintFilterRules}
-                                    prefetch
+                                    environmentCapabilities={environmentToDeployOn?.capabilities}
                                 />
                             </Form.Field>
                         )}
