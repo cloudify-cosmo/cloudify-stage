@@ -3,9 +3,9 @@ import type { ButtonConfiguration } from 'app/widgets/common/configuration/butto
 import type { FilterRule } from 'app/widgets/common/filters/types';
 
 export declare namespace DeploymentButtonWidget {
-    export type DataItem = Pick<FullBlueprintData, 'id'>;
+    type DataItem = Pick<FullBlueprintData, 'id'>;
 
-    interface Configuration extends ButtonConfiguration {
+    export interface Configuration extends ButtonConfiguration {
         toolbox: Stage.Types.Toolbox;
         blueprintFilterRules: FilterRule[];
     }
