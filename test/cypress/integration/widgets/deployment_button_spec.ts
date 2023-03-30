@@ -126,7 +126,7 @@ describe('Create Deployment Button widget', () => {
         );
     };
 
-    it('disables to click deployment button when there are no blueprints available', () => {
+    it('disables clicking deployment button when there are no blueprints available', () => {
         const checkIfDeploymentButtonIsEnabled = (isEnabled: boolean) => {
             const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
             cy.get('div.deploymentButtonWidget button').should(chainerQuery, 'disabled');
