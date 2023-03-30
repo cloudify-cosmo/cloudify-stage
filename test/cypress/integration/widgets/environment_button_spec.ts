@@ -1,6 +1,34 @@
 describe('Environment button widget', () => {
+    const resourcePrefix = 'environment_button_spec_';
+    const blueprintName = `${resourcePrefix}environment`;
+
     before(() => {
-        cy.activate().useWidgetWithDefaultConfiguration('environmentButton');
+        cy.activate()
+            .useWidgetWithDefaultConfiguration('environmentButton')
+            .deleteBlueprints(resourcePrefix, true)
+            .uploadBlueprint('blueprints/deploy_on_environment.zip', blueprintName);
+    });
+
+    it('disables to click Environment Button when there are no blueprints available', () => {
+        const checkIfEnvironmentButtonIsEnabled = (isEnabled: boolean) => {
+            const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
+            cy.contains('.ui.dropdown', 'Create Environment').should(chainerQuery, 'disabled');
+        };
+
+        checkIfEnvironmentButtonIsEnabled(true);
+
+        cy.interceptSp(
+            'POST',
+            { pathname: '/searches/blueprints', query: { _include: 'id', _size: '1' } },
+            {
+                items: []
+            }
+        ).as('blueprints');
+
+        cy.refreshPage();
+        cy.wait('@blueprints');
+
+        checkIfEnvironmentButtonIsEnabled(false);
     });
 
     it('opens From Blueprint modal and lists only environment blueprints', () => {
