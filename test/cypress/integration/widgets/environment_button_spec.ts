@@ -9,8 +9,18 @@ describe('Environment button widget', () => {
             .uploadBlueprint('blueprints/deploy_on_environment.zip', blueprintName);
     });
 
+    beforeEach(() => {
+        cy.refreshPage();
+    });
+
     it('opens From Blueprint modal and lists only environment blueprints', () => {
-        cy.interceptSp('POST', '/searches/blueprints').as('blueprintsRequest');
+        cy.interceptSp('POST', {
+            pathname: '/searches/blueprints',
+            query: {
+                _include: 'id',
+                _sort: 'id'
+            }
+        }).as('blueprintsRequest');
 
         cy.contains('Create Environment').click();
         cy.contains('From Blueprint').click();
@@ -22,6 +32,28 @@ describe('Environment button widget', () => {
             })
         );
         cy.clickButton('Cancel');
+    });
+
+    it('disables clicking environment button when there are no blueprints available', () => {
+        const checkIfEnvironmentButtonIsEnabled = (isEnabled: boolean) => {
+            const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
+            cy.contains('.ui.dropdown', 'Create Environment').should(chainerQuery, 'disabled');
+        };
+
+        checkIfEnvironmentButtonIsEnabled(true);
+
+        cy.interceptSp(
+            'POST',
+            { pathname: '/searches/blueprints', query: { _include: 'id', _size: '1' } },
+            {
+                items: []
+            }
+        ).as('blueprints');
+
+        cy.refreshPage();
+        cy.wait('@blueprints');
+
+        checkIfEnvironmentButtonIsEnabled(false);
     });
 
     describe('opens New modal and', () => {
@@ -160,27 +192,5 @@ describe('Environment button widget', () => {
                 cy.contains(labelValue);
             });
         });
-    });
-
-    it('disables clicking environment button when there are no blueprints available', () => {
-        const checkIfEnvironmentButtonIsEnabled = (isEnabled: boolean) => {
-            const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
-            cy.contains('.ui.dropdown', 'Create Environment').should(chainerQuery, 'disabled');
-        };
-
-        checkIfEnvironmentButtonIsEnabled(true);
-
-        cy.interceptSp(
-            'POST',
-            { pathname: '/searches/blueprints', query: { _include: 'id', _size: '1' } },
-            {
-                items: []
-            }
-        ).as('blueprints');
-
-        cy.refreshPage();
-        cy.wait('@blueprints');
-
-        checkIfEnvironmentButtonIsEnabled(false);
     });
 });
