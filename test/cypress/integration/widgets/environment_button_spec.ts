@@ -9,7 +9,7 @@ describe('Environment button widget', () => {
             .uploadBlueprint('blueprints/deploy_on_environment.zip', blueprintName);
     });
 
-    it('disables to click Environment Button when there are no blueprints available', () => {
+    it('disables to click environment button when there are no blueprints available', () => {
         const checkIfEnvironmentButtonIsEnabled = (isEnabled: boolean) => {
             const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
             cy.contains('.ui.dropdown', 'Create Environment').should(chainerQuery, 'disabled');

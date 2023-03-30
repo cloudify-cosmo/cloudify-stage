@@ -126,6 +126,30 @@ describe('Create Deployment Button widget', () => {
         );
     };
 
+    it('disables to click deployment button when there are no blueprints available', () => {
+        const checkIfDeploymentButtonIsEnabled = (isEnabled: boolean) => {
+            const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
+            cy.get('div.deploymentButtonWidget button').should(chainerQuery, 'disabled');
+        };
+
+        cy.contains('.modal .button', 'Cancel').click();
+
+        checkIfDeploymentButtonIsEnabled(true);
+
+        cy.interceptSp(
+            'POST',
+            { pathname: '/searches/blueprints', query: { _include: 'id', _size: '1' } },
+            {
+                items: []
+            }
+        ).as('blueprints');
+
+        cy.refreshPage();
+        cy.wait('@blueprints');
+
+        checkIfDeploymentButtonIsEnabled(false);
+    });
+
     it('opens deployment modal', () => {
         cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
