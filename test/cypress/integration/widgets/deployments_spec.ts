@@ -137,7 +137,21 @@ describe('Deployments widget', () => {
             const environmentBlueprintName = `${blueprintName}_deploy_on_environment`;
             const environmentDeploymentName = `${deploymentId}_deploy_on_environment`;
             const childDeploymentName = `${environmentDeploymentName}_child_service`;
+            const suggestedBlueprint = `${blueprintName}_deploy_on_suggested_blueprint`;
+            const notSuggestedBlueprint = `${blueprintName}_deploy_on_not_suggested_blueprint`;
 
+            const typeValueToDynamicDropdown = (value: string) => {
+                cy.get('input').click().clear().type(value);
+            };
+
+            const checkIfBlueprintIsSuggested = (blueprint: string, shouldBeSuggested: boolean) => {
+                const listHeader = shouldBeSuggested ? 'Suggested' : 'Others';
+
+                cy.contains('.header', listHeader).next().should('have.text', blueprint);
+            };
+
+            cy.uploadBlueprint('blueprints/deploy_on_with_suggestion.zip', suggestedBlueprint);
+            cy.uploadBlueprint('blueprints/deploy_on_without_suggestion.zip', notSuggestedBlueprint);
             cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
                 environmentBlueprintName,
                 environmentDeploymentName
@@ -146,7 +160,16 @@ describe('Deployments widget', () => {
             executeDeploymentAction(environmentDeploymentName, environmentDeploymentName, 'Deploy On');
 
             cy.get('.modal').within(() => {
-                cy.setSearchableDropdownValue('Blueprint', environmentBlueprintName);
+                cy.getField('Blueprint').within(() => {
+                    typeValueToDynamicDropdown(notSuggestedBlueprint);
+                    checkIfBlueprintIsSuggested(notSuggestedBlueprint, false);
+
+                    typeValueToDynamicDropdown(suggestedBlueprint);
+                    checkIfBlueprintIsSuggested(suggestedBlueprint, true);
+
+                    cy.contains(suggestedBlueprint).click();
+                });
+
                 cy.typeToFieldInput('Deployment name', childDeploymentName);
                 cy.clickButton('Install');
             });
@@ -309,7 +332,8 @@ describe('Deployments widget', () => {
                     site_name: null,
                     updated_at: '2022-03-21T08:52:31.251Z',
                     workflows: [],
-                    visibility: 'tenant'
+                    visibility: 'tenant',
+                    capabilities: {}
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
