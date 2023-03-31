@@ -187,10 +187,6 @@ describe('Deployments widget', () => {
             cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
             cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
 
-            const typeInput = (name: string, value: string) => {
-                cy.get(`div[name=${name}]`).click();
-                cy.get(`div[name=${name}] input`).type(value);
-            };
             executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
             cy.get('.modal').within(() => {
                 cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
@@ -198,13 +194,7 @@ describe('Deployments widget', () => {
                 cy.get('form.loading').should('not.exist');
 
                 cy.get('.segment.dropdown').click();
-                typeInput('labelKey', labelKey);
-                typeInput('labelValue', labelValue);
-                cy.get('button .add').click();
-
-                cy.wait('@checkLabelPresence');
-                cy.get('.blue.label').should('have.text', `${labelKey} ${labelValue}`);
-
+                cy.addLabel(labelKey, labelValue);
                 cy.get('button.ok').click();
             });
             cy.wait('@updateLabels');
