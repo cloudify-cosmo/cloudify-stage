@@ -2625,12 +2625,12 @@
                             "secret": "Secret",
                             "input": "Input"
                         },
-                        "default": "Blueprint Default",
+                        "default": "Default",
                         "value": "Value"
                     },
                     "labels": {
                         "header": "Labels",
-                        "default": "Blueprint Default"
+                        "default": "Default"
                     },
                     "location": "Location"
                 },
@@ -2641,6 +2641,7 @@
                     "capabilityNameMissing": "Please provide capability name",
                     "capabilitySourceMissing": "Please provide capability source",
                     "capabilityNameDuplicated": "Capability name already defined",
+                    "capabilityValueMissing": "Please provide capability value",
                     "blueprintNameExists": "Blueprint with this name already exists"
                 },
                 "submit": "Create",
