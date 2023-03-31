@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
+import { chain, find, capitalize } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
@@ -37,11 +38,11 @@ interface RunWorkflowModalProps {
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
 const getWorkflowsOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
-    return _.chain(workflows)
-        .filter(workflow => !_.find(workflow.parameters, parameter => parameter.default === undefined))
+    return chain(workflows)
+        .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
         .sortBy(workflows, 'name')
         .map(workflow => ({
-            text: _.capitalize(_.upperCase(workflow.name)),
+            text: capitalize(workflow.name.replaceAll('_', ' ')),
             value: workflow.name,
             disabled: workflow.disabled
         }))
@@ -63,25 +64,19 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
 
     const searchActions = new SearchActions(toolbox);
 
-    const fetchCommonWorkflows = () => {
+    const fetchWorkflows = (common?: boolean) => {
         return searchActions.doListAllWorkflows<keyof FetchedWorkflow>(filterRules, {
             _include: fetchedWorkflowFields.join(','),
-            _common_only: true
-        });
-    };
-
-    const fetchAllWorkflows = () => {
-        return searchActions.doListAllWorkflows<keyof FetchedWorkflow>(filterRules, {
-            _include: fetchedWorkflowFields.join(',')
+            _common_only: common
         });
     };
 
     const getFilteredWorkflows = (): Promise<EnhancedWorkflow[]> => {
-        const fetchRequests = [fetchCommonWorkflows(), fetchAllWorkflows()];
-        return Promise.all(fetchRequests).then(([{ items: commonWorkflows }, { items: allWorkflows }]) => {
-            const filteredWorkflows = allWorkflows.map(singleWorkflow => ({
+        const fetchRequests = [fetchWorkflows(true), fetchWorkflows()];
+        return Promise.all(fetchRequests).then(([commonWorkflows, allWorkflows]) => {
+            const filteredWorkflows = allWorkflows.items.map(singleWorkflow => ({
                 ...singleWorkflow,
-                disabled: !commonWorkflows.find(commonWorkflow => commonWorkflow.name === singleWorkflow.name)
+                disabled: !commonWorkflows.items.find(commonWorkflow => commonWorkflow.name === singleWorkflow.name)
             }));
             return filteredWorkflows;
         });
