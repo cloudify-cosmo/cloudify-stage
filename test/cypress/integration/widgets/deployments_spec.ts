@@ -185,7 +185,7 @@ describe('Deployments widget', () => {
             cy.setLabels(deploymentId, [{ a: 'b' }]);
             cy.interceptSp('PATCH', `/deployments/${deploymentId}`).as('updateLabels');
             cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
-            cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
+            cy.interceptSp('GET', `/labels/deployments`);
 
             executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
             cy.get('.modal').within(() => {
