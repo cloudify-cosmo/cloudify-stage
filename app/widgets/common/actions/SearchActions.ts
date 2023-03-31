@@ -77,7 +77,7 @@ export default class SearchActions {
         return this.doList<Pick<FullBlueprintData, IncludeKeys>>('blueprints', filterRules, params);
     }
 
-    doListAllWorkflows(filterRules: FilterRule[], params?: Params) {
-        return this.doListAll<Workflow>('workflows', filterRules, params);
+    doListAllWorkflows<IncludeKeys extends keyof Workflow>(filterRules: FilterRule[], params?: Params) {
+        return this.doListAll<Pick<Workflow, IncludeKeys>>('workflows', filterRules, params);
     }
 }

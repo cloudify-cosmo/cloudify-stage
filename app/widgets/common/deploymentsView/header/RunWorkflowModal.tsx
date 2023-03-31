@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
+import type { DropdownItemProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
     ApproveButton,
@@ -21,6 +22,12 @@ import ExecutionStartedModal from './ExecutionStartedModal';
 import type { Workflow } from '../../executeWorkflow';
 import StageUtils from '../../../../utils/stageUtils';
 
+const fetchedWorkflowFields = ['name', 'parameters'] as const;
+type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
+interface EnhancedWorkflow extends FetchedWorkflow {
+    disabled: boolean;
+}
+
 interface RunWorkflowModalProps {
     filterRules: FilterRule[];
     onHide: () => void;
@@ -29,14 +36,20 @@ interface RunWorkflowModalProps {
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
-const getWorkflowsOptions = (workflows: Workflow[]) => {
+const getWorkflowsOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
     return _.chain(workflows)
-        .sortBy('name')
         .filter(workflow => !_.find(workflow.parameters, parameter => parameter.default === undefined))
+        .sortBy(workflows, 'name')
         .map(workflow => ({
             text: _.capitalize(_.upperCase(workflow.name)),
-            value: workflow.name
+            value: workflow.name,
+            disabled: workflow.disabled
         }))
+        .groupBy('disabled')
+        .values()
+        .reduce((workflowList, groupedWorkflowList) => {
+            return [...workflowList, ...groupedWorkflowList];
+        }, [] as DropdownItemProps[])
         .value();
 };
 
@@ -44,11 +57,35 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     const [executionGroupStarted, setExecutionGroupStarted, unsetExecutionGroupStarted] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState('');
-    const [workflows, setWorkflows, resetWorkflows] = useResettableState<Workflow[]>([]);
+    const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
     const workflowsOptions = useMemo(() => getWorkflowsOptions(workflows), [workflows]);
 
     const searchActions = new SearchActions(toolbox);
+
+    const fetchCommonWorkflows = () => {
+        return searchActions.doListAllWorkflows<keyof FetchedWorkflow>(filterRules, {
+            _include: fetchedWorkflowFields.join(','),
+            _common_only: true
+        });
+    };
+
+    const fetchAllWorkflows = () => {
+        return searchActions.doListAllWorkflows<keyof FetchedWorkflow>(filterRules, {
+            _include: fetchedWorkflowFields.join(',')
+        });
+    };
+
+    const getFilteredWorkflows = (): Promise<EnhancedWorkflow[]> => {
+        const fetchRequests = [fetchCommonWorkflows(), fetchAllWorkflows()];
+        return Promise.all(fetchRequests).then(([{ items: commonWorkflows }, { items: allWorkflows }]) => {
+            const filteredWorkflows = allWorkflows.map(singleWorkflow => ({
+                ...singleWorkflow,
+                disabled: !commonWorkflows.find(commonWorkflow => commonWorkflow.name === singleWorkflow.name)
+            }));
+            return filteredWorkflows;
+        });
+    };
 
     useEffect(() => {
         clearErrors();
@@ -57,11 +94,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         unsetExecutionGroupStarted();
         setLoadingMessage(tModal('messages.fetchingWorkflows'));
 
-        searchActions
-            .doListAllWorkflows(filterRules)
-            .then(data => setWorkflows(data.items))
-            .catch(setMessageAsError)
-            .finally(turnOffLoading);
+        getFilteredWorkflows().then(setWorkflows).catch(setMessageAsError).finally(turnOffLoading);
     }, []);
 
     async function runWorkflow() {
