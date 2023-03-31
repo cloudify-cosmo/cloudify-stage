@@ -37,12 +37,16 @@ interface RunWorkflowModalProps {
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
+const getWorkflowOptionHelp = (workflow: EnhancedWorkflow) => {
+    return capitalize(workflow.name.replaceAll('_', ' '));
+};
+
 const getWorkflowsOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
     return chain(workflows)
         .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
         .sortBy(workflows, 'name')
         .map(workflow => ({
-            text: capitalize(workflow.name.replaceAll('_', ' ')),
+            text: getWorkflowOptionHelp(workflow),
             value: workflow.name,
             disabled: workflow.disabled
         }))
