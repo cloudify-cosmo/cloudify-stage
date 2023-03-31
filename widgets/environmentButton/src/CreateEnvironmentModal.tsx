@@ -108,6 +108,9 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
             if (!capability.source) {
                 getErrorsForRow().source = translateError('capabilitySourceMissing');
             }
+            if (!capability.value && capability.source === 'secret') {
+                getErrorsForRow().value = translateError('capabilityValueMissing');
+            }
         });
 
         if (!isEmpty(validationErrors)) {
