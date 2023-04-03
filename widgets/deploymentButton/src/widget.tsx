@@ -39,7 +39,7 @@ Stage.defineWidget<unknown, DeploymentButtonWidget.Data, DeploymentButtonWidget.
 
     render(widget, data, _error, toolbox) {
         const { basic, color, icon, label, blueprintFilterRules } = widget.configuration;
-        const disableDeploymentButton = isEmpty(data) || data!.items.length === 0;
+        const disableDeploymentButton = Stage.Utils.isEmptyWidgetData(data) || data!.items.length === 0;
 
         return (
             <DeploymentButton
