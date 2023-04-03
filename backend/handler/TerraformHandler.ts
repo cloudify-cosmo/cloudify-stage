@@ -2,25 +2,19 @@
 import tfParser from '@evops/hcl-terraform-parser';
 import fs from 'fs';
 import path from 'path';
-import os from 'os';
 import axios from 'axios';
 import type { File } from 'decompress';
 import decompress from 'decompress';
 import directoryTree from 'directory-tree';
 import _, { escapeRegExp, merge, trimStart } from 'lodash';
-import uniqueDirectoryName from 'short-uuid';
-import type { GitError } from 'simple-git';
-import simpleGit from 'simple-git';
 import type { NextFunction, Request, Response } from 'express';
 import type { Blueprint } from 'cloudify-ui-common-backend';
-import { renderBlueprintYaml } from 'cloudify-ui-common-backend';
+import { cloneGitRepo, renderBlueprintYaml } from 'cloudify-ui-common-backend';
 import { getLogger } from './LoggerHandler';
 import type { TerraformBlueprintData, TerraformParserResult, Variable } from './TerraformHandler.types';
 import { createGetAttributeCall, createGetSecretCall, createIntrinsicFunctionCall } from './services/BlueprintBuilder';
 
 const logger = getLogger('Terraform');
-// NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
-const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
 
 const directoryTreeOptions: directoryTree.DirectoryTreeOptions = {
     extensions: /.tf$/,
@@ -43,38 +37,6 @@ export const getBufferFromUrl = async (url: string, authHeader?: string) => {
     }).then(response => response.data);
 };
 
-const getGitUrl = (url: string, authHeader?: string) => {
-    if (authHeader) {
-        const encodedCredentials = authHeader.replace(new RegExp('Basic ', 'ig'), '');
-        const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
-        const [username, personalToken] = gitCredentials.split(':');
-        const credentialsString = `${username}:${personalToken}@`;
-        return url.replace('//', `//${credentialsString}`);
-    }
-
-    return url;
-};
-
-const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: string): Promise<void> => {
-    try {
-        const gitUrl = getGitUrl(url, authHeader);
-        await simpleGit().clone(gitUrl, repositoryPath, [disableGitAuthenticationPromptOption]);
-        // @ts-ignore-next-line simple-git library ensures that the occurred error would be in a shape of the GitError type
-    } catch (error: GitError) {
-        const isAuthenticationIssue = error.message.includes('Authentication failed');
-        const errorMessage = isAuthenticationIssue
-            ? 'Git Authentication failed - Please note that some git providers require a token to be passed instead of a password'
-            : 'The URL is not accessible';
-
-        logger.error(`Error while cloning git repository: ${error.message}`);
-        throw new Error(errorMessage);
-    }
-};
-
-const removeGitRepo = (repositoryPath: string) => {
-    fs.rmdirSync(repositoryPath, { recursive: true });
-};
-
 export const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
@@ -90,35 +52,27 @@ export const getModuleListForZipBuffer = async (content: Buffer): Promise<string
             throw new Error('The URL does not point to a valid ZIP file');
         });
 
-const getUniqNotExistingTemporaryDirectory = (): string => {
-    const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
-    if (fs.existsSync(repositoryPath)) {
-        return getUniqNotExistingTemporaryDirectory();
-    }
-    return repositoryPath;
-};
-
 const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
-    const repositoryPath = getUniqNotExistingTemporaryDirectory();
     const terraformModuleDirectories: string[] = [];
 
-    await cloneGitRepo(repositoryPath, url, authHeader);
+    await cloneGitRepo(
+        url,
+        repositoryPath =>
+            directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
+                const relativeFilePath = path.relative(repositoryPath, filePath);
+                const isInRootDirectory = !relativeFilePath.includes('/');
 
-    directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
-        const relativeFilePath = path.relative(repositoryPath, filePath);
-        const isInRootDirectory = !relativeFilePath.includes('/');
+                if (isInRootDirectory) {
+                    return;
+                }
 
-        if (isInRootDirectory) {
-            return;
-        }
-
-        const fileDirectory = path.dirname(relativeFilePath);
-        if (!terraformModuleDirectories.includes(fileDirectory)) {
-            terraformModuleDirectories.push(fileDirectory);
-        }
-    });
-
-    removeGitRepo(repositoryPath);
+                const fileDirectory = path.dirname(relativeFilePath);
+                if (!terraformModuleDirectories.includes(fileDirectory)) {
+                    terraformModuleDirectories.push(fileDirectory);
+                }
+            }),
+        authHeader
+    );
 
     return terraformModuleDirectories.sort();
 };
@@ -128,18 +82,19 @@ export const getTfFileBufferListFromGitRepositoryUrl = async (
     resourceLocation: string,
     authHeader?: string
 ) => {
-    const repositoryPath = getUniqNotExistingTemporaryDirectory();
-    const terraformModulePath = path.join(repositoryPath, resourceLocation);
     const files: Buffer[] = [];
 
-    await cloneGitRepo(repositoryPath, url, authHeader);
-
-    await directoryTree(terraformModulePath, directoryTreeOptions, (_terraformFile, terraformFilePath) => {
-        const fileBuffer = fs.readFileSync(terraformFilePath);
-        files.push(fileBuffer);
-    });
-
-    removeGitRepo(repositoryPath);
+    await cloneGitRepo(
+        url,
+        async repositoryPath => {
+            const terraformModulePath = path.join(repositoryPath, resourceLocation);
+            await directoryTree(terraformModulePath, directoryTreeOptions, (_terraformFile, terraformFilePath) => {
+                const fileBuffer = fs.readFileSync(terraformFilePath);
+                files.push(fileBuffer);
+            });
+        },
+        authHeader
+    );
 
     return files;
 };

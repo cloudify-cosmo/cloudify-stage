@@ -106,7 +106,18 @@ describe('Environment button widget', () => {
                         cy.get('tr').eq(1).contains('Please provide capability source');
                         cy.get('tr').eq(3).contains('Capability name already defined');
                     });
-
+                cy.contains('Capabilities')
+                    .next()
+                    .find('tbody')
+                    .within(() => {
+                        fillCapabilityInputs(0, 'secret_capability_key', 'Secret', '');
+                    });
+                cy.clickButton('Create');
+                cy.contains('Capabilities')
+                    .next()
+                    .within(() => {
+                        cy.get('tr').eq(1).contains('Please provide capability value');
+                    });
                 cy.clickButton('Cancel');
             });
             cy.contains('Are you sure you would like to discard the filled data and close?').should('be.visible');
