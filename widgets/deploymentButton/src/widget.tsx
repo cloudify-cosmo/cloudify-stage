@@ -30,9 +30,12 @@ Stage.defineWidget<unknown, DeploymentButtonWidget.Data, DeploymentButtonWidget.
 
     fetchData(widget, toolbox) {
         const searchActions = new SearchActions(toolbox);
-        return searchActions.doListBlueprints(widget.configuration.blueprintFilterRules, {
-            _include: 'id',
-            _size: 1
+        return searchActions.doListBlueprints({
+            filterRules: widget.configuration.blueprintFilterRules,
+            params: {
+                _include: 'id',
+                _size: 1
+            }
         });
     },
 
