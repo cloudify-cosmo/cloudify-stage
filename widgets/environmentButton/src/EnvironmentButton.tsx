@@ -8,9 +8,10 @@ const translateMenu = Stage.Utils.getT('widgets.environmentButton.menu');
 interface EnvironmentButtonProps {
     toolbox: Toolbox;
     configuration: ButtonConfiguration;
+    disabled?: boolean;
 }
 
-const EnvironmentButton: FunctionComponent<EnvironmentButtonProps> = ({ configuration, toolbox }) => {
+const EnvironmentButton: FunctionComponent<EnvironmentButtonProps> = ({ configuration, toolbox, disabled }) => {
     const { useBoolean } = Stage.Hooks;
     const [fromBlueprintModalOpen, openFromBlueprintModal, closeFromBlueprintModal] = useBoolean();
     const [createNewModalOpen, openCreateNewModal, closeCreateNewModal] = useBoolean();
@@ -22,6 +23,7 @@ const EnvironmentButton: FunctionComponent<EnvironmentButtonProps> = ({ configur
             <Dropdown
                 fluid
                 icon={null}
+                disabled={disabled}
                 trigger={
                     <Button fluid color={configuration.color} basic={configuration.basic} icon labelPosition="left">
                         {configuration.label}
