@@ -8,6 +8,8 @@ export interface DefaultableLabel extends Label {
 
 export type Capability = PostEnvironmentBlueprintRequestBody['capabilities'][number];
 
-export type DataItem = Pick<FullBlueprintData, 'id'>;
+export namespace EnvironmentButtonWidget {
+    type DataItem = Pick<FullBlueprintData, 'id'>;
 
-export type WidgetData = Stage.Types.WidgetData<Stage.Types.PaginatedResponse<DataItem>>;
+    export type Data = Stage.Types.WidgetData<Stage.Types.PaginatedResponse<DataItem>>;
+}

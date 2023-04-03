@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import DeploymentButton from './DeploymentButton';
 import type { DeploymentButtonWidget } from './widget.types';
 

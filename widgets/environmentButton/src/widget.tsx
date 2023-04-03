@@ -1,14 +1,13 @@
-import { isEmpty } from 'lodash';
 import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 import EnvironmentButton from './EnvironmentButton';
-import type { WidgetData } from './widget.types';
+import type { EnvironmentButtonWidget } from './widget.types';
 
 const translate = Stage.Utils.getT('widgets.environmentButton');
 const SearchActions = Stage.Common.Actions.Search;
 const FilterActions = Stage.Common.Filters.Actions;
 const environmentFilterId = 'csys-environment-filter';
 
-Stage.defineWidget<never, WidgetData, ButtonConfiguration>({
+Stage.defineWidget<never, EnvironmentButtonWidget.Data, ButtonConfiguration>({
     id: 'environmentButton',
     initialWidth: 2,
     initialHeight: 3,
@@ -41,7 +40,7 @@ Stage.defineWidget<never, WidgetData, ButtonConfiguration>({
     },
 
     render(widget, data, _error, toolbox) {
-        const disableEnvironmentButton = isEmpty(data) || data!.items.length === 0;
+        const disableEnvironmentButton = Stage.Utils.isEmptyWidgetData(data) || data!.items.length === 0;
 
         return (
             <EnvironmentButton
