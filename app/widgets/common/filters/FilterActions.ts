@@ -5,10 +5,6 @@ import type { Filter, FilterRule } from './types';
 export default class FilterActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doGet(filterId: string, params?: QueryStringParams) {
-        return this.toolbox.getManager().doGet<Filter>(`/filters/deployments/${filterId}`, params);
-    }
-
     doList(params: QueryStringParams): Promise<Stage.Types.PaginatedResponse<Filter>> {
         return this.toolbox.getManager().doGet(`/filters/deployments`, { params });
     }
