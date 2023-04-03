@@ -185,7 +185,10 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
         if (deploymentName && !blueprintName) {
             showGeneratingBluepringName();
             new SearchAction(toolbox)
-                .doListBlueprints([], { _include: 'id', _search: deploymentName })
+                .doListBlueprints({
+                    filterRules: [],
+                    params: { _include: 'id', _search: deploymentName }
+                })
                 .then(existingBlueprints => {
                     const existingBlueprintIds = map(existingBlueprints.items, 'id');
                     const newBlueprintName = deploymentName.toLowerCase().replaceAll(/\s+/g, '_');
