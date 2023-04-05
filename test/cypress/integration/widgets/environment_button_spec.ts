@@ -68,7 +68,18 @@ describe('Environment button widget', () => {
                         cy.get('tr').eq(1).contains('Please provide capability source');
                         cy.get('tr').eq(3).contains('Capability name already defined');
                     });
-
+                cy.contains('Capabilities')
+                    .next()
+                    .find('tbody')
+                    .within(() => {
+                        fillCapabilityInputs(0, 'secret_capability_key', 'Secret', '');
+                    });
+                cy.clickButton('Create');
+                cy.contains('Capabilities')
+                    .next()
+                    .within(() => {
+                        cy.get('tr').eq(1).contains('Please provide capability value');
+                    });
                 cy.clickButton('Cancel');
             });
             cy.contains('Are you sure you would like to discard the filled data and close?').should('be.visible');
@@ -96,7 +107,13 @@ describe('Environment button widget', () => {
             cy.get('.modal').within(() => {
                 cy.typeToFieldInput('Name', deploymentName);
                 cy.getField('Blueprint Description').get('textarea').type(blueprintDescription);
-                cy.contains('Location').next().find('input').type(`${siteName}{enter}`);
+
+                cy.contains('Location')
+                    .next()
+                    .within(() => {
+                        cy.get('input').type(siteName);
+                        cy.get(`div[option-value="${siteName}"]`).click();
+                    });
 
                 cy.addLabel(labelKey, labelValue);
 

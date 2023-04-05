@@ -24,7 +24,7 @@ const commands = {
         cy.get('[aria-label=Add]').click();
 
         cy.wait('@fetchLabel');
-        cy.contains('a.label', `${key} ${value}`).should('exist');
+        cy.contains('a.label', `${key}: ${value}`).should('exist');
     }
 };
 

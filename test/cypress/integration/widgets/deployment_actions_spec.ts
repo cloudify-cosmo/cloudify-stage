@@ -5,6 +5,7 @@ describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
     const deploymentId = 'deployment_action_buttons_test';
     const deploymentName = `${deploymentId}_name`;
+    const existingLabel = 'existing_key: existing_value';
 
     const typeLabelInput = (inputType: LabelInputType, text: string) => {
         if (inputType === 'key') {
@@ -214,7 +215,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.get('button[aria-label=Add]').click();
                 cy.wait('@checkIfLabelExists');
 
-                cy.contains('a.label', 'existing_key sample_value').should('be.visible');
+                cy.contains('a.label', existingLabel).should('be.visible');
             });
         });
 
@@ -267,7 +268,6 @@ describe('Deployment Action Buttons widget', () => {
 
         it('allows to remove label from the list', () => {
             cy.get('.modal').within(() => {
-                const existingLabel = 'existing_key existing_value';
                 cy.contains('a.label', existingLabel).should('be.visible');
                 cy.contains('a.label', existingLabel).find('.delete').click();
                 cy.contains('a.label', existingLabel).should('not.exist');
@@ -279,7 +279,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.addLabel('my_key', 'my_value');
 
                 cy.revertToDefaultValue();
-                cy.contains('a.label', 'existing_key existing_value').should('be.visible');
+                cy.contains('a.label', existingLabel).should('be.visible');
             });
         });
     });
