@@ -28,7 +28,7 @@ describe('Page management', () => {
         cy.contains('Add Widgets').click();
         cy.waitUntilWidgetsDataLoaded(20);
         cy.contains('Add Widget').click();
-        cy.waitUntilWidgetsDataLoaded();
+        cy.waitUntilWidgetsDataLoaded(5);
         cy.get('[data-id="agents"]').click();
         cy.get('[data-id="blueprintSources"]').click();
         cy.contains('Add selected widgets (2)').click();
