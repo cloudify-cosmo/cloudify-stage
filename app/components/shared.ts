@@ -1,3 +1,4 @@
+import { DynamicTable } from 'cloudify-ui-components';
 import ExecutionStatus from './common/ExecutionStatus';
 import ClusterServicesList from './common/status/cluster/ClusterServicesList';
 import ClusterStatusIcon from './common/status/cluster/ClusterStatusIcon';
@@ -5,7 +6,6 @@ import ClusterServicesOverview from './common/status/cluster/ClusterServicesOver
 import Graph from './common/graphs/Graph';
 import PieGraph from './common/graphs/PieGraph';
 import IdPopup from './common/IdPopup';
-import DynamicTable from './common/DynamicTable';
 import Link from './common/Link';
 import MaintenanceModeActivationButton from './maintenanceMode/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenanceMode/MaintenanceModeModal';
