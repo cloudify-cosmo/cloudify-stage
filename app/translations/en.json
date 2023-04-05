@@ -802,7 +802,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
+                "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/getting_started.json",
                 "linkParameterExample": "https://cloudify.co"
             },
             "noDataMessage": {

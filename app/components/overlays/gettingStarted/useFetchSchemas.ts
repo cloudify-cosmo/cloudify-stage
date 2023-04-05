@@ -5,13 +5,13 @@ import type { GettingStartedSchema } from './model';
 
 export const gettingStartedSchemaUrl = StageUtils.Url.url(
     `/external/content?url=${encodeURIComponent(
-        'https://repository.cloudifysource.org/cloudify/getting-started/6.4/gettingStarted.schema.json'
+        'https://repository.cloudifysource.org/cloudify/getting-started/7.0/gettingStarted.schema.json'
     )}`
 );
 
 export const cloudSetupSchemaUrl = StageUtils.Url.url(
     `/external/content?url=${encodeURIComponent(
-        'https://repository.cloudifysource.org/cloudify/getting-started/6.4/cloudSetup.schema.json'
+        'https://repository.cloudifysource.org/cloudify/getting-started/7.0/cloudSetup.schema.json'
     )}`
 );
 
