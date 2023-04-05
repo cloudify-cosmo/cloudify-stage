@@ -6,17 +6,28 @@ const widgetId = 'executionLogs';
 // const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
 export interface Event {
-    id: string;
     /* eslint-disable camelcase */
+    _storage_id: string;
     execution_id: string;
     message: string;
     error_causes: { message: string; traceback: string; type: string }[] | null;
     event_type: string;
     level: string;
     reported_timestamp: string;
-    type: string;
+    type: 'cloudify_event' | 'cloudify_log';
     /* eslint-enable camelcase */
 }
+
+const eventKeys: (keyof Event)[] = [
+    '_storage_id',
+    'execution_id',
+    'message',
+    'error_causes',
+    'event_type',
+    'level',
+    'reported_timestamp',
+    'type'
+];
 
 interface ExecutionLogsParams {
     // eslint-disable-next-line camelcase
@@ -31,12 +42,12 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
     id: widgetId,
     initialWidth: 12,
     initialHeight: 18,
-    fetchUrl: '[manager]/events?[params]',
+    fetchUrl: `[manager]/events?_include=${eventKeys.join(',')}[params]`,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('events'), // TODO: Change to `executionLogs`
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
-    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(2), Stage.GenericConfig.PAGE_SIZE_CONFIG()],
+    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(2), Stage.GenericConfig.PAGE_SIZE_CONFIG(50)],
 
     fetchParams(_widget, toolbox) {
         const executionId = toolbox.getContext().getValue('executionId');

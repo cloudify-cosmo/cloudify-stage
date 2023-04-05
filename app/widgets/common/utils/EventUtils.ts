@@ -160,4 +160,15 @@ export default class EventUtils {
     static getLogLevelOptions(log: keyof typeof EventUtils.logLevelOptions) {
         return { ...{ icon: 'question', color: 'orange' as const }, ...EventUtils.logLevelOptions[log] };
     }
+
+    static isError(type: 'cloudify_event' | 'cloudify_log', eventType: string, logLevel: string) {
+        return (
+            (type === 'cloudify_event' &&
+                eventType in EventUtils.eventTypeOptions &&
+                EventUtils.eventTypeOptions[eventType]?.rowClass === 'row-error') ||
+            (type === 'cloudify_log' &&
+                logLevel in EventUtils.logLevelOptions &&
+                EventUtils.logLevelOptions[eventType]?.rowClass === 'row-error')
+        );
+    }
 }

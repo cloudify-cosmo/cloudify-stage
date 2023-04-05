@@ -1,4 +1,6 @@
+import { isEmpty } from 'lodash';
 import type { PaginatedResponse } from 'backend/types';
+import LogMessage from './LogMessage';
 import type { Event } from './widget';
 // import DetailsModal from '../../events/src/DetailsModal';
 import DetailsIcon from '../../events/src/DetailsIcon';
@@ -7,74 +9,30 @@ interface LogsTableProps {
     data: PaginatedResponse<Event>;
 }
 export default function LogsTable({ data }: LogsTableProps) {
-    const { Table, Icon, Popup } = Stage.Basic;
-    const { EventUtils } = Stage.Common;
+    const { Table } = Stage.Basic;
     const { Json } = Stage.Utils;
-    const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
-
-    // TODO: Have dynamic length?
-    const maxMessageLength = 200;
 
     return (
-        <Table compact basic color="black">
+        <Table basic color="black" compact inverted>
             <Table.Body>
                 {data.items.map(item => {
-                    const isEventType = item.type === EventUtils.eventType;
                     const messageText = Json.stringify(item.message, false);
-                    const showDetailsIcon = !_.isEmpty(item.error_causes) || messageText.length > maxMessageLength;
-
-                    const eventOptions = isEventType
-                        ? EventUtils.getEventTypeOptions(item.event_type)
-                        : EventUtils.getLogLevelOptions(item.level);
-                    const eventName =
-                        eventOptions.text || _.capitalize(_.lowerCase(isEventType ? item.event_type : item.level));
-                    const EventIcon = () => (
-                        <span style={{ color: '#2c4b68', lineHeight: 1 }}>
-                            {isEventType ? (
-                                <i
-                                    style={{ fontFamily: 'cloudify', fontSize: 26 }}
-                                    className={`icon ${eventOptions.iconClass}`}
-                                >
-                                    {eventOptions.iconChar}
-                                </i>
-                            ) : (
-                                <Icon
-                                    name={eventOptions.icon}
-                                    color={eventOptions.color}
-                                    circular
-                                    inverted
-                                    className={eventOptions.class}
-                                />
-                            )}
-                        </span>
+                    const isErrorLog = Stage.Common.EventUtils.isError(item.type, item.event_type, item.level);
+                    const showErrorCauses = !isEmpty(item.error_causes);
+                    const timestamp = Stage.Utils.Time.formatTimestamp(
+                        item.reported_timestamp,
+                        'DD-MM-YYYY HH:mm:ss.SSS',
+                        moment.ISO_8601
                     );
 
                     return (
-                        <Table.Row key={item.id}>
-                            <Table.Cell className="alignCenter">
-                                {!eventName ? (
-                                    <EventIcon />
-                                ) : (
-                                    <Popup
-                                        trigger={
-                                            <span>
-                                                <EventIcon />
-                                            </span>
-                                        }
-                                        content={<span>{eventName}</span>}
-                                    />
-                                )}
-                            </Table.Cell>
-                            <Table.Cell className="alignCenter noWrap">{item.reported_timestamp}</Table.Cell>
+                        // eslint-disable-next-line no-underscore-dangle
+                        <Table.Row key={item._storage_id} error={isErrorLog}>
+                            <Table.Cell collapsing>{timestamp}</Table.Cell>
                             <Table.Cell>
-                                {item.message}
-                                {showDetailsIcon && (
-                                    <>
-                                        <EmptySpace />
-                                        <DetailsIcon onClick={_.noop} />
-                                    </>
-                                )}
+                                <LogMessage>{messageText}</LogMessage>
                             </Table.Cell>
+                            <Table.Cell collapsing>{showErrorCauses && <DetailsIcon onClick={_.noop} />}</Table.Cell>
                         </Table.Row>
                     );
                 })}
