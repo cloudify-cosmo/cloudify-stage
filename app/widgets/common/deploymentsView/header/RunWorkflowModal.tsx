@@ -25,6 +25,7 @@ import StageUtils from '../../../../utils/stageUtils';
 
 const fetchedWorkflowFields = ['name', 'parameters'] as const;
 type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
+
 interface EnhancedWorkflow extends FetchedWorkflow {
     disabled: boolean;
 }
@@ -37,7 +38,7 @@ interface RunWorkflowModalProps {
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
-const getWorkflowOptionHelp = (workflow: EnhancedWorkflow) => {
+const getWorkflowOptionText = (workflow: EnhancedWorkflow) => {
     return capitalize(workflow.name.replaceAll('_', ' '));
 };
 
@@ -49,7 +50,7 @@ const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] 
         .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
         .sortBy('name')
         .map(workflow => ({
-            text: getWorkflowOptionHelp(workflow),
+            text: getWorkflowOptionText(workflow),
             value: workflow.name,
             disabled: workflow.disabled
         }))
