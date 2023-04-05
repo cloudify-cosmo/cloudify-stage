@@ -41,21 +41,24 @@ const getWorkflowOptionHelp = (workflow: EnhancedWorkflow) => {
     return capitalize(workflow.name.replaceAll('_', ' '));
 };
 
-const getWorkflowsOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
-    return chain(workflows)
+const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
+    type OptionsGroupName = 'enabledOptions' | 'disabledOptions';
+    type GroupedOptions = Record<OptionsGroupName, DropdownItemProps[] | undefined>;
+
+    const { enabledOptions = [], disabledOptions = [] } = chain(workflows)
         .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
-        .sortBy(workflows, 'name')
+        .sortBy('name')
         .map(workflow => ({
             text: getWorkflowOptionHelp(workflow),
             value: workflow.name,
             disabled: workflow.disabled
         }))
-        .groupBy('disabled')
-        .values()
-        .reduce((workflowList, groupedWorkflowList) => {
-            return [...workflowList, ...groupedWorkflowList];
-        }, [] as DropdownItemProps[])
-        .value();
+        .groupBy((workflow): OptionsGroupName => {
+            return workflow.disabled ? 'disabledOptions' : 'enabledOptions';
+        })
+        .value() as GroupedOptions;
+
+    return [...enabledOptions, ...disabledOptions];
 };
 
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRules, onHide, toolbox }) => {
@@ -64,7 +67,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState('');
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
-    const workflowsOptions = useMemo(() => getWorkflowsOptions(workflows), [workflows]);
+    const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
 
     const searchActions = new SearchActions(toolbox);
 
