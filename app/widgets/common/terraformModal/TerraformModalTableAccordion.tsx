@@ -1,10 +1,8 @@
 import React from 'react';
-import type { DynamicTableProps } from '../../../components/common/DynamicTable';
+import type { DynamicTableProps, DynamicTableValue } from 'cloudify-ui-components';
 import AccordionSection from '../components/accordion/AccordionSection';
 
 import { DynamicTable } from '../../../components/shared';
-
-type DynamicTableValue = DynamicTableProps['value'];
 
 export interface TerraformModalTableAccordionProps<T extends any[]> {
     value: T;
