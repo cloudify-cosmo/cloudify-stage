@@ -63,7 +63,10 @@ describe('Environment button widget', () => {
                 .within(() => {
                     cy.get('input[name=name]').type(name);
                     if (source) cy.contains(source).click({ force: true });
-                    if (value) cy.get('.value').find('input').type(value);
+                    if (value) {
+                        cy.get('.value').find('input').type(value);
+                        if (source === 'Secret') cy.get(`div[option-value="${value}"]`).click();
+                    }
                 });
         }
 
@@ -161,7 +164,7 @@ describe('Environment button widget', () => {
                     .next()
                     .find('tbody')
                     .within(() => {
-                        fillCapabilityInputs(0, secretCapabilityKey, 'Secret', `${secretKey}{enter}`);
+                        fillCapabilityInputs(0, secretCapabilityKey, 'Secret', secretKey);
                         fillCapabilityInputs(1, inputCapabilityKey, 'Input', inputCapabilityValue);
                     });
 
