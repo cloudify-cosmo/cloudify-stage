@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
 import { chain, find, capitalize } from 'lodash';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
-import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
+import { useBoolean, useErrors, useInputs, useResettableState } from '../../../../utils/hooks';
 import {
     ApproveButton,
     CancelButton,
@@ -22,6 +22,7 @@ import ExecutionGroupsActions from './ExecutionGroupsActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
 import type { Workflow } from '../../executeWorkflow';
 import StageUtils from '../../../../utils/stageUtils';
+import InputField from '../../inputs/InputField';
 
 const fetchedWorkflowFields = ['name', 'parameters'] as const;
 type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
@@ -63,6 +64,9 @@ const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] 
     return [...enabledOptions, ...disabledOptions];
 };
 
+// TODO Norbert: Display parameters data in form
+// TODO Norbert: Add form validation
+// TODO Norbert: Ensure that form states are being cleared between selecting workflow
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     filterRules,
     onHide,
@@ -76,6 +80,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     >(undefined);
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
+    const [parametersInputs, setParametersInputs, resetParametersInputs] = useInputs<Record<string, any>>({});
 
     const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
     const searchActions = new SearchActions(toolbox);
@@ -101,6 +106,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     useEffect(() => {
         clearErrors();
         resetSelectedWorkflow();
+        resetParametersInputs();
         resetWorkflows();
         unsetExecutionGroupStarted();
         setLoadingMessage(tModal('messages.fetchingWorkflows'));
@@ -134,6 +140,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     }
 
     const handleSelectWorkflow: DropdownProps['onChange'] = (_event, { value: workflowName }) => {
+        resetParametersInputs();
         setSelectedWorkflow(workflows.find(workflow => workflow.name === workflowName));
     };
 
@@ -160,6 +167,30 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                             value={selectedWorkflow?.name}
                         />
                     </Form.Field>
+                    {selectedWorkflow &&
+                        Object.keys(selectedWorkflow.parameters).map(parameterName => {
+                            // const filteredParameters = '';
+                            const parameters = selectedWorkflow.parameters[parameterName];
+
+                            return (
+                                <Form.Field label={parameterName}>
+                                    <InputField
+                                        onChange={setParametersInputs}
+                                        toolbox={toolbox}
+                                        error={false}
+                                        // TODO Norbert: Initialize form with default inputs data
+                                        value={parameters.default || parametersInputs[parameterName]}
+                                        input={{
+                                            type: parameters.type,
+                                            name: parameterName,
+                                            display: {},
+                                            constraints: [],
+                                            default: parameters.default
+                                        }}
+                                    />
+                                </Form.Field>
+                            );
+                        })}
                     <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>
