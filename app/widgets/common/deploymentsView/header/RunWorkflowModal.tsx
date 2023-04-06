@@ -44,7 +44,7 @@ const getWorkflowOptionText = (workflow: EnhancedWorkflow) => {
 
 const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
     type OptionsGroupName = 'enabledOptions' | 'disabledOptions';
-    type GroupedOptions = Record<OptionsGroupName, DropdownItemProps[] | undefined>;
+    type GroupedOptions = Partial<Record<OptionsGroupName, DropdownItemProps[]>>;
 
     const { enabledOptions = [], disabledOptions = [] } = chain(workflows)
         .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
