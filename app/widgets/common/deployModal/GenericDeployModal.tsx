@@ -221,7 +221,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         name: 'install',
         parameters: {},
         plugin: '',
-        is_available: true
+        is_available: true,
+        is_cascading: false,
+        operation: ''
     };
 
     static initialState: GenericDeployModalState = {
