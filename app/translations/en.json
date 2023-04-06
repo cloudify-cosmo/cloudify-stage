@@ -1387,7 +1387,7 @@
                     "runWorkflow": {
                         "title": "Run Workflow",
                         "modal": {
-                            "header": "Run workflow on filtered deployments",
+                            "header": "Run workflow on {{deploymentsCount}} deployments",
                             "inputs": {
                                 "workflowId": {
                                     "label": "Workflow",

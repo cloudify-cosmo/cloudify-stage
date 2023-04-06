@@ -30,10 +30,11 @@ interface EnhancedWorkflow extends FetchedWorkflow {
     disabled: boolean;
 }
 
-interface RunWorkflowModalProps {
+export interface RunWorkflowModalProps {
     filterRules: FilterRule[];
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
+    deploymentsCount: number;
 }
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
@@ -62,7 +63,12 @@ const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] 
     return [...enabledOptions, ...disabledOptions];
 };
 
-const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRules, onHide, toolbox }) => {
+const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
+    filterRules,
+    onHide,
+    toolbox,
+    deploymentsCount
+}) => {
     const [executionGroupStarted, setExecutionGroupStarted, unsetExecutionGroupStarted] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState('');
@@ -130,7 +136,10 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     ) : (
         <Modal open onClose={onHide}>
             <Modal.Header>
-                <Icon name="cogs" /> {tModal('header')}
+                <Icon name="cogs" />{' '}
+                {tModal('header', {
+                    deploymentsCount
+                })}
             </Modal.Header>
 
             <Modal.Content>
