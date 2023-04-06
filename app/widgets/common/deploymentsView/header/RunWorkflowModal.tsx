@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
 import { chain, find, capitalize } from 'lodash';
-import type { DropdownItemProps } from 'semantic-ui-react';
+import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
     ApproveButton,
@@ -71,11 +71,13 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 }) => {
     const [executionGroupStarted, setExecutionGroupStarted, unsetExecutionGroupStarted] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState('');
+    const [selectedWorkflow, setSelectedWorkflow, resetSelectedWorkflow] = useResettableState<
+        EnhancedWorkflow | undefined
+    >(undefined);
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
-    const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
 
+    const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
     const searchActions = new SearchActions(toolbox);
 
     const fetchWorkflows = (common?: boolean) => {
@@ -98,7 +100,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
     useEffect(() => {
         clearErrors();
-        resetWorkflowId();
+        resetSelectedWorkflow();
         resetWorkflows();
         unsetExecutionGroupStarted();
         setLoadingMessage(tModal('messages.fetchingWorkflows'));
@@ -107,7 +109,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     }, []);
 
     async function runWorkflow() {
-        if (!workflowId) {
+        if (!selectedWorkflow) {
             setErrors({ error: tModal('errors.noWorkflowError') });
             return;
         }
@@ -120,7 +122,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
             setLoadingMessage(tModal('messages.startingExecutionGroup'));
             const executionGroupsActions = new ExecutionGroupsActions(toolbox);
-            await executionGroupsActions.doStart(groupId, workflowId);
+            await executionGroupsActions.doStart(groupId, selectedWorkflow.name);
 
             toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');
             setExecutionGroupStarted();
@@ -130,6 +132,10 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
         turnOffLoading();
     }
+
+    const handleSelectWorkflow: DropdownProps['onChange'] = (_event, { value: workflowName }) => {
+        setSelectedWorkflow(workflows.find(workflow => workflow.name === workflowName));
+    };
 
     return executionGroupStarted ? (
         <ExecutionStartedModal toolbox={toolbox} onClose={onHide} />
@@ -150,8 +156,8 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                             search
                             selection
                             options={workflowsOptions}
-                            onChange={(_event, { value }) => setWorkflowId(value as string)}
-                            value={workflowId}
+                            onChange={handleSelectWorkflow}
+                            value={selectedWorkflow?.name}
                         />
                     </Form.Field>
                     <Message>{tModal('messages.limitations')}</Message>
@@ -160,7 +166,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} />
-                <ApproveButton onClick={runWorkflow} content={tModal('buttons.run')} disabled={!workflowId} />
+                <ApproveButton onClick={runWorkflow} content={tModal('buttons.run')} disabled={!selectedWorkflow} />
             </Modal.Actions>
         </Modal>
     );
