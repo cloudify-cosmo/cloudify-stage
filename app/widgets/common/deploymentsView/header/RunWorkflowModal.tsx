@@ -84,7 +84,6 @@ const filterSupporterWorkflowParameters = (
 };
 
 // TODO Norbert: Add form validation (Ensure that form states are being cleared between selecting workflow
-// TODO Norbert: Provide ability to submit parameters data
 
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     filterRules,
@@ -147,7 +146,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
             setLoadingMessage(tModal('messages.startingExecutionGroup'));
             const executionGroupsActions = new ExecutionGroupsActions(toolbox);
-            await executionGroupsActions.doStart(groupId, selectedWorkflow.name);
+            await executionGroupsActions.doStart(groupId, selectedWorkflow.name, parametersInputs);
 
             toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');
             setExecutionGroupStarted();
@@ -192,13 +191,13 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                 const parameters = selectedWorkflow.parameters[parameterName];
 
                                 return (
-                                    <Form.Field label={parameterName}>
+                                    <Form.Field label={parameterName} key={parameterName}>
                                         <InputField
                                             onChange={setParametersInputs}
                                             toolbox={toolbox}
                                             error={false}
                                             // TODO Norbert: Initialize form with default inputs data
-                                            value={parameters.default || parametersInputs[parameterName]}
+                                            value={parametersInputs[parameterName] || parameters.default}
                                             input={{
                                                 type: parameters.type,
                                                 name: parameterName,
