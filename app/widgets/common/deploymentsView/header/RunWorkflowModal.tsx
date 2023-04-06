@@ -114,8 +114,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     >(undefined);
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
-    // TODO Norbert: Initialize form with default parameters values
-    const [parametersInputs, setParametersInputs, resetParametersInputs] = useInputs<Record<string, any>>({});
+    const [parametersInputs, setParametersInputs, resetParametersInputs] = useInputs<Record<string, unknown>>({});
 
     const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
     const searchActions = new SearchActions(toolbox);
@@ -177,10 +176,29 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
         turnOffLoading();
     }
 
+    const initializeParametersInputs = () => {
+        const defaultParametersData = selectedWorkflow?.parameters.reduce((parameters, parameter) => {
+            parameters[parameter.name] = parameter.default;
+            return parameters;
+        }, {} as Record<string, unknown>);
+
+        setParametersInputs(defaultParametersData);
+    };
+
     const handleSelectWorkflow: DropdownProps['onChange'] = (_event, { value: workflowName }) => {
-        resetParametersInputs();
         setSelectedWorkflow(workflows.find(workflow => workflow.name === workflowName));
     };
+
+    useEffect(() => {
+        // TODO: Handle inputs reset - both state updates below are being executed as a batch and because of that the reset is not taking place
+        resetParametersInputs();
+        initializeParametersInputs();
+    }, [selectedWorkflow]);
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        console.log(parametersInputs);
+    }, [parametersInputs]);
 
     return executionGroupStarted ? (
         <ExecutionStartedModal toolbox={toolbox} onClose={onHide} />
@@ -214,8 +232,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                         toolbox={toolbox}
                                         // TODO Norbert: Handle form error validations
                                         error={false}
-                                        // TODO Norbert: Initialize form with default inputs data
-                                        value={parametersInputs[parameters.name] || parameters.default}
+                                        value={parametersInputs[parameters.name]}
                                         input={{
                                             type: parameters.type as Input['type'],
                                             name: parameters.name,
