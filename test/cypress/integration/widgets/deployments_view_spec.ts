@@ -1,5 +1,5 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
-import { without } from 'lodash';
+import { without, snakeCase } from 'lodash';
 import type { ObjectKeys } from 'app/utils/types';
 import type { FilterRule } from 'app/widgets/common/filters/types';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from 'app/widgets/common/filters/types';
@@ -44,7 +44,7 @@ describe('Deployments View widget', () => {
     before(() => {
         cy.activate()
             .deleteSites(exampleSiteName)
-            .deleteBlueprint(blueprintName, true)
+            .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
@@ -1261,6 +1261,40 @@ describe('Deployments View widget', () => {
             cy.contains('.modal', 'Group execution started').within(() => {
                 cy.contains('Go to Executions page');
                 cy.contains('Close').click();
+            });
+        });
+
+        it('should enable to select only workflows common across filtered deployments', () => {
+            const notCommonWorkflowsBlueprintName = `${blueprintName}_uncommon_workflows`;
+
+            cy.uploadBlueprint('blueprints/topology.zip', notCommonWorkflowsBlueprintName).deployBlueprint(
+                notCommonWorkflowsBlueprintName,
+                notCommonWorkflowsBlueprintName
+            );
+
+            const commonWorkflowNames = ['Start', 'Stop'];
+            const notCommonWorkflowNames = ['Run infracost', 'Terraform plan'];
+
+            const checkWorkflowOptionAvailability = (workflowName: string, enabled: boolean) => {
+                const classQuery = enabled ? 'not.have.class' : 'have.class';
+                cy.get(`div[option-value="${snakeCase(workflowName)}"]`).should(classQuery, 'disabled');
+            };
+
+            useDeploymentsViewWidget();
+            widgetHeader.openRunWorkflowModal();
+
+            cy.get('.modal').within(() => {
+                cy.getField('Workflow').within(() => {
+                    cy.get('input').click();
+
+                    commonWorkflowNames.forEach(workflowName => {
+                        checkWorkflowOptionAvailability(workflowName, true);
+                    });
+
+                    notCommonWorkflowNames.forEach(workflowName => {
+                        checkWorkflowOptionAvailability(workflowName, false);
+                    });
+                });
             });
         });
 
