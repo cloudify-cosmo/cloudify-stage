@@ -18,7 +18,7 @@ const getValueElement = (value: ParameterValueProps['value'], stringValue: strin
     switch (types.toType(value)) {
         case 'array':
         case 'object':
-            return <HighlightText language="json">{stringValue}</HighlightText>;
+            return <HighlightText>{stringValue}</HighlightText>;
         case 'number':
             return <code style={{ ...commonStyle, ...highlighterStyles['hljs-number'] }}>{stringValue}</code>;
         case 'boolean':
