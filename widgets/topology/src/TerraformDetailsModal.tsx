@@ -25,7 +25,7 @@ export default function TerraformDetailsModal({ terraformDetails, onClose }: Ter
                             <DataTable.Data>{tfResource.name}</DataTable.Data>
                             <DataTable.Data>{tfResource.provider}</DataTable.Data>
                             <DataTable.Data>
-                                <HighlightText language="json">{JSON.stringify(tfResource, null, 2)}</HighlightText>
+                                <HighlightText>{JSON.stringify(tfResource, null, 2)}</HighlightText>
                             </DataTable.Data>
                         </DataTable.Row>
                     ))}
