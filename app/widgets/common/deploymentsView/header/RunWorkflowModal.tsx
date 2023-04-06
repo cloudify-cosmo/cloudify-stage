@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { chain, find, capitalize } from 'lodash';
+import { chain, find, capitalize, filter } from 'lodash';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useInputs, useResettableState } from '../../../../utils/hooks';
 import {
@@ -64,9 +64,28 @@ const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] 
     return [...enabledOptions, ...disabledOptions];
 };
 
-// TODO Norbert: Display parameters data in form
-// TODO Norbert: Add form validation
-// TODO Norbert: Ensure that form states are being cleared between selecting workflow
+// TODO Norbert: add parameters mapping for a better developer experience
+const filterSupporterWorkflowParameters = (
+    workflowParameters: FetchedWorkflow['parameters']
+): FetchedWorkflow['parameters'] => {
+    const supportedParameterTypes = ['string', 'integer', 'float', 'boolean', 'list', 'textarea'];
+
+    const filteredWorkflowParameters = Object.keys(workflowParameters).reduce((filteredParameters, parameterName) => {
+        const parameter = workflowParameters[parameterName];
+
+        if (parameter.type === undefined || supportedParameterTypes.includes(parameter.type)) {
+            filteredParameters[parameterName] = parameter;
+        }
+
+        return filteredParameters;
+    }, {} as FetchedWorkflow['parameters']);
+
+    return filteredWorkflowParameters;
+};
+
+// TODO Norbert: Add form validation (Ensure that form states are being cleared between selecting workflow
+// TODO Norbert: Provide ability to submit parameters data
+
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     filterRules,
     onHide,
@@ -168,29 +187,31 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                         />
                     </Form.Field>
                     {selectedWorkflow &&
-                        Object.keys(selectedWorkflow.parameters).map(parameterName => {
-                            // const filteredParameters = '';
-                            const parameters = selectedWorkflow.parameters[parameterName];
+                        Object.keys(filterSupporterWorkflowParameters(selectedWorkflow.parameters)).map(
+                            parameterName => {
+                                const parameters = selectedWorkflow.parameters[parameterName];
 
-                            return (
-                                <Form.Field label={parameterName}>
-                                    <InputField
-                                        onChange={setParametersInputs}
-                                        toolbox={toolbox}
-                                        error={false}
-                                        // TODO Norbert: Initialize form with default inputs data
-                                        value={parameters.default || parametersInputs[parameterName]}
-                                        input={{
-                                            type: parameters.type,
-                                            name: parameterName,
-                                            display: {},
-                                            constraints: [],
-                                            default: parameters.default
-                                        }}
-                                    />
-                                </Form.Field>
-                            );
-                        })}
+                                return (
+                                    <Form.Field label={parameterName}>
+                                        <InputField
+                                            onChange={setParametersInputs}
+                                            toolbox={toolbox}
+                                            error={false}
+                                            // TODO Norbert: Initialize form with default inputs data
+                                            value={parameters.default || parametersInputs[parameterName]}
+                                            input={{
+                                                type: parameters.type,
+                                                name: parameterName,
+                                                display: {},
+                                                constraints: [],
+                                                default: parameters.default
+                                            }}
+                                            // TODO Norbert: get to know what condition should be applied to determine if input field should be required
+                                        />
+                                    </Form.Field>
+                                );
+                            }
+                        )}
                     <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>
