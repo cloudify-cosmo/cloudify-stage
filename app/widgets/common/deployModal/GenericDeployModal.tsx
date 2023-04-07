@@ -2,6 +2,7 @@ import type { ChangeEvent, SyntheticEvent } from 'react';
 import React from 'react';
 import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
 import type { DateInputProps } from 'cloudify-ui-components';
+import { AccordionSection } from 'cloudify-ui-components';
 import { compact, isEmpty, mapValues, noop } from 'lodash';
 import i18n from 'i18next';
 import FileActions from '../actions/FileActions';
@@ -11,7 +12,6 @@ import DynamicDropdown from '../components/DynamicDropdown';
 import Consts from '../Consts';
 import LabelsInput from '../labels/LabelsInput';
 import MissingSecretsError from '../secrets/MissingSecretsError';
-import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
 import DeploymentInputs from './DeploymentInputs';
 import DeployModalActions, { Buttons as ApproveButtons } from './DeployModalActions';
 import type {
@@ -795,7 +795,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         )}
 
                         <Accordion fluid>
-                            <AccordionSectionWithDivider
+                            <AccordionSection
+                                divider
                                 title={t('sections.deploymentInputs')}
                                 index={DEPLOYMENT_SECTIONS.deploymentInputs}
                                 activeSection={activeSection}
@@ -810,8 +811,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     deploymentInputs={deploymentInputs}
                                     errors={errors}
                                 />
-                            </AccordionSectionWithDivider>
-                            <AccordionSectionWithDivider
+                            </AccordionSection>
+                            <AccordionSection
+                                divider
                                 title={t('sections.deploymentMetadata')}
                                 index={DEPLOYMENT_SECTIONS.deploymentMetadata}
                                 activeSection={activeSection}
@@ -846,8 +848,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         onChange={(newLabels: Label[]) => this.setState({ labels: newLabels })}
                                     />
                                 </Form.Field>
-                            </AccordionSectionWithDivider>
-                            <AccordionSectionWithDivider
+                            </AccordionSection>
+                            <AccordionSection
+                                divider
                                 title={t('sections.executionParameters')}
                                 index={DEPLOYMENT_SECTIONS.executionParameters}
                                 activeSection={activeSection}
@@ -865,8 +868,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         help=""
                                     />
                                 </Form.Field>
-                            </AccordionSectionWithDivider>
-                            <AccordionSectionWithDivider
+                            </AccordionSection>
+                            <AccordionSection
+                                divider
                                 title={t('sections.advanced')}
                                 index={DEPLOYMENT_SECTIONS.advanced}
                                 activeSection={activeSection}
@@ -905,9 +909,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         help=""
                                     />
                                 </Form.Field>
-                            </AccordionSectionWithDivider>
+                            </AccordionSection>
                             {selectedApproveButton === ApproveButtons.install && (
-                                <AccordionSectionWithDivider
+                                <AccordionSection
+                                    divider
                                     title={t('sections.install')}
                                     index={DEPLOYMENT_SECTIONS.install}
                                     activeSection={activeSection}
@@ -933,7 +938,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         onScheduleChange={this.onScheduleChange}
                                         onScheduledTimeChange={this.onScheduledTimeChange}
                                     />
-                                </AccordionSectionWithDivider>
+                                </AccordionSection>
                             )}
                         </Accordion>
                     </Form>
