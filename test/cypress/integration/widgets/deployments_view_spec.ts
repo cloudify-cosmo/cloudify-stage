@@ -1,7 +1,8 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
-import { without, snakeCase } from 'lodash';
+import { without } from 'lodash';
 import type { ObjectKeys } from 'app/utils/types';
 import type { FilterRule } from 'app/widgets/common/filters/types';
+import type { Workflow } from 'app/widgets/common/executeWorkflow';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from 'app/widgets/common/filters/types';
 import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
 import { testPageName } from '../../support/commands';
@@ -44,7 +45,7 @@ describe('Deployments View widget', () => {
     before(() => {
         cy.activate()
             .deleteSites(exampleSiteName)
-            .deleteBlueprints(blueprintName, true)
+            .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
@@ -1265,20 +1266,46 @@ describe('Deployments View widget', () => {
         });
 
         it('should enable to select only workflows common across filtered deployments', () => {
-            const notCommonWorkflowsBlueprintName = `${blueprintName}_uncommon_workflows`;
+            type SimplifiedWorkflow = Pick<Workflow, 'name' | 'parameters'>;
+            const emptyParameters: Workflow['parameters'] = {};
+            const commonWorkflowNames = ['start', 'stop'];
+            const notCommonWorkflowNames = ['run_infracost', 'terraform_plan'];
+            const allWorkflows = [...commonWorkflowNames, ...notCommonWorkflowNames];
 
-            cy.uploadBlueprint('blueprints/topology.zip', notCommonWorkflowsBlueprintName).deployBlueprint(
-                notCommonWorkflowsBlueprintName,
-                notCommonWorkflowsBlueprintName
-            );
-
-            const commonWorkflowNames = ['Start', 'Stop'];
-            const notCommonWorkflowNames = ['Run infracost', 'Terraform plan'];
+            const getMockedWorkflows = (workflowNames: string[]): SimplifiedWorkflow[] => {
+                return workflowNames.map(commonWorkflowName => ({
+                    name: commonWorkflowName,
+                    parameters: emptyParameters
+                }));
+            };
 
             const checkWorkflowOptionAvailability = (workflowName: string, enabled: boolean) => {
                 const classQuery = enabled ? 'not.have.class' : 'have.class';
-                cy.get(`div[option-value="${snakeCase(workflowName)}"]`).should(classQuery, 'disabled');
+                cy.get(`div[option-value="${workflowName}"]`).should(classQuery, 'disabled');
             };
+
+            cy.interceptSp(
+                'POST',
+                {
+                    pathname: '/searches/workflows'
+                },
+                {
+                    items: getMockedWorkflows(allWorkflows)
+                }
+            );
+
+            cy.interceptSp(
+                'POST',
+                {
+                    pathname: '/searches/workflows',
+                    query: {
+                        _common_only: 'true'
+                    }
+                },
+                {
+                    items: getMockedWorkflows(commonWorkflowNames)
+                }
+            );
 
             useDeploymentsViewWidget();
             widgetHeader.openRunWorkflowModal();
