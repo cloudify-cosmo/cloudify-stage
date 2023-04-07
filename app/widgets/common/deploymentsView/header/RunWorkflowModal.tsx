@@ -19,24 +19,13 @@ import type { FilterRule } from '../../filters/types';
 import { getGroupIdForBatchAction } from './common';
 import ExecutionGroupsActions from './ExecutionGroupsActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
-import type { Workflow } from '../../executeWorkflow';
 import StageUtils from '../../../../utils/stageUtils';
 import InputField from '../../inputs/InputField';
 import type { Input } from '../../inputs/types';
 import useParametersInputs from './useParametersInputs';
 import { initializeWorkflowParameters, getWorkflowOptions } from './RunWorkflowModal.utils';
-
-const fetchedWorkflowFields = ['name', 'parameters'] as const;
-type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
-
-type SimplifiedWorkflowParameter = FetchedWorkflow['parameters'] & {
-    name: string;
-};
-
-interface EnhancedWorkflow extends Omit<FetchedWorkflow, 'parameters'> {
-    disabled: boolean;
-    parameters: SimplifiedWorkflowParameter[];
-}
+import { fetchedWorkflowFields } from './RunWorkflowModal.consts';
+import type { EnhancedWorkflow, FetchedWorkflow } from './RunWorkflowModal.types';
 
 export interface RunWorkflowModalProps {
     filterRules: FilterRule[];
