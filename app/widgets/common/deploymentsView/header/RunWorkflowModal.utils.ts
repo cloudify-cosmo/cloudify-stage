@@ -1,4 +1,4 @@
-import { chain, find, capitalize } from 'lodash';
+import { chain, find, capitalize, map } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import type { FetchedWorkflow, EnhancedWorkflow, SimplifiedWorkflowParameter } from './RunWorkflowModal.types';
 
@@ -26,21 +26,13 @@ export const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemP
     return [...enabledOptions, ...disabledOptions];
 };
 
-// NOTE Norbert: Maybe flatMap function could simplify operations below
-// Reference link: https://lodash.com/docs/4.17.15#flatMap
 const mapFetchedWorkflowParameters = (
     workflowParameters: FetchedWorkflow['parameters']
 ): SimplifiedWorkflowParameter[] => {
-    const mappedWorkflowParameters = Object.keys(workflowParameters).map(workflowParameterName => {
-        const workflowParameter = workflowParameters[workflowParameterName];
-        const simplifiedWorkflowParameter = {
-            ...workflowParameter,
-            name: workflowParameterName
-        } as SimplifiedWorkflowParameter;
-        return simplifiedWorkflowParameter;
-    });
-
-    return mappedWorkflowParameters;
+    return map(workflowParameters, (parameterFields, parameterName) => ({
+        ...parameterFields,
+        name: parameterName
+    })) as SimplifiedWorkflowParameter[];
 };
 
 const filterSupportedWorkflowParameters = (
