@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
 import { chain, find, capitalize } from 'lodash';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
-import { useBoolean, useErrors, useInputs, useResettableState } from '../../../../utils/hooks';
+import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
     ApproveButton,
     CancelButton,
@@ -24,6 +24,7 @@ import type { Workflow } from '../../executeWorkflow';
 import StageUtils from '../../../../utils/stageUtils';
 import InputField from '../../inputs/InputField';
 import type { Input } from '../../inputs/types';
+import useParametersInputs from './useParametersInputs';
 
 const fetchedWorkflowFields = ['name', 'parameters'] as const;
 type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
@@ -72,6 +73,8 @@ const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] 
     return [...enabledOptions, ...disabledOptions];
 };
 
+// NOTE Norbert: Maybe flatMap function could simplify operations below
+// Reference link: https://lodash.com/docs/4.17.15#flatMap
 const mapFetchedWorkflowParameters = (
     workflowParameters: FetchedWorkflow['parameters']
 ): SimplifiedWorkflowParameter[] => {
@@ -114,7 +117,9 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     >(undefined);
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
-    const [parametersInputs, setParametersInputs, resetParametersInputs] = useInputs<Record<string, unknown>>({});
+
+    // TODO Norbert: Consider extracting form elements & mechanisms as external component, to omit usage of custom hook
+    const [parametersInputs, setParametersInputs, resetParametersInputs] = useParametersInputs();
 
     const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
     const searchActions = new SearchActions(toolbox);
@@ -177,12 +182,13 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     }
 
     const initializeParametersInputs = () => {
-        const defaultParametersData = selectedWorkflow?.parameters.reduce((parameters, parameter) => {
-            parameters[parameter.name] = parameter.default;
-            return parameters;
-        }, {} as Record<string, unknown>);
+        const defaultParametersData =
+            selectedWorkflow?.parameters.reduce((parameters, parameter) => {
+                parameters[parameter.name] = parameter.default;
+                return parameters;
+            }, {} as Record<string, unknown>) || {};
 
-        setParametersInputs(defaultParametersData);
+        resetParametersInputs(defaultParametersData);
     };
 
     const handleSelectWorkflow: DropdownProps['onChange'] = (_event, { value: workflowName }) => {
@@ -190,15 +196,8 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     };
 
     useEffect(() => {
-        // TODO: Handle inputs reset - both state updates below are being executed as a batch and because of that the reset is not taking place
-        resetParametersInputs();
         initializeParametersInputs();
     }, [selectedWorkflow]);
-
-    useEffect(() => {
-        // eslint-disable-next-line
-        console.log(parametersInputs);
-    }, [parametersInputs]);
 
     return executionGroupStarted ? (
         <ExecutionStartedModal toolbox={toolbox} onClose={onHide} />
