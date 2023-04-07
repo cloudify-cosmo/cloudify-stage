@@ -1,7 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { chain, find, capitalize } from 'lodash';
-import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
+import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
     ApproveButton,
@@ -25,6 +24,7 @@ import StageUtils from '../../../../utils/stageUtils';
 import InputField from '../../inputs/InputField';
 import type { Input } from '../../inputs/types';
 import useParametersInputs from './useParametersInputs';
+import { initializeWorkflowParameters, getWorkflowOptions } from './RunWorkflowModal.utils';
 
 const fetchedWorkflowFields = ['name', 'parameters'] as const;
 type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
@@ -47,63 +47,8 @@ export interface RunWorkflowModalProps {
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
-// TODO Norbert: Extract some functions to a separated file
-
-const getWorkflowOptionText = (workflow: EnhancedWorkflow) => {
-    return capitalize(workflow.name.replaceAll('_', ' '));
-};
-
-const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
-    type OptionsGroupName = 'enabledOptions' | 'disabledOptions';
-    type GroupedOptions = Partial<Record<OptionsGroupName, DropdownItemProps[]>>;
-
-    const { enabledOptions = [], disabledOptions = [] } = chain(workflows)
-        .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
-        .sortBy('name')
-        .map(workflow => ({
-            text: getWorkflowOptionText(workflow),
-            value: workflow.name,
-            disabled: workflow.disabled
-        }))
-        .groupBy((workflow): OptionsGroupName => {
-            return workflow.disabled ? 'disabledOptions' : 'enabledOptions';
-        })
-        .value() as GroupedOptions;
-
-    return [...enabledOptions, ...disabledOptions];
-};
-
-// NOTE Norbert: Maybe flatMap function could simplify operations below
-// Reference link: https://lodash.com/docs/4.17.15#flatMap
-const mapFetchedWorkflowParameters = (
-    workflowParameters: FetchedWorkflow['parameters']
-): SimplifiedWorkflowParameter[] => {
-    const mappedWorkflowParameters = Object.keys(workflowParameters).map(workflowParameterName => {
-        const workflowParameter = workflowParameters[workflowParameterName];
-        const simplifiedWorkflowParameter = {
-            ...workflowParameter,
-            name: workflowParameterName
-        } as SimplifiedWorkflowParameter;
-        return simplifiedWorkflowParameter;
-    });
-
-    return mappedWorkflowParameters;
-};
-
-const filterSupportedWorkflowParameters = (
-    workflowParameters: EnhancedWorkflow['parameters']
-): EnhancedWorkflow['parameters'] => {
-    const supportedParameterTypes = ['string', 'integer', 'float', 'boolean', 'list', 'textarea'];
-
-    const filteredWorkflowParameters = workflowParameters.filter(
-        parameter => parameter.type === undefined || supportedParameterTypes.includes(parameter.type as string)
-    );
-
-    return filteredWorkflowParameters;
-};
-
 // TODO Norbert: Add form validation (Ensure that form states are being cleared between selecting workflow
-
+// TODO Norbert: Consider using namespaces for extracted files
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     filterRules,
     onHide,
@@ -117,7 +62,6 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     >(undefined);
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
-
     // TODO Norbert: Consider extracting form elements & mechanisms as external component, to omit usage of custom hook
     const [parametersInputs, setParametersInputs, resetParametersInputs] = useParametersInputs();
 
@@ -137,9 +81,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
             const filteredWorkflows = allWorkflows.items.map(singleWorkflow => ({
                 ...singleWorkflow,
                 disabled: !commonWorkflows.items.find(commonWorkflow => commonWorkflow.name === singleWorkflow.name),
-                // TODO Norbert: Make it more robust and developer friendly
-                // TODO Norbert: Add note to PR about the reason behind doing mapping first (from performance POV it's not the best) - the reason is DX and not having a need of doing additional, complicated Array.prototype.reduce operations
-                parameters: filterSupportedWorkflowParameters(mapFetchedWorkflowParameters(singleWorkflow.parameters))
+                parameters: initializeWorkflowParameters(singleWorkflow.parameters)
             }));
             return filteredWorkflows;
         });
