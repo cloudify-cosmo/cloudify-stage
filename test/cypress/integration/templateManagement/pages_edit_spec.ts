@@ -26,7 +26,7 @@ describe('Page management', () => {
 
         cy.log('Adding widgets');
         cy.contains('Add Widgets').click();
-        cy.waitUntilWidgetsDataLoaded(20);
+        cy.waitUntilWidgetsDataLoaded();
         cy.contains('Add Widget').click();
         cy.waitUntilWidgetsDataLoaded(20);
         cy.get('[data-id="agents"]').click();
