@@ -160,6 +160,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                     <InputField
                                         onChange={setParametersInputs}
                                         toolbox={toolbox}
+                                        // TODO Norbert: Get to know what condition should be applied to determine if input field should be required
                                         // TODO Norbert: Handle form error validations
                                         error={false}
                                         value={parametersInputs[parameters.name]}
@@ -170,11 +171,12 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                             constraints: [],
                                             default: parameters.default
                                         }}
-                                        // TODO Norbert: Get to know what condition should be applied to determine if input field should be required
                                     />
                                 </Form.Field>
                             );
                         })}
+                    {/* TODO Norbert: Ask if the message below should be modified */}
+                    {/* Currently it's saying "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'." */}
                     <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>
