@@ -20,11 +20,10 @@ import Consts from '../../utils/consts';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
-    onLogin: (username: string, password: string, redirect?: string) => void;
+    onLogin: (username: string, password: string, redirect?: string) => Promise<void>;
     location: {
         search: string;
     };
-    loginError: string | null;
     loginPageUrl: ClientConfig['app']['auth']['loginPageUrl'];
     username: string;
     whiteLabel: ClientConfig['app']['whiteLabel'];
@@ -33,14 +32,9 @@ export interface LoginPageProps {
 interface LoginPageState {
     username: string;
     password: string;
-    errors: Errors;
     isFirstLogin: boolean;
+    error?: string;
 }
-
-type Errors = {
-    username?: string;
-    password?: string;
-} | null;
 
 const StyledInput = styled(Input)`
     &&&&&& input:autofill,
@@ -66,7 +60,6 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         this.state = {
             username: props.username,
             password: '',
-            errors: {},
             isFirstLogin: false
         };
     }
@@ -84,36 +77,42 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         }
     }
 
+    mapLoginError = (errorMessage?: string) => {
+        const incorrectCredentialsError = errorMessage?.includes('User unauthorized');
+
+        if (incorrectCredentialsError) {
+            return t('error.incorrectCredentials');
+        }
+
+        return errorMessage;
+    };
+
     onSubmit = () => {
         const { password, username } = this.state;
         const { location, onLogin } = this.props;
-        const errors: Errors = {};
 
-        if (isEmpty(username)) {
-            errors.username = t('error.noUsername');
-        }
-        if (isEmpty(password)) {
-            errors.password = t('error.noPassword');
-        }
-        if (!isEmpty(errors)) {
-            this.setState({ errors });
+        if (!username || !password) {
+            this.setState({ error: t('error.missingCredentials') });
             return false;
         }
 
         const query = parse(location.search);
         const redirect = query.redirect as string;
 
-        return onLogin(username, password, redirect);
+        return onLogin(username, password, redirect).catch(error => {
+            this.setState({ error: this.mapLoginError(error.message) });
+        });
     };
 
     handleInputChange = (_proxy: any, field: Parameters<typeof Form.fieldNameValue>[0]) => {
         const fieldNameValue = Form.fieldNameValue(field);
-        this.setState({ ...fieldNameValue, errors: {} });
+
+        this.setState({ ...fieldNameValue, error: undefined });
     };
 
     render() {
-        const { errors, password, username, isFirstLogin } = this.state;
-        const { loginPageUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
+        const { error, password, username, isFirstLogin } = this.state;
+        const { loginPageUrl, isLoggingIn, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
         const defaultLoginPageUrl = `${Consts.CONTEXT_PATH}${Consts.PAGE_PATH.LOGIN}`;
@@ -152,7 +151,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             style={{ marginLeft: -25 }}
                             trigger={
                                 <div>
-                                    <Form.Field required error={errors?.username}>
+                                    <Form.Field required error={error && !username}>
                                         <StyledInput
                                             name="username"
                                             type="text"
@@ -162,7 +161,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                                             onChange={this.handleInputChange}
                                         />
                                     </Form.Field>
-                                    <Form.Field required error={errors?.password}>
+                                    <Form.Field required error={error && !password}>
                                         <StyledInput
                                             name="password"
                                             type="password"
@@ -175,9 +174,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             }
                         />
 
-                        {loginError && (
+                        {error && (
                             <Message error style={{ display: 'block', backgroundColor: '#fdeded', boxShadow: 'none' }}>
-                                {loginError}
+                                {error}
                             </Message>
                         )}
 
@@ -202,7 +201,6 @@ const mapStateToProps = (state: ReduxState) => {
         username: manager.auth.username,
         loginPageUrl: config.app.auth.loginPageUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
-        loginError: manager.auth.error,
         mode: get(config, 'mode'),
         whiteLabel: get(config, 'app.whiteLabel')
     };
@@ -210,9 +208,8 @@ const mapStateToProps = (state: ReduxState) => {
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
     return {
-        onLogin: (username: string, password: string, redirect?: string) => {
-            dispatch(login(username, password, redirect));
-        }
+        onLogin: (username: string, password: string, redirect?: string) =>
+            dispatch(login(username, password, redirect))
     };
 };
 

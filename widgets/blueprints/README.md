@@ -95,11 +95,12 @@ The default visibility is "Tenant", and according to the logged-in user's permis
 
 1. Click the deploy icon ![Deploy icon]( /images/ui/icons/deploy-icon.png ).   
 2. In the Deploy Blueprint dialog, specify a name for your deployment.
-3. Specify the required deployment inputs.   
+3. Specify environment on which the blueprint should be deployed on - this option is presented only when the blueprint is using [get_environment_capability](/developer/blueprints/spec-intrinsic-functions#get_environment_capability) intrinsic function.
+4. Specify the required deployment inputs.   
    The names of the default input values appear in the inputs fields. You can leave these defaults or override them with new values.
    Input's description (on hovering help icon ![Help icon]( /images/ui/icons/help-icon.png )) might help you understand how to fill-in the proper value.
    An alternative for providing the inputs is to specify a .yaml file containing the relevant values.
-4. Select **Deploy** in the drop-down to deploy the blueprint or click **Install** to deploy and execute `install` workflow on it.
+5. Select **Deploy** in the drop-down to deploy the blueprint or click **Install** to deploy and execute `install` workflow on it.
 
 ![Create a deployment]( /images/ui/widgets/blueprints_deployment_creation.png )
 
@@ -132,5 +133,5 @@ See Settings section for details on how to turn on/off this feature.
 * `Enable click to drill down` - Enables redirecting to the blueprint’s drill-down page upon clicking on a specific blueprint. Default: Yes
 * `Display style` - Defines how the blueprints list should be displayed. Can be either Catalog or Table. Default: Table
 * `Hide failed blueprints` - Allows to hide blueprints not uploaded successfully. Default: Off
-* `Show Composer options` - Allows to show {{< param cfy_composer_name >}} options in menu and in the blueprints list. Default: On
+* `Show Composer options` - Allows to show {{< param cfy_composer_name >}} options in menu and in the blueprints list for users with permission. Default: On
 * `Label filter rules` - Allows to define blueprint labels' filter rules. See [blueprint filters](/cli/orch_cli/blueprints#blueprint-filters) for more details. Default: empty

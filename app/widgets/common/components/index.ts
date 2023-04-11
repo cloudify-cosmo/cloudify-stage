@@ -3,6 +3,7 @@ import DeleteConfirm from './DeleteConfirm';
 import DynamicDropdown from './DynamicDropdown';
 import FeedbackMessages from './FeedbackMessages';
 import GroupState from './GroupState';
+import GridWrapper from './GridWrapper';
 import IconButtonsGroup from './IconButtonsGroup';
 import NoDataMessage from './NoDataMessage';
 import RevertToDefaultIcon from './RevertToDefaultIcon';
@@ -17,6 +18,7 @@ export default {
     DynamicDropdown,
     FeedbackMessages,
     GroupState,
+    GridWrapper,
     IconButtonsGroup,
     NoDataMessage,
     Parameter,

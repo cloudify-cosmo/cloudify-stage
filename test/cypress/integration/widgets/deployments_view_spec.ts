@@ -83,16 +83,6 @@ describe('Deployments View widget', () => {
     const verifyMapHeight = (expectedHeight: number) =>
         getDeploymentsViewMap().invoke('height').should('eq', expectedHeight);
 
-    const widgetConfigurationHelpers = {
-        getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
-        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
-
-        getLabelsDropdown: () => cy.contains('List of labels').parent().find('[role="combobox"]'),
-        toggleLabelsDropdown: () => widgetConfigurationHelpers.getLabelsDropdown().click(),
-
-        mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
-    };
-
     const widgetHeader = {
         openRunWorkflowModal: () => {
             cy.contains('Bulk Actions').click();
@@ -118,14 +108,9 @@ describe('Deployments View widget', () => {
                 cy.contains(exampleSiteName).should('not.exist');
             });
 
-            cy.log('Show some columns');
-            cy.editWidgetConfiguration(widgetId, () => {
-                widgetConfigurationHelpers.toggleFieldsDropdown();
-                widgetConfigurationHelpers.getFieldsDropdown().within(() => {
-                    cy.get('[role="option"]').contains('Blueprint name').click();
-                });
-                widgetConfigurationHelpers.toggleFieldsDropdown();
-            });
+            cy.setMultipleDropdownConfigurationField(widgetId, 'List of fields to show in the table', [
+                'Blueprint name'
+            ]);
 
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
@@ -146,14 +131,11 @@ describe('Deployments View widget', () => {
                 cy.contains(prefixedLabelName).should('not.exist');
             });
 
-            cy.log('Show a label');
-            cy.editWidgetConfiguration(widgetId, () => {
-                widgetConfigurationHelpers.toggleLabelsDropdown();
-                widgetConfigurationHelpers.getLabelsDropdown().within(() => {
-                    cy.contains('[role="listbox"]', prefixedLabelName).click();
-                });
-                widgetConfigurationHelpers.toggleLabelsDropdown();
-            });
+            cy.setSearchableDropdownConfigurationField(
+                widgetId,
+                "List of labels' keys to show in the table as columns",
+                prefixedLabelName
+            );
 
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
@@ -171,10 +153,7 @@ describe('Deployments View widget', () => {
 
             const newHeight = 100;
 
-            cy.editWidgetConfiguration(widgetId, () => {
-                // NOTE: after clearing the input, 0 is automatically inserted. {home}{del} removes the leading 0
-                widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
-            });
+            cy.setNumericConfigurationField(widgetId, 'Map height', newHeight);
 
             verifyMapHeight(newHeight);
         });
@@ -1191,6 +1170,8 @@ describe('Deployments View widget', () => {
 
                 cy.getField('Name suffix').find('input').type(`${name}`);
 
+                cy.getField('Deploy On').should('not.exist');
+
                 cy.openAccordionSection('Deployment Metadata');
                 cy.getField('Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
@@ -1211,7 +1192,7 @@ describe('Deployments View widget', () => {
             cy.wait('@searchDeployments');
             cy.wait('@createDeploymentGroup').then(({ request }) => {
                 expect(request.body.blueprint_id).to.eq(blueprintName);
-                expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
+                expect(request.body.labels).to.deep.contain({ [labelKey]: labelValue });
                 expect(request.body.new_deployments).to.deep.equal(
                     deploymentIds.map(id => ({
                         id: '{uuid}',

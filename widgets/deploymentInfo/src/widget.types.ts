@@ -1,4 +1,5 @@
-import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { DeploymentWithUpdate } from 'app/widgets/common/deployments/DeploymentDetails';
 
 export declare namespace DeploymentInfoWidget {
     export interface Params {
@@ -16,20 +17,7 @@ export declare namespace DeploymentInfoWidget {
     }
 
     export interface Data {
-        /* eslint-disable camelcase */
-        deployment: {
-            id: string;
-            display_name?: string;
-            description: string;
-            visibility: string;
-            blueprint_id: string;
-            site_name: string;
-            created_at: string;
-            updated_at: string;
-            created_by: string;
-            isUpdated: boolean;
-        };
-        /* eslint-enable camelcase */
+        deployment: DeploymentWithUpdate;
         instancesCount: number;
         instancesStates: {
             [key: string]: number;

@@ -16,7 +16,6 @@ import type { GetAuthUserResponse } from 'backend/routes/Auth.types';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
 import 'cypress-file-upload';
-import 'cypress-get-table';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcher, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { castArray, identity, isString, noop } from 'lodash';
@@ -104,8 +103,8 @@ const commands = {
         cy.contains('Loading...').should('not.exist');
         return cy.waitUntilWidgetsDataLoaded();
     },
-    waitUntilWidgetsDataLoaded: (timeout: number = secondsToMs(10)) =>
-        cy.get('div.loader:visible', { timeout }).should('not.exist'),
+    waitUntilWidgetsDataLoaded: (timeout = 10) =>
+        cy.get('div.loader:visible', { timeout: secondsToMs(timeout) }).should('not.exist'),
     waitUntilAppLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
@@ -514,9 +513,33 @@ Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: un
     // eslint-disable-next-line security/detect-non-literal-regexp
     (subject ? cy.wrap(subject) : cy).contains(new RegExp(`\\b${num}\\b`))
 );
+
 Cypress.Commands.add('clickButton', { prevSubject: 'optional' }, (subject: unknown | undefined, buttonLabel: string) =>
     (subject ? cy.wrap(subject) : cy).contains('button', buttonLabel).click()
 );
+
+// NOTE: This command is inspired by https://github.com/roggerfe/cypress-get-table/blob/master/src/index.js
+Cypress.Commands.add('getTable', { prevSubject: true }, (subject: any) => {
+    if (subject.get().length > 1) {
+        throw new Error(`Selector "${subject.selector}" returned more than 1 element.`);
+    }
+
+    const tableElement = subject.get()[0];
+
+    const tableHeaders = [...tableElement.querySelectorAll('thead th')].map(element => element.textContent);
+
+    const tableRows = [...tableElement.querySelectorAll('tbody tr')].map(tableRow => {
+        return [...tableRow.querySelectorAll('td')].map(element => element.textContent);
+    });
+
+    const mappedTableValues = tableRows.map(tableRow =>
+        tableRow.reduce((accumulator, tableRowText, tableRowIndex) => {
+            return { ...accumulator, [tableHeaders[tableRowIndex]]: tableRowText };
+        }, {})
+    );
+
+    return cy.wrap(mappedTableValues);
+});
 
 function setContext(field: string, value: string) {
     cy.get(`.${field}FilterField`)

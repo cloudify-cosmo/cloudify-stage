@@ -1,13 +1,9 @@
-import React, { useCallback, useMemo } from 'react';
-import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { CSSProperties, FunctionComponent } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 import { Button } from '../../../components/basic';
 
-export interface ButtonLinkProps {
-    basic: boolean;
-    color: SemanticCOLORS;
-    icon: SemanticICONS;
-    label: string;
+export interface ButtonLinkProps extends ButtonConfiguration {
     url: string;
     fullHeight: boolean;
 }

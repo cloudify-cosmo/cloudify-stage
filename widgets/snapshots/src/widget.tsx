@@ -2,16 +2,12 @@ import type { PaginatedResponse } from 'backend/types';
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
 import type { Snapshot } from './widget.types';
 import SnapshotsTable from './SnapshotsTable';
-import { translate } from './widget.common';
 
 // eslint-disable-next-line camelcase
 Stage.defineWidget<{ created_by?: string }, PaginatedResponse<Snapshot>, DataTableConfiguration>({
     id: 'snapshots',
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 4,
     initialHeight: 16,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('snapshots'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

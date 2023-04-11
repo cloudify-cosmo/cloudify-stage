@@ -23,6 +23,7 @@ import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
 import Config from './routes/Config';
 import ContactDetails from './routes/ContactDetails';
+import Environment from './routes/Environment';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
@@ -103,6 +104,7 @@ const cookieAuthenticatedApiRoutes: Record<string, Router> = {
     ba: BlueprintAdditions,
     bud: BlueprintUserData,
     contactDetails: ContactDetails,
+    environment: Environment,
     external: External,
     file: File,
     filters: Filters,
@@ -114,8 +116,7 @@ const cookieAuthenticatedApiRoutes: Record<string, Router> = {
     terraform: Terraform,
     ua: UserApp,
     wb: WidgetBackend,
-    widgets: Widgets,
-    snapshots: Snapshots
+    widgets: Widgets
 };
 Object.entries(cookieAuthenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithCookie, router)

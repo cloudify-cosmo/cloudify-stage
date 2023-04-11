@@ -1,3 +1,4 @@
+import type { DeploymentWithUpdate } from 'app/widgets/common/deployments/DeploymentDetails';
 import type { DeploymentInfoWidget } from './widget.types';
 import DeploymentInfo from './DeploymentInfo';
 import Consts from './consts';
@@ -7,11 +8,8 @@ const t = Utils.getWidgetTranslation();
 
 Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, DeploymentInfoWidget.Configuration>({
     id: Consts.WIDGET_ID,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 16,
     initialHeight: 7,
-    isReact: true,
     hasReadme: true,
     showHeader: false,
     showBorder: false,
@@ -77,7 +75,7 @@ Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, Deplo
 
         if (deploymentId) {
             deployment = await manager
-                .doGet(`/deployments/${deploymentId}`, {
+                .doGet<Omit<DeploymentWithUpdate, 'isUpdated'>>(`/deployments/${deploymentId}`, {
                     params: {
                         _include: _.join(
                             _.compact([
@@ -108,7 +106,12 @@ Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, Deplo
                 });
 
             const nodeInstancesSummary = configuration.showNodeInstances
-                ? await new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances('deployment_id', {
+                ? await new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances<
+                      'deployment_id',
+                      string,
+                      'state',
+                      string
+                  >('deployment_id', {
                       _sub_field: 'state',
                       deployment_id: deploymentId
                   })

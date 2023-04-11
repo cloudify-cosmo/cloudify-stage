@@ -2,6 +2,7 @@
 import i18n from 'i18next';
 import type { GetExternalContentQueryParams } from 'backend/routes/External.types';
 import type { PutSourceListYamlQueryParams, PutSourceListYamlResponse } from 'backend/routes/SourceBrowser.types';
+import type { Visibility } from 'app/widgets/common/types';
 import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
@@ -66,13 +67,17 @@ export interface BlueprintPlan {
     imported_blueprints: unknown[];
     namespaces_mapping: { [key: string]: unknown };
     data_types: {
-        derived_from: string;
-        version: string;
-        properties: {
-            description: string;
-            type: string;
-            default: unknown;
-            required: boolean;
+        [key: string]: {
+            derived_from: string;
+            version: string;
+            properties: {
+                [key: string]: {
+                    description: string;
+                    type: string;
+                    default: unknown;
+                    required: boolean;
+                };
+            };
         };
     };
     labels: { [key: string]: unknown };
@@ -82,12 +87,12 @@ export interface BlueprintPlan {
 
 export interface FullBlueprintData {
     id: string;
-    visibility: string;
+    visibility: Visibility;
     created_at: string;
     main_file_name: string;
     plan: BlueprintPlan;
     updated_at: string;
-    description: null | unknown;
+    description: string | null;
     is_hidden: boolean;
     state: string;
     error: null | string;
@@ -96,7 +101,12 @@ export interface FullBlueprintData {
     created_by: string;
     resource_availability: string;
     private_resource: false;
-    labels: [];
+    labels: {
+        created_at: string;
+        created_by: string;
+        key: string;
+        value: string;
+    }[];
     upload_execution: {
         visibility: string;
         created_at: string;
@@ -356,7 +366,7 @@ export default class BlueprintActions {
         return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, { body: { visibility } });
     }
 
-    doListYamlFiles(blueprintUrl: string, file = null, includeFilename = false) {
+    doListYamlFiles(blueprintUrl: string, file: File | null = null, includeFilename = false) {
         if (file) {
             return this.toolbox
                 .getInternal()

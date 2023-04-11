@@ -2,13 +2,14 @@ import React, { useMemo } from 'react';
 
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import colors from '../../styles/colors.scss';
 import { Label } from '../basic';
 import type { ReduxState } from '../../reducers';
 import { defaultStyle } from './SideBarItemIcon';
 
 const StyledLabel = styled(Label)`
     &&&&& {
-        background: #65adff;
+        background: ${colors.cloudifyBlue};
         margin-top: -5px;
         padding-left: 4px !important;
     }

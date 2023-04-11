@@ -23,11 +23,3 @@ const ExecutionProgress: React.FunctionComponent<ExecutionProgressProps> = ({ ex
     return <Progress percent={progress} error={error} attached="bottom" color={color} />;
 };
 export default ExecutionProgress;
-
-ExecutionProgress.propTypes = {
-    execution: PropTypes.shape({
-        status: PropTypes.string.isRequired,
-        finished_operations: PropTypes.number.isRequired,
-        total_operations: PropTypes.number.isRequired
-    }).isRequired
-};

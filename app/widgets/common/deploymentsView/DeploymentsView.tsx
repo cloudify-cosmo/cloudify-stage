@@ -30,10 +30,11 @@ import DeploymentsMapContainer from './map';
 import SearchActions from '../actions/SearchActions';
 import getSelectedDeployment from './getSelectedDeployment';
 import useFilterQuery from './useFilterQuery';
-import type { Deployment, DeploymentsResponse } from './types';
+import type { DeploymentsResponse } from './types';
 
 import { ErrorMessage, Loading } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
+import { deploymentFields } from './types';
 
 const t = StageUtils.getT(i18nMessagesPrefix);
 
@@ -53,31 +54,6 @@ export interface DeploymentsViewProps {
 const reactSplitPaneOffset = 30;
 // NOTE: keeps the UI looking nice at all times
 const minPaneWidth = 440 + reactSplitPaneOffset;
-
-// NOTE: should contain all the properties in `Deployment`
-const deploymentPropertiesToInclude = (<T extends (keyof Deployment)[]>(keys: T) => keys)([
-    'id',
-    'display_name',
-    'site_name',
-    'blueprint_id',
-    'latest_execution_status',
-    'deployment_status',
-    'environment_type',
-    'latest_execution_total_operations',
-    'latest_execution_finished_operations',
-    'sub_services_count',
-    'sub_services_status',
-    'sub_environments_count',
-    'sub_environments_status',
-    'labels',
-    'capabilities'
-]);
-
-type MustBeTrue<T extends true> = T;
-// @ts-expect-error Only for type-checking
-type AllPropertiesIncluded = MustBeTrue<
-    keyof Deployment extends typeof deploymentPropertiesToInclude[number] ? true : false
->;
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
@@ -114,7 +90,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         (): Promise<DeploymentsResponse> =>
             searchActions.doListDeployments(finalFilterRules, {
                 ...gridParams,
-                _include: deploymentPropertiesToInclude.join(',')
+                _include: deploymentFields.join(',')
             }),
         {
             enabled: filteringByParentDeploymentResult.filterable,
@@ -182,17 +158,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     return (
         <DeploymentsViewContainer>
-            <DeploymentsViewHeaderContainer>
-                <DeploymentsViewHeader
-                    mapOpen={mapOpen}
-                    toggleMap={toggleMap}
-                    toolbox={toolbox}
-                    onFilterChange={setUserFilterRules}
-                    filterRules={finalFilterRules}
-                    disableBulkActions={disableBulkActions}
-                />
-            </DeploymentsViewHeaderContainer>
-
             {mapOpen && (
                 <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
                     <DeploymentsMapContainer
@@ -215,6 +180,17 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     style={{ position: 'relative' }}
                 >
                     <DeploymentsTableContainer>
+                        <DeploymentsViewHeaderContainer>
+                            <DeploymentsViewHeader
+                                mapOpen={mapOpen}
+                                toggleMap={toggleMap}
+                                toolbox={toolbox}
+                                onFilterChange={setUserFilterRules}
+                                filterRules={finalFilterRules}
+                                disableBulkActions={disableBulkActions}
+                                selectedDeployment={selectedOrFallbackDeployment}
+                            />
+                        </DeploymentsViewHeaderContainer>
                         <DeploymentsTable
                             setGridParams={setGridParams}
                             toolbox={toolbox}

@@ -4,21 +4,21 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import axios from 'axios';
+import type { File } from 'decompress';
 import decompress from 'decompress';
 import directoryTree from 'directory-tree';
-import ejs from 'ejs';
 import _, { escapeRegExp, merge, trimStart } from 'lodash';
 import uniqueDirectoryName from 'short-uuid';
-import simpleGit from 'simple-git';
-import type { File } from 'decompress';
-import type { NextFunction, Request, Response } from 'express';
 import type { GitError } from 'simple-git';
+import simpleGit from 'simple-git';
+import type { NextFunction, Request, Response } from 'express';
+import type { Blueprint } from 'cloudify-ui-common-backend';
+import { renderBlueprintYaml } from 'cloudify-ui-common-backend';
 import { getLogger } from './LoggerHandler';
-import type { TerraformBlueprintData, TerraformParserResult } from './TerraformHandler.types';
+import type { TerraformBlueprintData, TerraformParserResult, Variable } from './TerraformHandler.types';
+import { createGetAttributeCall, createGetSecretCall, createIntrinsicFunctionCall } from './services/BlueprintBuilder';
 
 const logger = getLogger('Terraform');
-const templatePath = path.resolve(__dirname, '../templates/terraform');
-const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
 
@@ -153,40 +153,93 @@ export const getModuleListForUrl = async (templateUrl: string, authHeader?: stri
     );
 };
 
-export const renderBlueprint = (
-    {
-        blueprintName,
+export const renderTerraformBlueprint = (terraformBlueprintData: TerraformBlueprintData, res: Response) => {
+    function createVariables(variables?: Variable[]) {
+        if (!variables?.length) {
+            return undefined;
+        }
+
+        return variables
+            .map(variable => ({
+                [variable.variable]:
+                    variable.source === 'static'
+                        ? variable.value
+                        : createIntrinsicFunctionCall(`get_${variable.source}`, variable.name)
+            }))
+            .reduce(merge, {});
+    }
+
+    function createOutputs(type: 'output' | 'capability') {
+        return outputs
+            ?.filter(output => output.type === type)
+            .map(output => ({
+                [output.name]: {
+                    value: createGetAttributeCall('cloud_resources', 'outputs', output.terraformOutput, 'value')
+                }
+            }))
+            .reduce(merge, {});
+    }
+
+    const {
         blueprintDescription,
-        terraformVersion,
-        terraformTemplate = '',
-        urlAuthentication,
+        blueprintName,
+        environmentVariables,
+        outputs,
         resourceLocation,
-        variables = [],
-        environmentVariables = [],
-        outputs = []
-    }: TerraformBlueprintData,
-    res: Response
-) => {
+        terraformTemplate,
+        terraformVersion,
+        urlAuthentication,
+        variables
+    } = terraformBlueprintData;
+
+    const blueprintModel: Blueprint = {
+        tosca_definitions_version: 'cloudify_dsl_1_4',
+        description: blueprintDescription || '',
+        imports: ['cloudify/types/types.yaml', 'plugin:cloudify-terraform-plugin'],
+        inputs: (variables ?? [])
+            .concat(environmentVariables ?? [])
+            .filter(variable => variable.source === 'input' && !variable.duplicated)
+            .map(variable => ({ [variable.name]: { type: 'string', default: variable.value || undefined } }))
+            .reduce(merge, {}),
+        node_templates: {
+            terraform: {
+                type: 'cloudify.nodes.terraform',
+                properties: {
+                    resource_config: {
+                        installation_source: `https://releases.hashicorp.com/terraform/${terraformVersion}/terraform_${terraformVersion}_linux_amd64.zip`
+                    }
+                }
+            },
+            cloud_resources: {
+                type: 'cloudify.nodes.terraform.Module',
+                properties: {
+                    resource_config: {
+                        source: {
+                            location: terraformTemplate,
+                            username: urlAuthentication ? createGetSecretCall(`${blueprintName}.username`) : undefined,
+                            password: urlAuthentication ? createGetSecretCall(`${blueprintName}.password`) : undefined
+                        },
+                        source_path: resourceLocation,
+                        variables: createVariables(variables),
+                        environment_variables: createVariables(environmentVariables)
+                    }
+                },
+                relationships: [
+                    {
+                        target: 'terraform',
+                        type: 'cloudify.terraform.relationships.run_on_host'
+                    }
+                ]
+            }
+        },
+        outputs: createOutputs('output'),
+        capabilities: createOutputs('capability')
+    };
+
     let result = '';
 
     try {
-        result = ejs.render(
-            template,
-            {
-                blueprintName,
-                blueprintDescription,
-                terraformVersion,
-                terraformTemplate,
-                urlAuthentication,
-                resourceLocation,
-                variables,
-                environmentVariables,
-                outputs
-            },
-            {
-                views: [templatePath]
-            }
-        );
+        result = renderBlueprintYaml(blueprintModel);
     } catch (err: any) {
         logger.error(err);
         res.status(500).send({ message: `Error when generating blueprint` });

@@ -36,6 +36,7 @@ const options: WebpackDevServer.Configuration = {
         [`${CONTEXT_PATH}/clientConfig`]: stageBackendOptions,
         [`${CONTEXT_PATH}/contactDetails`]: stageBackendOptions,
         [`${CONTEXT_PATH}/config`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/environment`]: stageBackendOptions,
         [`${CONTEXT_PATH}/external`]: stageBackendOptions,
         [`${CONTEXT_PATH}/file`]: stageBackendOptions,
         [`${CONTEXT_PATH}/filters`]: stageBackendOptions,
@@ -65,7 +66,8 @@ const options: WebpackDevServer.Configuration = {
     }
 };
 
-const compiler = webpack(webpackConfig);
+// NOTE: TypeScript is not capable of figuring out which version of overloaded function to use without this condition
+const compiler = Array.isArray(webpackConfig) ? webpack(webpackConfig) : webpack(webpackConfig);
 const server = new WebpackDevServer(options, compiler);
 
 server.startCallback(err => {

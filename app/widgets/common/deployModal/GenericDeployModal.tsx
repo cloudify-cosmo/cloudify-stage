@@ -62,7 +62,7 @@ type StepsProp = {
     executeStep: ExecuteStep;
 };
 
-type GenericDeployModalProps = {
+export type GenericDeployModalProps = {
     /**
      * specifies whether the deploy modal is displayed
      */
@@ -179,6 +179,7 @@ type GenericDeployModalState = {
     errors: Errors;
     fileLoading: boolean;
     labels: Label[];
+    initialLabels?: Label[];
     loading: boolean;
     loadingMessage: string;
     runtimeOnlyEvaluation: boolean;
@@ -287,13 +288,31 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
-        const { blueprintId, open } = this.props;
+        const { blueprintId, open, toolbox } = this.props;
+
+        const getStateFromContext = (
+            contextKey: 'siteName' | 'deploymentName' | 'labels' | 'deploymentInputs',
+            stateKey?: 'initialLabels'
+        ) => {
+            const contextValue = toolbox.getContext().getValue(contextKey);
+            if (contextValue) {
+                this.setState({ [stateKey ?? contextKey]: contextValue } as GenericDeployModalState);
+                toolbox.getContext().setValue(contextKey, undefined);
+            }
+        };
 
         if (!prevProps.open && open) {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({ ...GenericDeployModal.initialState, deploymentId: StageUtils.uuid() }, () => {
-                this.selectBlueprint(blueprintId!);
+            this.setState({
+                ...GenericDeployModal.initialState,
+                deploymentId: StageUtils.uuid()
             });
+
+            getStateFromContext('siteName');
+            getStateFromContext('deploymentName');
+            getStateFromContext('labels', 'initialLabels');
+
+            this.selectBlueprint(blueprintId!).then(() => getStateFromContext('deploymentInputs'));
         }
     }
 
@@ -567,7 +586,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             const { toolbox, environmentToDeployOn } = this.props;
 
             const actions = new BlueprintActions(toolbox);
-            actions
+            return actions
                 .doGetFullBlueprintData(id)
                 .then(blueprint => {
                     const deploymentInputs = getInputsInitialValues(blueprint.plan);
@@ -596,9 +615,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         errors: { error: err.message }
                     });
                 });
-        } else {
-            this.setState({ blueprint: GenericDeployModal.EMPTY_BLUEPRINT, errors: {} });
         }
+        this.setState({ blueprint: GenericDeployModal.EMPTY_BLUEPRINT, errors: {} });
+        return Promise.resolve();
     }
 
     validateInputs() {
@@ -680,7 +699,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             scheduledTime,
             selectedApproveButton,
             showDeployOnDropdown,
-            deploymentIdToDeployOn
+            deploymentIdToDeployOn,
+            initialLabels
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
@@ -818,8 +838,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 >
                                     <LabelsInput
                                         toolbox={toolbox}
-                                        hideInitialLabels
-                                        onChange={(labels: Label[]) => this.setState({ labels })}
+                                        initialLabels={initialLabels}
+                                        onChange={(newLabels: Label[]) => this.setState({ labels: newLabels })}
                                     />
                                 </Form.Field>
                             </AccordionSectionWithDivider>

@@ -1,35 +1,49 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { castArray } from 'lodash';
+import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { BlueprintInfoData } from './types';
 import BlueprintInfo from './BlueprintInfo';
 import Actions from './actions';
 
-Stage.defineWidget({
-    id: 'blueprintInfo',
-    name: 'Blueprint Info',
-    description: 'Shows blueprint basic information and status',
+const widgetId = 'blueprintInfo';
+const translate = Stage.Utils.getT('widgets.blueprintInfo');
+
+interface BlueprintInfoParams {
+    /* eslint-disable camelcase */
+    blueprint_id?: string;
+    deployment_id?: string | null;
+    /* eslint-enable camelcase */
+}
+
+interface BlueprintInfoConfiguration extends PollingTimeConfiguration {
+    blueprintId?: string;
+}
+
+Stage.defineWidget<BlueprintInfoParams, BlueprintInfoData, BlueprintInfoConfiguration>({
+    id: widgetId,
     initialWidth: 3,
     initialHeight: 14,
-    isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintInfo'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'blueprintId',
-            name: 'Blueprint ID',
-            placeHolder: 'Enter the blueprint id you wish to show info',
+            name: translate('configuration.blueprintId.name'),
+            placeHolder: translate('configuration.blueprintId.placeholder'),
             type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
 
     fetchParams(widget, toolbox) {
-        let blueprintId = toolbox.getContext().getValue('blueprintId');
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        let blueprintId = castArray(toolbox.getContext().getValue('blueprintId'))[0];
 
-        blueprintId = _.isEmpty(widget.configuration.blueprintId) ? blueprintId : widget.configuration.blueprintId;
+        blueprintId = widget.configuration.blueprintId ?? blueprintId;
 
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
 
         return {
             blueprint_id: blueprintId,
@@ -37,7 +51,7 @@ Stage.defineWidget({
         };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
         const blueprintId = params.blueprint_id;
@@ -48,28 +62,27 @@ Stage.defineWidget({
             promise = actions.doGetBlueprintId(deploymentId);
         }
 
-        return promise.then(({ blueprint_id: id }) => {
-            if (id) {
-                return Promise.all([actions.doGetBlueprintDetails(id), actions.doGetBlueprintDeployments(id)]).then(
-                    data => ({
-                        ...data[0],
-                        created_at: Stage.Utils.Time.formatTimestamp(data[0].created_at),
-                        updated_at: Stage.Utils.Time.formatTimestamp(data[0].updated_at),
-                        deployments: _.get(data[1].items[0], 'deployments', 0)
-                    })
-                );
-            }
-            return Promise.resolve({ id: '' });
-        });
+        return promise.then(({ blueprint_id: id }) =>
+            id
+                ? Promise.all([actions.doGetBlueprintDetails(id), actions.doGetBlueprintDeployments(id)]).then(
+                      data => ({
+                          ...data[0],
+                          created_at: Stage.Utils.Time.formatTimestamp(data[0].created_at),
+                          updated_at: Stage.Utils.Time.formatTimestamp(data[0].updated_at),
+                          deployments: data[1].items[0]?.deployments || 0
+                      })
+                  )
+                : Promise.reject(translate('noBlueprintError'))
+        );
     },
 
-    render(widget, data, error, toolbox) {
+    render(_widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
-        return <BlueprintInfo widget={widget} data={data} toolbox={toolbox} />;
+        return <BlueprintInfo data={data} toolbox={toolbox} />;
     }
 });

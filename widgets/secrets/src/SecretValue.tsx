@@ -40,8 +40,8 @@ const SecretValue: FunctionComponent<SecretValueProps> = ({
         if (canShowSecret) {
             return (
                 <div>
-                    <pre className="forceMaxWidth">{showSecretValue}</pre>
                     <Icon link name="hide" title={translateSecrets('icons.hide')} onClick={onHide} />
+                    <pre className="forceMaxWidth">{showSecretValue}</pre>
                 </div>
             );
         }

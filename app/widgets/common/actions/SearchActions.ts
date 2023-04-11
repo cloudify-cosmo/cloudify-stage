@@ -1,4 +1,6 @@
-import type { Deployment } from '../deploymentsView/types';
+import type { PaginatedResponse } from 'backend/types';
+import type { FullBlueprintData } from '../blueprints/BlueprintActions';
+import type { FullDeploymentData } from '../deployments/DeploymentActions';
 import type { Workflow } from '../executeWorkflow';
 import type { FilterRule } from '../filters/types';
 
@@ -19,10 +21,11 @@ type ListBlueprintsParams = Stage.Types.ManagerGridParams & {
 export default class SearchActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    private doList(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
-        return this.toolbox
-            .getManager()
-            .doPost(`/searches/${resourceName}`, { params, body: { filter_rules: filterRules } });
+    private doList<Resource>(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
+        return this.toolbox.getManager().doPost<PaginatedResponse<Resource>>(`/searches/${resourceName}`, {
+            params,
+            body: { filter_rules: filterRules }
+        });
     }
 
     private doListAll<ResponseBody>(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
@@ -48,16 +51,30 @@ export default class SearchActions {
         };
     }
 
-    doListDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
-        return this.doList('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
+    doListDeployments<IncludeKeys extends keyof FullDeploymentData = keyof FullDeploymentData>(
+        filterRules: FilterRule[],
+        params?: ListDeploymentsParams
+    ) {
+        return this.doList<Pick<FullDeploymentData, IncludeKeys>>(
+            'deployments',
+            filterRules,
+            SearchActions.searchAlsoByDeploymentName(params)
+        );
     }
 
     doListAllDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
-        return this.doListAll<Deployment>('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
+        return this.doListAll<FullDeploymentData>(
+            'deployments',
+            filterRules,
+            SearchActions.searchAlsoByDeploymentName(params)
+        );
     }
 
-    doListBlueprints(filterRules: FilterRule[], params?: ListBlueprintsParams) {
-        return this.doList('blueprints', filterRules, params);
+    doListBlueprints<IncludeKeys extends keyof FullBlueprintData>(
+        filterRules: FilterRule[],
+        params?: ListBlueprintsParams
+    ) {
+        return this.doList<Pick<FullBlueprintData, IncludeKeys>>('blueprints', filterRules, params);
     }
 
     doListAllWorkflows(filterRules: FilterRule[], params?: Params) {

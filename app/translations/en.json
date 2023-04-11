@@ -117,7 +117,6 @@
             }
         },
         "welcomeLogoLabel": "CLOUDIFY",
-        "loading": "Loading...",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
@@ -296,8 +295,8 @@
         "message": "Welcome to the Cloudify Management Console, Please log in",
         "firstLoginHint": "For the first login please use\nUsername: admin\nPassword: admin\n\nIt's recommended to change the password after login.",
         "error": {
-            "noPassword": "Please provide password",
-            "noUsername": "Please provide username"
+            "missingCredentials": "Please fill your credentials",
+            "incorrectCredentials": "Incorrect username and/or password. Please check and try again."
         },
         "password": "Password",
         "username": "Username",
@@ -311,7 +310,23 @@
                 "activate": "Are you sure you want to enter maintenance mode?",
                 "deactivate": "Are you sure you want to exit maintenance mode?"
             },
-            "activeExecutionsDelay": "There are active executions. If you confirm, maintenance mode will be activated when all executions are done."
+            "buttons": {
+                "submit": "Yes",
+                "cancel": "No"
+            },
+            "activeExecutionsDelay": "There are active executions. If you confirm, maintenance mode will be activated when all executions are done.",
+            "executions": {
+                "blueprint": "Blueprint",
+                "deployment": "Deployment",
+                "workflow": "Workflow",
+                "id": "Id",
+                "system": "System",
+                "status": "Status",
+                "action": "Action",
+                "cancel": "Cancel",
+                "forceCancel": "Force Cancel",
+                "killCancel": "'Kill Cancel"
+            }
         },
         "deactivate": "Deactivate Maintenance Mode",
         "header": "Maintenance mode",
@@ -729,6 +744,8 @@
                 },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
+                "labelNumberValidationError": "This label should be a number between {{ from }} and {{ to }}",
+                "labelDuplicatedKeyError": "This label key cannot be added twice",
                 "modalHeader": "Manage labels for deployment {{ deploymentNameAndId }}",
                 "modalApplyButton": "Apply"
             },
@@ -994,7 +1011,27 @@
                 "editCopy": "Edit a copy in Composer"
             }
         },
+        "blueprintInfo": {
+            "name": "Blueprint Info",
+            "description": "Shows blueprint basic information and status",
+            "configuration": {
+                "blueprintId": {
+                    "name": "Blueprint ID",
+                    "placeholder": "Enter the blueprint ID you wish to show info for"
+                }
+            },
+            "fields": {
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "mainFile": "Main Blueprint File",
+                "deployments": "Deployments"
+            },
+            "noBlueprintError": "No blueprint selected"
+        },
         "blueprints": {
+            "name": "Blueprints",
+            "description": "Shows blueprints list",
             "configuration": {
                 "fieldsToShow": {
                     "label": "List of fields to show",
@@ -1099,6 +1136,29 @@
                         "outputInvalid": "Please provide valid Terraform output - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     }
                 }
+            },
+            "noDataMessage": "There are no Blueprints available. Click \"Upload\" to add Blueprints.",
+            "errors:": {
+                "deleteBlueprint": "Something went wrong, no blueprint was selected for delete"
+            },
+            "icons": {
+                "createDeployment": "Create deployment",
+                "deleteBlueprint": "Delete blueprint",
+                "editInComposer": "Edit a copy in Composer"
+            },
+            "buttons": {
+                "deploy": "Deploy",
+                "delete": "Delete",
+                "editInComposer": "Edit in Composer"
+            },
+            "columns": {
+                "name": "Name",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "main_file_name": "Main file name",
+                "state": "State",
+                "deployments": "# Deployments"
             }
         },
         "blueprintSources": {
@@ -1499,6 +1559,35 @@
                 "message": "Message"
             }
         },
+        "eventsFilter": {
+            "name": "Events/logs filter",
+            "description": "Adds a filter section for events and logs",
+            "inputs": {
+                "type": {
+                    "placeholder": "Type"
+                },
+                "eventType": {
+                    "placeholder": "Event Types",
+                    "additionLabel": "Add custom Event Type: "
+                },
+                "logLevel": {
+                    "placeholder": "Log Levels",
+                    "additionLabel": "Add custom Log Level: "
+                },
+                "operationText": {
+                    "placeholder": "Operation"
+                },
+                "messageText": {
+                    "placeholder": "Message"
+                },
+                "timeRange": {
+                    "placeholder": "Time Range"
+                },
+                "resetFilter": {
+                    "content": "Reset filter"
+                }
+            }
+        },
         "executions": {
             "name": "Executions",
             "description": "This widget shows the deployment executions",
@@ -1572,6 +1661,61 @@
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
+        "nodes": {
+            "name": "Nodes list",
+            "description": "This widget shows nodes",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "containedIn": "Contained in",
+                        "connectedTo": "Connected to",
+                        "host": "Host",
+                        "creator": "Creator",
+                        "instancesCount": "# Instances",
+                        "groups": "Groups"
+                    }
+                }
+            },
+            "nodeInstanceModal": {
+                "header": "Node instance {{ id }}",
+                "relationships": {
+                    "header": "Relationships",
+                    "targetNode": "Target node",
+                    "type": "Relationship type",
+                    "sourceNode": "Source node",
+                    "noDataMessage": "There are no Relationships defined for that Node Instance."
+                },
+                "runtimeProperties": {
+                    "header": "Runtime properties",
+                    "key": "Key",
+                    "value": "Value",
+                    "noDataMessage": "There are no Runtime Properties defined for that Node Instance."
+                },
+                "buttons": {
+                    "close": "Close",
+                    "copy": "Copy"
+                }
+            },
+            "nodeInstancesTable": {
+                "columns": {
+                    "instance": "Instance",
+                    "status": "Status",
+                    "details": "Details"
+                },
+                "noDataMessage": "There are no Node Instances of selected Node available."
+            },
+            "nodesTable": {
+                "noDataMessage": "There are no Nodes available. Probably there's no deployment created, yet.",
+                "typeHierarchy": "Type Hierarchy"
+            }
+        },
         "nodesStats": {
             "name": "Nodes statistics",
             "description": "This widget shows number of node instances in different states"
@@ -1605,6 +1749,8 @@
             "successMessage": "{{pluginTitle}} successfully uploaded"
         },
         "plugins": {
+            "name": "Plugins list",
+            "description": "Plugins list",
             "upload": {
                 "button": "Upload",
                 "marketplace": "Upload from Marketplace",
@@ -1796,8 +1942,9 @@
                         "secretKey": "Please provide secret key",
                         "secretValue": "Please provide secret value",
                         "noProviders": "No Secret providers are defined in the System",
-                        "secretProviderName": "Please select a secret provider",
-                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
+                        "secretProvider": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider",
+                        "secretProviderOptions": "Invalid Provider Options"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
@@ -2263,10 +2410,77 @@
             "noDeploymentSelected": "No deployment selected"
         },
         "sites": {
-            "actions": {
-                "updateSite": "Update site",
-                "deleteSite": "Delete site"
+            "name": "Sites",
+            "description": "This widget shows a list of available sites and allow managing them",
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "location": "Location",
+                    "created": "Created",
+                    "creator": "Creator",
+                    "tenant": "Tenant",
+                    "deploymentsCount": "# Deployments"
+                },
+                "items": {
+                    "location": "Latitude: {{latitude}}, Longitude: {{longitude}}"
+                },
+                "actions": {
+                    "updateSite": "Update site",
+                    "deleteSite": "Delete site"
+                },
+                "confirm": {
+                    "delete": "Are you sure you want to delete the site '{{siteName}}'?"
+                },
+                "noDataMessage": "There are no Sites available. Click \"Create\" to create Sites."
+            },
+            "modals": {
+                "create": {
+                    "header": "Create site {{siteName}}",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "create": "Create"
+                    },
+                    "fields": {
+                        "siteName": "Name"
+                    }
+                },
+                "update": {
+                    "header": "Create site",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "update": "Update"
+                    },
+                    "fields": {
+                        "siteNewName": "Name"
+                    }
+                }
+            },
+            "map": {
+                "noInternetMessage": "Map cannot be displayed because there is no connection to the maps repository. Please check network connection."
+            },
+            "common": {
+                "fields": {
+                    "siteLocation": {
+                        "label": "Location",
+                        "placeholder": "latitude, longitude (32.166369, 34.810893)"
+                    }
+                }
             }
+        },
+        "pluginsNum": {
+            "name": "Number of plugins",
+            "description": "Number of plugins",
+            "configuration": {
+                "page": {
+                    "name": "Page to open on click",
+                    "description": "Page to open when user clicks on widget content"
+                }
+            },
+            "quantityDescription": "Plugins"
         },
         "snapshots": {
             "actions": {
@@ -2351,13 +2565,6 @@
             "name": "Snapshots list",
             "decription": "Snapshots list"
         },
-        "managers": {
-            "actions": {
-                "openConsole": "Open Console",
-                "refreshStatus": "Refresh Status",
-                "refreshStatusInProgress": "Status refresh in progress..."
-            }
-        },
         "deploymentActionButtons": {
             "name": "Deployment action buttons",
             "description": "Provides set of action buttons for deployment",
@@ -2385,6 +2592,52 @@
                 "enableZoom": "Enable zoom",
                 "enableDrag": "Enable drag",
                 "showToolbar": "Show toolbar"
+            }
+        },
+        "environmentButton": {
+            "name": "Create environment button",
+            "description": "Adds button to create a new environment",
+            "buttonLabel": "Create Environment",
+            "menu": {
+                "new": "New",
+                "fromBlueprint": "From Blueprint"
+            },
+            "createNewModal": {
+                "header": "Create Environment",
+                "form": {
+                    "name": "Name",
+                    "blueprintName": "Blueprint Name",
+                    "blueprintDescription": "Blueprint Description",
+                    "capabilities": {
+                        "header": "Capabilities",
+                        "name": "Capability Name",
+                        "source": "Source",
+                        "sources": {
+                            "static": "Static",
+                            "secret": "Secret",
+                            "input": "Input"
+                        },
+                        "default": "Default",
+                        "value": "Value"
+                    },
+                    "labels": {
+                        "header": "Labels",
+                        "default": "Default"
+                    },
+                    "location": "Location"
+                },
+                "errors": {
+                    "nameMissing": "Environment name is required, please fill the environment name",
+                    "blueprintNameMissing": "Environment blueprint name should be provided",
+                    "blueprintNameInvalid": "Invalid blueprint name. It should contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
+                    "capabilityNameMissing": "Please provide capability name",
+                    "capabilitySourceMissing": "Please provide capability source",
+                    "capabilityNameDuplicated": "Capability name already defined",
+                    "capabilityValueMissing": "Please provide capability value",
+                    "blueprintNameExists": "Blueprint with this name already exists"
+                },
+                "submit": "Create",
+                "cancelConfirm": "Are you sure you would like to discard the filled data and close?"
             }
         }
     }

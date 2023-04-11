@@ -1,12 +1,15 @@
-import type { CSSProperties, FunctionComponent, SyntheticEvent } from 'react';
+import type { CSSProperties, SyntheticEvent } from 'react';
 import React from 'react';
+import { pick, toNumber } from 'lodash';
+import type { LabelsListProps, Label as BasicLabelWithSystemData } from 'cloudify-ui-components';
+import LabelErrorPopup from './LabelErrorPopup';
 import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
 import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import KeyDropdown from './KeyDropdown';
-import type { Label, LabelWithSystemData } from './types';
+import type { Label as BasicLabel } from './types';
 import ValueDropdown from './ValueDropdown';
 import { isLabelModifiable } from './common';
 
@@ -31,8 +34,8 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
-            .then(keys => {
-                setReservedKeys(keys.filter(isLabelModifiable));
+            .then(labelKeys => {
+                setReservedKeys(labelKeys.filter(isLabelModifiable));
             })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
@@ -41,20 +44,57 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     return { reservedKeys, fetchingReservedKeys };
 }
 
-export interface LabelsInputProps {
+const coordinateLabelKeys = {
+    latitude: 'csys-location-lat',
+    longitude: 'csys-location-long'
+};
+
+function validateCoordinateLabels(newValue: string, newLabelKey: string, existingLabelKeys: string[]) {
+    if (!Object.values(coordinateLabelKeys).find(key => key === newLabelKey)) {
+        return undefined;
+    }
+    const boundary = newLabelKey === coordinateLabelKeys.latitude ? 90 : 180;
+
+    const number = toNumber(newValue);
+
+    if (Number.isNaN(number) || number > boundary || number < -boundary) {
+        return Stage.i18n.t('widgets.common.labels.labelNumberValidationError', { to: boundary, from: -boundary });
+    }
+
+    if (existingLabelKeys.find(label => label === newLabelKey)) {
+        return Stage.i18n.t('widgets.common.labels.labelDuplicatedKeyError');
+    }
+
+    return undefined;
+}
+
+export interface ExtraFormFieldProps<Label extends BasicLabel> {
+    label: Label;
+    onChange: (label: Label) => void;
+}
+
+export interface LabelsInputProps<Label extends BasicLabel> {
     hideInitialLabels?: boolean;
     initialLabels?: Label[];
     onChange: (labels: Label[]) => void;
     toolbox: Stage.Types.Toolbox;
+    extraFormField?: React.FunctionComponent<ExtraFormFieldProps<Label>>;
+    coloringStrategy?: LabelsListProps<Label>['coloringStrategy'];
 }
 
-const LabelsInput: FunctionComponent<LabelsInputProps> = ({
+const defaultInitialLabels: any[] = [];
+
+function LabelsInput<Label extends BasicLabel = BasicLabel>({
     hideInitialLabels = false,
-    initialLabels = [],
+    initialLabels = defaultInitialLabels,
     onChange,
-    toolbox
-}) => {
-    const { useEffect, useRef } = React;
+    toolbox,
+    extraFormField,
+    coloringStrategy
+}: LabelsInputProps<Label>) {
+    type LabelWithSystemData = Label & BasicLabelWithSystemData;
+
+    const { useEffect, useRef, useState } = React;
     const {
         Basic: { Divider, Form, Icon, LabelsList, Segment },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
@@ -67,19 +107,33 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         hideInitialLabels ? [] : initialLabels
     );
     const [open, toggleOpen] = useToggle();
-    const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
-    const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
+    const [newLabel, setNewLabel] = useState<Label>({ key: '', value: '' } as Label);
     const keyDropdownRef = useRef<HTMLElement>(null);
+
+    const newLabelKey = newLabel.key;
+    const newLabelValue = newLabel.value;
+
+    function resetNewLabel() {
+        setNewLabel({ ...newLabel, key: '', value: '' });
+    }
 
     const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
     const newLabelIsAlreadyPresent = (() => {
-        const newLabel = { key: newLabelKey, value: newLabelValue };
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
-        return !!_.find(allLabels, newLabel);
+        return !!_.find(allLabels, pick(newLabel, 'key', 'value'));
     })();
+    const keyValidationError = validateCoordinateLabels(
+        newLabelValue,
+        newLabelKey,
+        labels.map(({ key }) => key)
+    );
     const newLabelKeyIsNotPermitted = newLabelKey.startsWith(internalKeyPrefix) && !reservedKeys.includes(newLabelKey);
     const addLabelNotAllowed =
-        !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel || newLabelKeyIsNotPermitted;
+        !newLabelIsProvided ||
+        newLabelIsAlreadyPresent ||
+        addingLabel ||
+        newLabelKeyIsNotPermitted ||
+        !!keyValidationError;
     const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
@@ -87,8 +141,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
     }, [labels]);
 
     useOpenProp(open, () => {
-        resetNewLabelKey();
-        resetNewLabelValue();
+        resetNewLabel();
     });
 
     useEffect(() => {
@@ -109,10 +162,9 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 
         setAddingLabel();
         return isLabelInSystem().then(isInSystem => {
-            const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isInSystem }];
+            const newLabels = [...labels, { ...newLabel, isInSystem }];
             setLabels(newLabels);
-            resetNewLabelKey();
-            resetNewLabelValue();
+            resetNewLabel();
             unsetAddingLabel();
         });
     }
@@ -122,6 +174,8 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
             keyDropdownRef.current?.click();
         });
     }
+
+    const ExtraFormField = extraFormField;
 
     return (
         <Segment
@@ -158,7 +212,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                     onClick={toggleOpen}
                     style={{ ...iconStyle, right: '0.5em' }}
                 />
-                <LabelsList labels={labels} onChange={setLabels} />
+                <LabelsList labels={labels} onChange={setLabels} coloringStrategy={coloringStrategy} />
             </div>
             {open && (
                 <div style={{ padding: '0 0.5em' }}>
@@ -170,20 +224,22 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                             )}
                             <KeyDropdown
                                 innerRef={keyDropdownRef}
-                                onChange={setNewLabelKey}
+                                onChange={(key: string) => setNewLabel({ ...newLabel, key })}
                                 toolbox={toolbox}
                                 value={newLabelKey}
                             />
                         </Form.Field>
                         <Form.Field width={7}>
                             {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
+                            {keyValidationError && <LabelErrorPopup content={keyValidationError} />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
-                                onChange={setNewLabelValue}
+                                onChange={(value: string) => setNewLabel({ ...newLabel, value })}
                                 toolbox={toolbox}
                                 value={newLabelValue}
                             />
                         </Form.Field>
+                        {ExtraFormField && <ExtraFormField label={newLabel} onChange={setNewLabel} />}
                         <Form.Field width={2}>
                             <AddButton
                                 onClick={onAddLabel}
@@ -196,5 +252,5 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
             )}
         </Segment>
     );
-};
+}
 export default LabelsInput;

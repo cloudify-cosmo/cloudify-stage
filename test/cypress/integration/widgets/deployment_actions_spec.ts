@@ -5,6 +5,7 @@ describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
     const deploymentId = 'deployment_action_buttons_test';
     const deploymentName = `${deploymentId}_name`;
+    const existingLabel = 'existing_key: existing_value';
 
     const typeLabelInput = (inputType: LabelInputType, text: string) => {
         if (inputType === 'key') {
@@ -60,6 +61,8 @@ describe('Deployment Action Buttons widget', () => {
         it('should allow to start an action on the deployment', () => {
             const siteName = 'deployment_action_buttons_test';
             cy.deleteSites(siteName).createSite({ name: siteName });
+            cy.refreshTemplate();
+            cy.clearDeploymentContext().setDeploymentContext(deploymentId);
             cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setSite');
 
             cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
@@ -75,6 +78,17 @@ describe('Deployment Action Buttons widget', () => {
 
             cy.wait('@setSite');
             cy.get('.modal').should('not.exist');
+        });
+
+        it('should disable set site if there are no sites', () => {
+            cy.deleteSites();
+            cy.refreshTemplate();
+            cy.clearDeploymentContext().setDeploymentContext(deploymentId);
+
+            cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
+            cy.clickButton('Deployment actions');
+
+            cy.get('.popupMenu > .menu').contains('Set Site').should('have.class', 'disabled');
         });
 
         it('should show only available workflows and actions', () => {
@@ -201,7 +215,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.get('button[aria-label=Add]').click();
                 cy.wait('@checkIfLabelExists');
 
-                cy.contains('a.label', 'existing_key sample_value').should('be.visible');
+                cy.contains('a.label', existingLabel).should('be.visible');
             });
         });
 
@@ -241,7 +255,7 @@ describe('Deployment Action Buttons widget', () => {
             }
             function checkIfInternalKeyIsPermitted(key: string) {
                 checkIfPopupIsNotDisplayed('key', key);
-                cy.typeLabelValue('a');
+                cy.typeLabelValue('10');
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
             cy.getReservedLabelKeys().then(reservedLabelKeys => {
@@ -254,7 +268,6 @@ describe('Deployment Action Buttons widget', () => {
 
         it('allows to remove label from the list', () => {
             cy.get('.modal').within(() => {
-                const existingLabel = 'existing_key existing_value';
                 cy.contains('a.label', existingLabel).should('be.visible');
                 cy.contains('a.label', existingLabel).find('.delete').click();
                 cy.contains('a.label', existingLabel).should('not.exist');
@@ -266,7 +279,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.addLabel('my_key', 'my_value');
 
                 cy.revertToDefaultValue();
-                cy.contains('a.label', 'existing_key existing_value').should('be.visible');
+                cy.contains('a.label', existingLabel).should('be.visible');
             });
         });
     });

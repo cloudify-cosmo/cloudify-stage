@@ -1,16 +1,43 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { get, isEmpty, isEqual } from 'lodash';
+import type {
+    PageSizeConfiguration,
+    PollingTimeConfiguration,
+    SortAscendingConfiguration,
+    SortColumnConfiguration
+} from 'app/utils/GenericConfig';
+import './widget.css';
+import type { DeploymentsData, FetchedLastExecutionType } from 'widgets/deployments/src/types';
+import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
-import './widget.css';
+import type { DeploymentsListData } from './types';
+import { fetchedDeploymentFields, fetchedLastExecutionFields } from './types';
 
-const t = Stage.Utils.getT('widgets.deployments');
+const translate = Stage.Utils.getT('widgets.deployments');
 
-Stage.defineWidget({
+export interface DeploymentsConfiguration
+    extends PollingTimeConfiguration,
+        PageSizeConfiguration,
+        SortColumnConfiguration,
+        SortAscendingConfiguration {
+    blueprintIdFilter: string;
+    showFirstUserJourneyButtons: boolean;
+    clickToDrillDown: boolean;
+    displayStyle: 'table' | 'list';
+    showExecutionStatusLabel: boolean;
+}
+
+type DeploymentsParams = {
+    _search?: string;
+    /* eslint-disable camelcase */
+    blueprint_id: string;
+    site_name?: string;
+    created_by?: string;
+    /* eslint-enable camelcase */
+};
+
+Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>({
     id: 'deployments',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
@@ -20,33 +47,33 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'clickToDrillDown',
-            name: t('configuration.clickToDrillDown.name'),
+            name: translate('configuration.clickToDrillDown.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showExecutionStatusLabel',
-            name: t('configuration.showExecutionStatusLabel.name'),
-            description: t('configuration.showExecutionStatusLabel.description'),
+            name: translate('configuration.showExecutionStatusLabel.name'),
+            description: translate('configuration.showExecutionStatusLabel.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showFirstUserJourneyButtons',
-            name: t('configuration.showFirstUserJourneyButtons.name'),
-            description: t('configuration.showFirstUserJourneyButtons.description'),
+            name: translate('configuration.showFirstUserJourneyButtons.name'),
+            description: translate('configuration.showFirstUserJourneyButtons.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'blueprintIdFilter',
-            name: t('configuration.blueprintIdFilter.name'),
+            name: translate('configuration.blueprintIdFilter.name'),
             placeHolder: 'Enter the blueprint id you wish to filter by',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
-            name: t('configuration.displayStyle.name'),
+            name: translate('configuration.displayStyle.name'),
             items: [
                 { name: 'Table', value: 'table' },
                 { name: 'List', value: 'list' }
@@ -57,7 +84,6 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
@@ -66,7 +92,7 @@ Stage.defineWidget({
         blueprintId = isEmpty(widget.configuration.blueprintIdFilter)
             ? blueprintId
             : widget.configuration.blueprintIdFilter;
-        const obj = { blueprint_id: blueprintId };
+        const obj: DeploymentsParams = { blueprint_id: blueprintId };
 
         const siteName = toolbox.getContext().getValue('siteName');
         if (siteName) {
@@ -79,11 +105,12 @@ Stage.defineWidget({
         return obj;
     },
 
-    async fetchData(widget, toolbox, params) {
-        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments(
+    async fetchData(_widget, toolbox, params) {
+        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments<
+            typeof fetchedDeploymentFields[number]
+        >(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
-                _include:
-                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
+                _include: fetchedDeploymentFields.join(','),
                 ...params
             })
         );
@@ -91,18 +118,22 @@ Stage.defineWidget({
         const nodeInstanceDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.id))
             .then(ids =>
-                new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances('deployment_id', {
-                    _sub_field: 'state',
-                    deployment_id: ids
-                })
+                new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances<'deployment_id', string, 'state', string>(
+                    'deployment_id',
+                    {
+                        _sub_field: 'state',
+                        deployment_id: ids
+                    }
+                )
             );
 
         const latestExecutionsDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.latest_execution))
             .then(ids =>
-                new Stage.Common.Executions.Actions(toolbox.getManager()).doGetAll({
-                    _include:
-                        'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
+                new Stage.Common.Executions.Actions(toolbox.getManager()).doGetAll<
+                    typeof fetchedLastExecutionFields[number]
+                >({
+                    _include: fetchedLastExecutionFields.join(','),
                     id: ids
                 })
             );
@@ -110,17 +141,27 @@ Stage.defineWidget({
         return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, latestExecutionsDataPromise]).then(data => {
             const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
-            const nodeInstanceData = data[1].items.reduce((result, item) => {
-                result[item.deployment_id] = {
-                    states: NodeInstancesConsts.extractStatesFrom(item),
-                    count: item.node_instances
-                };
-                return result;
-            }, {});
-            const latestExecutionData = data[2].items.reduce((result, latestExecution) => {
-                result[latestExecution.deployment_id] = latestExecution;
-                return result;
-            }, {});
+
+            const nodeInstanceData = data[1].items.reduce(
+                (
+                    result: Record<string, { states: Record<string, number>; count: number }>,
+                    item: InstanceSummaryItem
+                ) => {
+                    result[item.deployment_id] = {
+                        states: NodeInstancesConsts.extractStatesFrom(item),
+                        count: item.node_instances
+                    };
+                    return result;
+                },
+                {}
+            );
+            const latestExecutionData = data[2].items.reduce(
+                (result: Record<string, FetchedLastExecutionType>, latestExecution) => {
+                    result[latestExecution.deployment_id] = latestExecution;
+                    return result;
+                },
+                {}
+            );
 
             return {
                 ...deploymentData,
@@ -143,14 +184,15 @@ Stage.defineWidget({
         });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
         const {
             configuration: { showFirstUserJourneyButtons }
         } = widget;
-        if (isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
+
         const searchValue = data?.searchValue;
         const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && !searchValue && isEmpty(data?.items);
 
@@ -159,7 +201,7 @@ Stage.defineWidget({
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');
-        const formattedData = {
+        const formattedData: DeploymentsListData = {
             ...data,
             items: data.items.map(item => {
                 return {

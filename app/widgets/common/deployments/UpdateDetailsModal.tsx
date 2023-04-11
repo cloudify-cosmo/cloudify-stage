@@ -1,7 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
 import { diffChars } from 'diff';
-import PropTypes from 'prop-types';
+import { map, keys, chain, isEqual, isEmpty, get, capitalize, lowerCase, filter, size, uniq, noop } from 'lodash';
+import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import {
     ApproveButton,
     CancelButton,
@@ -18,12 +18,16 @@ import {
 } from '../../../components/basic';
 import ParameterValue from '../components/parameter/ParameterValue';
 import ParameterValueDescription from '../components/parameter/ParameterValueDescription';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import DeploymentUpdatesActions from './DeploymentUpdatesActions';
 import Json from '../../../utils/shared/JsonUtils';
 import { useBoolean, useResettableState } from '../../../utils/hooks';
 
-function BlueprintSection({ newBlueprint, oldBlueprint }) {
+interface BlueprintSectionProps {
+    newBlueprint?: string;
+    oldBlueprint?: string;
+}
+
+function BlueprintSection({ newBlueprint, oldBlueprint }: BlueprintSectionProps) {
     const isChanged = oldBlueprint !== newBlueprint;
 
     return (
@@ -41,23 +45,18 @@ function BlueprintSection({ newBlueprint, oldBlueprint }) {
     );
 }
 
-BlueprintSection.propTypes = {
-    newBlueprint: PropTypes.string,
-    oldBlueprint: PropTypes.string
-};
+interface DiffProps {
+    stringA: string;
+    stringB: string;
+}
 
-BlueprintSection.defaultProps = {
-    newBlueprint: null,
-    oldBlueprint: null
-};
-
-function Diff({ stringA, stringB }) {
+function Diff({ stringA, stringB }: DiffProps) {
     const difference = diffChars(String(stringA), String(stringB));
 
     return (
         <div>
-            {_.map(difference, (part, index) => {
-                let style = null;
+            {map(difference, (part, index) => {
+                let style;
                 if (part.added) {
                     style = { color: 'green' };
                 } else if (part.removed) {
@@ -73,26 +72,31 @@ function Diff({ stringA, stringB }) {
         </div>
     );
 }
-Diff.propTypes = {
-    stringA: PropTypes.string.isRequired,
-    stringB: PropTypes.string.isRequired
-};
 
-function InputsSection({ oldInputs: oldInputsProp, newInputs: newInputsProp }) {
+interface Inputs {
+    [key: string]: string;
+}
+
+interface InputSectionProps {
+    newInputs: Inputs;
+    oldInputs: Inputs;
+}
+
+function InputsSection({ oldInputs = {}, newInputs = {} }: InputSectionProps) {
     const [showOnlyChanged, setShowOnlyChanged] = React.useState(false);
 
-    const newInputs = _.keys(newInputsProp).sort();
-    const onlyChangedInputs = _.chain(newInputs)
+    const sortedNewInputs = keys(newInputs).sort();
+    const onlyChangedInputs = chain(sortedNewInputs)
         .filter(
             inputName =>
-                !_.isEqual(
-                    Json.getStringValue(newInputsProp[inputName] || ''),
-                    Json.getStringValue(oldInputsProp[inputName] || '')
+                !isEqual(
+                    Json.getStringValue(newInputs[inputName] || ''),
+                    Json.getStringValue(oldInputs[inputName] || '')
                 )
         )
         .uniq()
         .value();
-    const inputsChanged = !_.isEqual(oldInputsProp, newInputsProp);
+    const inputsChanged = !isEqual(oldInputs, newInputs);
 
     return (
         <>
@@ -148,7 +152,7 @@ function InputsSection({ oldInputs: oldInputsProp, newInputs: newInputsProp }) {
             </Header>
 
             {inputsChanged ? (
-                <Table striped>
+                <Table compact basic>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={4}>Input</Table.HeaderCell>
@@ -162,12 +166,12 @@ function InputsSection({ oldInputs: oldInputsProp, newInputs: newInputsProp }) {
                     </Table.Header>
 
                     <Table.Body>
-                        {_.map(showOnlyChanged ? onlyChangedInputs : newInputs, input => {
-                            const oldValue = _.get(oldInputsProp, input, '');
+                        {map(showOnlyChanged ? onlyChangedInputs : sortedNewInputs, (input: string) => {
+                            const oldValue = get(oldInputs, input, '');
                             const oldValueString = Json.getStringValue(oldValue);
-                            const newValue = _.get(newInputsProp, input, '');
+                            const newValue = get(newInputs, input, '');
                             const newValueString = Json.getStringValue(newValue);
-                            const inputChanged = !_.isEqual(oldValueString, newValueString);
+                            const inputChanged = !isEqual(oldValueString, newValueString);
 
                             return (
                                 <Table.Row key={input}>
@@ -205,23 +209,22 @@ function InputsSection({ oldInputs: oldInputsProp, newInputs: newInputsProp }) {
     );
 }
 
-InputsSection.propTypes = {
-    newInputs: PropTypes.shape({}),
-    oldInputs: PropTypes.shape({})
-};
+interface NodeInstancesCardProps {
+    action?: string;
+    color: SemanticCOLORS;
+    icon: SemanticICONS;
+    instances: string[];
+    name: string;
+    workflowSkipped?: boolean;
+}
 
-InputsSection.defaultProps = {
-    newInputs: {},
-    oldInputs: {}
-};
-
-function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipped }) {
+function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipped }: NodeInstancesCardProps) {
     return (
         <Card key={name} color={color}>
             <Card.Content>
                 <Card.Header>
                     <Icon name={icon} color={color} />
-                    {_.capitalize(_.lowerCase(name))}
+                    {capitalize(lowerCase(name))}
                     {action && (
                         <Label className="right floated">
                             {action}: {workflowSkipped ? 'No' : 'Yes'}
@@ -229,9 +232,9 @@ function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipp
                     )}
                 </Card.Header>
                 <Card.Description>
-                    {!_.isEmpty(instances) ? (
+                    {!isEmpty(instances) ? (
                         <List bulleted>
-                            {_.map(instances, instance => (
+                            {map(instances, instance => (
                                 <List.Item key={instance}>{instance}</List.Item>
                             ))}
                         </List>
@@ -244,22 +247,12 @@ function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipp
     );
 }
 
-NodeInstancesCard.propTypes = {
-    action: PropTypes.string,
-    color: PropTypes.string.isRequired,
-    icon: PropTypes.string.isRequired,
-    instances: PropTypes.arrayOf(PropTypes.string).isRequired,
-    name: PropTypes.string.isRequired,
-    workflowSkipped: PropTypes.bool
-};
+interface NodeInstancesSectionProps {
+    types: NodeInstancesCardProps[];
+}
 
-NodeInstancesCard.defaultProps = {
-    action: null,
-    workflowSkipped: false
-};
-
-function NodeInstancesSection({ types }) {
-    const isChanged = !_.isEmpty(_.filter(types, type => _.size(type.instances) > 0));
+function NodeInstancesSection({ types }: NodeInstancesSectionProps) {
+    const isChanged = !isEmpty(filter(types, type => size(type.instances) > 0));
 
     return (
         <>
@@ -287,7 +280,7 @@ function NodeInstancesSection({ types }) {
 
             {isChanged ? (
                 <Card.Group itemsPerRow={2}>
-                    {_.map(types, type => (
+                    {map(types, type => (
                         <NodeInstancesCard
                             key={type.name}
                             name={type.name}
@@ -306,16 +299,21 @@ function NodeInstancesSection({ types }) {
     );
 }
 
-NodeInstancesSection.propTypes = {
-    types: PropTypes.arrayOf(
-        PropTypes.shape({
-            ...NodeInstancesCard.propTypes
-        })
-    ).isRequired
-};
+interface Step {
+    /* eslint-disable camelcase */
+    id: string;
+    action: string;
+    entity_type: string;
+    entity_id: string;
+    /* eslint-enable camelcase */
+}
 
-function StepsSection({ steps }) {
-    const stepsPresent = !_.isEmpty(steps);
+interface StepsSectionProps {
+    steps: Step[];
+}
+
+function StepsSection({ steps }: StepsSectionProps) {
+    const stepsPresent = !isEmpty(steps);
 
     return (
         <>
@@ -324,7 +322,7 @@ function StepsSection({ steps }) {
                 {stepsPresent && <Header.Subheader>Action steps taken during update.</Header.Subheader>}
             </Header>
             {stepsPresent ? (
-                <Table striped definition>
+                <Table compact basic definition>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell collapsing />
@@ -335,7 +333,7 @@ function StepsSection({ steps }) {
                     </Table.Header>
 
                     <Table.Body>
-                        {_.map(steps, (step, index) => (
+                        {map(steps, (step, index) => (
                             <Table.Row key={step.id}>
                                 <Table.Cell>{index + 1}</Table.Cell>
                                 <Table.Cell>{step.action}</Table.Cell>
@@ -352,13 +350,8 @@ function StepsSection({ steps }) {
     );
 }
 
-StepsSection.propTypes = {
-    steps: PropTypes.arrayOf(PropTypes.shape({}))
-};
-
-StepsSection.defaultProps = { steps: null };
-
 const EMPTY_DEPLOYMENT_UPDATE = {
+    id: '',
     old_inputs: {},
     new_inputs: {},
     old_blueprint_id: '',
@@ -373,33 +366,64 @@ const EMPTY_EXECUTION_PARAMETERS = {
     reinstall_list: []
 };
 
+export interface DeploymentUpdate {
+    /* eslint-disable camelcase */
+    id: string;
+    new_blueprint_id: string;
+    new_inputs: Inputs;
+    old_blueprint_id: string;
+    old_inputs: Inputs;
+    steps: StepsSectionProps['steps'];
+    /* eslint-enable camelcase */
+}
+
+interface ExecutionParameters {
+    /* eslint-disable camelcase */
+    reinstall_list: string[];
+    skip_install: boolean;
+    skip_reinstall: boolean;
+    skip_uninstall: boolean;
+    /* eslint-enable camelcase */
+}
+
+export interface UpdateDetailsModalProps {
+    toolbox: Stage.Types.WidgetlessToolbox;
+    open: boolean;
+    isPreview?: boolean;
+    deploymentUpdateId?: string;
+    deploymentUpdate?: DeploymentUpdate;
+    executionParameters?: ExecutionParameters;
+    onClose?: () => void;
+    onUpdate?: () => void;
+}
+
 function UpdateDetailsModal({
-    deploymentUpdateId,
+    deploymentUpdateId = '',
     executionParameters: providedExecutionParameters,
+    deploymentUpdate: providedDeploymentUpdate,
     open,
     toolbox,
     isPreview,
-    onClose,
-    onUpdate,
-    deploymentUpdate: providedDeploymentUpdate
-}) {
+    onClose = noop,
+    onUpdate = noop
+}: UpdateDetailsModalProps) {
     const { useEffect } = React;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [deploymentUpdate, setDeploymentUpdate, resetDeploymentUpdate] = useResettableState(
-        !_.isEmpty(deploymentUpdateId) ? EMPTY_DEPLOYMENT_UPDATE : providedDeploymentUpdate
+        deploymentUpdateId ? EMPTY_DEPLOYMENT_UPDATE : providedDeploymentUpdate
     );
     const [executionParameters, setExecutionParameters, resetExecutionParameters] =
         useResettableState(EMPTY_EXECUTION_PARAMETERS);
 
     useEffect(() => {
-        if (!_.isEmpty(deploymentUpdateId) && open) {
+        if (deploymentUpdateId && open) {
             setLoading();
             const actions = new DeploymentUpdatesActions(toolbox);
             actions
                 .doGetUpdate(deploymentUpdateId)
                 .then(fetchedDeploymentUpdate => {
-                    if (_.isEmpty(providedExecutionParameters) && !_.isEmpty(fetchedDeploymentUpdate.execution_id)) {
+                    if (isEmpty(providedExecutionParameters) && !isEmpty(fetchedDeploymentUpdate.execution_id)) {
                         actions
                             .doGetExecutionParameters(fetchedDeploymentUpdate.execution_id)
                             .then(({ parameters }) => {
@@ -425,23 +449,23 @@ function UpdateDetailsModal({
     }, [open]);
 
     useEffect(() => {
-        if (_.isEmpty(deploymentUpdateId)) {
+        if (isEmpty(deploymentUpdateId)) {
             setDeploymentUpdate(providedDeploymentUpdate);
         }
     }, [providedDeploymentUpdate]);
 
-    function getInstances(type) {
-        const instances = _.get(deploymentUpdate, `deployment_update_node_instances.${type}_and_related.affected`, []);
-        return _.map(instances, instance => instance.id);
+    function getInstances(type: string) {
+        const instances = get(deploymentUpdate, `deployment_update_node_instances.${type}_and_related.affected`, []);
+        return map(instances, instance => instance.id);
     }
 
-    const effectiveExecutionParameters = !_.isEmpty(providedExecutionParameters)
+    const effectiveExecutionParameters = !isEmpty(providedExecutionParameters)
         ? providedExecutionParameters
         : executionParameters;
 
     let header = `Deployment update details${isPreview ? ' preview' : ''}`;
-    if (!isPreview && deploymentUpdate.id) {
-        header += ` - ${deploymentUpdate.id}`;
+    if (!isPreview && deploymentUpdate?.id) {
+        header += ` - ${deploymentUpdate?.id}`;
     }
 
     return (
@@ -454,13 +478,13 @@ function UpdateDetailsModal({
                 <Modal.Content scrolling>
                     <Form loading={isLoading}>
                         <BlueprintSection
-                            oldBlueprint={deploymentUpdate.old_blueprint_id}
-                            newBlueprint={deploymentUpdate.new_blueprint_id}
+                            oldBlueprint={deploymentUpdate?.old_blueprint_id}
+                            newBlueprint={deploymentUpdate?.new_blueprint_id}
                         />
 
                         <InputsSection
-                            oldInputs={deploymentUpdate.old_inputs}
-                            newInputs={deploymentUpdate.new_inputs}
+                            oldInputs={deploymentUpdate?.old_inputs || {}}
+                            newInputs={deploymentUpdate?.new_inputs || {}}
                         />
 
                         <NodeInstancesSection
@@ -470,7 +494,7 @@ function UpdateDetailsModal({
                                     icon: 'plus',
                                     color: 'green',
                                     action: 'Install',
-                                    workflowSkipped: effectiveExecutionParameters.skip_install,
+                                    workflowSkipped: effectiveExecutionParameters?.skip_install,
                                     instances: getInstances('added')
                                 },
                                 {
@@ -478,7 +502,7 @@ function UpdateDetailsModal({
                                     icon: 'minus',
                                     color: 'red',
                                     action: 'Uninstall',
-                                    workflowSkipped: effectiveExecutionParameters.skip_uninstall,
+                                    workflowSkipped: effectiveExecutionParameters?.skip_uninstall,
                                     instances: getInstances('removed')
                                 },
                                 {
@@ -486,19 +510,19 @@ function UpdateDetailsModal({
                                     icon: 'edit',
                                     color: 'teal',
                                     action: 'Reinstall',
-                                    workflowSkipped: effectiveExecutionParameters.skip_reinstall,
-                                    instances: _.uniq([...getInstances('extended'), ...getInstances('reduced')])
+                                    workflowSkipped: effectiveExecutionParameters?.skip_reinstall,
+                                    instances: uniq([...getInstances('extended'), ...getInstances('reduced')])
                                 },
                                 {
                                     name: 'explicit_reinstall',
                                     icon: 'sync',
                                     color: 'blue',
-                                    instances: effectiveExecutionParameters.reinstall_list
+                                    instances: effectiveExecutionParameters?.reinstall_list || []
                                 }
                             ]}
                         />
 
-                        <StepsSection steps={deploymentUpdate.steps} />
+                        <StepsSection steps={deploymentUpdate?.steps || []} />
                     </Form>
                 </Modal.Content>
 
@@ -510,37 +534,5 @@ function UpdateDetailsModal({
         </div>
     );
 }
-
-UpdateDetailsModal.propTypes = {
-    toolbox: ToolboxPropType.isRequired,
-    open: PropTypes.bool.isRequired,
-    isPreview: PropTypes.bool,
-    deploymentUpdateId: PropTypes.string,
-    deploymentUpdate: PropTypes.shape({
-        id: PropTypes.string,
-        new_blueprint_id: PropTypes.string,
-        new_inputs: PropTypes.shape({}),
-        old_blueprint_id: PropTypes.string,
-        old_inputs: PropTypes.shape({}),
-        steps: PropTypes.arrayOf(PropTypes.shape({}))
-    }),
-    executionParameters: PropTypes.shape({
-        reinstall_list: PropTypes.arrayOf(PropTypes.string),
-        skip_install: PropTypes.bool,
-        skip_reinstall: PropTypes.bool,
-        skip_uninstall: PropTypes.bool
-    }),
-    onClose: PropTypes.func,
-    onUpdate: PropTypes.func
-};
-
-UpdateDetailsModal.defaultProps = {
-    isPreview: false,
-    deploymentUpdateId: '',
-    deploymentUpdate: {},
-    executionParameters: {},
-    onClose: _.noop,
-    onUpdate: _.noop
-};
 
 export default UpdateDetailsModal;

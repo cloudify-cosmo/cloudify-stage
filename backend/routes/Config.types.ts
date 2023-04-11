@@ -34,3 +34,14 @@ export interface ClientConfig {
 }
 
 export type GetConfigResponse = ClientConfig;
+
+interface SamlUserConfig {
+    saml?: {
+        enabled: boolean;
+        certPath: string;
+        ssoUrl: string;
+        portalUrl: string;
+    };
+}
+
+export type UserDataConfig = Partial<UserConfig & SamlUserConfig>;

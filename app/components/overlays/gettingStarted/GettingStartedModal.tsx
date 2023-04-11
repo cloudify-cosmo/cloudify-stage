@@ -10,7 +10,7 @@ import StageUtils from '../../../utils/stageUtils';
 import EventBus from '../../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../../utils/hooks';
 import useResettableState from '../../../utils/hooks/useResettableState';
-import { Confirm, Form, Modal } from '../../basic';
+import { Confirm, Form, Loading, Modal } from '../../basic';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
@@ -263,6 +263,11 @@ const GettingStartedModal = () => {
         }
     };
 
+    const nextButtonDisabled = useMemo(() => {
+        const isEnvironmentsStep = stepName === StepName.Environments;
+        return isEnvironmentsStep || !schema;
+    }, [stepName, environmentsStepData, schema]);
+
     if (error) {
         return <GettingStartedErrorModal onClose={clearError} />;
     }
@@ -290,7 +295,9 @@ const GettingStartedModal = () => {
                     errors={errors}
                 />
             ) : (
-                <Modal.Content>{i18n.t('gettingStartedModal.loading')}</Modal.Content>
+                <Modal.Content>
+                    <Loading />
+                </Modal.Content>
             )}
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
@@ -309,8 +316,8 @@ const GettingStartedModal = () => {
                 installationProcessing={installationProcessing}
                 onBackClick={handleBackClick}
                 onNextClick={handleNextClick}
+                nextButtonDisabled={nextButtonDisabled}
                 onModalClose={handleModalClose}
-                environmentsStepData={environmentsStepData}
             />
             <Confirm
                 open={cancelConfirmOpen}

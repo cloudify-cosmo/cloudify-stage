@@ -19,6 +19,9 @@ export interface Input {
     default: any;
     type: string;
     constraints: Constraint[];
+    required?: boolean;
 }
+
+export type Origin = 'deployment' | 'workflow';
 
 export type OnChange = ((event: SyntheticEvent<HTMLElement> | null, field: any) => void) | undefined;

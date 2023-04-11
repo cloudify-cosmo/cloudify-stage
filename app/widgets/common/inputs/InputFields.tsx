@@ -3,7 +3,7 @@ import { Form } from '../../../components/basic';
 import Help from './InputHelp';
 import InputField from './InputField';
 import getInputFieldInitialValue from './utils/getInputFieldInitialValue';
-import type { DataType, Input, OnChange } from './types';
+import type { DataType, Input, Origin, OnChange } from './types';
 import type { SortOrder } from './SortOrderIcons';
 
 function normalizeValue(input: Input, inputsState: Record<string, any>, dataType: DataType) {
@@ -33,7 +33,8 @@ function FormField({
     onChange,
     error,
     toolbox,
-    dataType
+    dataType,
+    origin
 }: {
     input: Input;
     value: any;
@@ -41,8 +42,18 @@ function FormField({
     error: boolean;
     toolbox: Stage.Types.WidgetlessToolbox;
     dataType: DataType;
+    origin: Origin;
 }) {
-    const { name, display_label: displayLabel, default: defaultValue, description, type, constraints } = input;
+    const {
+        name,
+        display_label: displayLabel,
+        default: defaultValue,
+        description,
+        type,
+        constraints,
+        required
+    } = input;
+
     const help = (
         <Help
             description={description}
@@ -52,7 +63,8 @@ function FormField({
             dataType={dataType}
         />
     );
-    const required = _.isUndefined(defaultValue);
+
+    const isFieldRequired = origin === 'deployment' ? required || _.isUndefined(required) : _.isUndefined(defaultValue);
     const booleanType = type === 'boolean';
 
     return (
@@ -60,7 +72,7 @@ function FormField({
             key={name}
             error={booleanType ? null : error}
             help={help}
-            required={required}
+            required={isFieldRequired}
             label={booleanType ? null : displayLabel ?? name}
         >
             <InputField input={input} value={value} onChange={onChange} error={error} toolbox={toolbox} />
@@ -76,6 +88,7 @@ interface InputFieldsProps {
     toolbox: Stage.Types.WidgetlessToolbox;
     dataTypes?: Record<string, any>;
     sortOrder?: SortOrder;
+    origin?: Origin;
 }
 export default function InputFields({
     inputs,
@@ -84,7 +97,8 @@ export default function InputFields({
     errorsState,
     toolbox,
     dataTypes,
-    sortOrder = 'original'
+    sortOrder = 'original',
+    origin = 'deployment'
 }: InputFieldsProps) {
     const inputFields = _(inputs)
         .map((input, name) => ({ name, sortLabel: getSortLabel(name, input.display_label), ...input }))
@@ -102,6 +116,7 @@ export default function InputFields({
                     error={errorsState[input.name]}
                     toolbox={toolbox}
                     dataType={dataType}
+                    origin={origin}
                 />
             );
         })

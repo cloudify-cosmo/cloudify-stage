@@ -16,20 +16,20 @@ import {
     getTerraformFileBufferListFromZip,
     getTerraformJsonMergedFromFileBufferList,
     getTfFileBufferListFromGitRepositoryUrl,
-    renderBlueprint
+    renderTerraformBlueprint
 } from '../handler/TerraformHandler';
 import type {
-    PostTerraformResourcesFileResponse,
-    PostTerraformResourcesResponse,
-    PostTerraformResourcesQueryParams,
-    PostTerraformFetchDataRequestBody,
-    PostTerraformFetchDataResponse,
-    PostTerraformFetchDataFileResponse,
-    PostTerraformFetchDataFileRequestBody,
+    PostTerraformBlueprintArchiveRequestBody,
+    PostTerraformBlueprintArchiveResponse,
     PostTerraformBlueprintRequestBody,
     PostTerraformBlueprintResponse,
-    PostTerraformBlueprintArchiveRequestBody,
-    PostTerraformBlueprintArchiveResponse
+    PostTerraformFetchDataFileRequestBody,
+    PostTerraformFetchDataFileResponse,
+    PostTerraformFetchDataRequestBody,
+    PostTerraformFetchDataResponse,
+    PostTerraformResourcesFileResponse,
+    PostTerraformResourcesQueryParams,
+    PostTerraformResourcesResponse
 } from './Terraform.types';
 import type { GenericErrorResponse } from '../types';
 
@@ -123,7 +123,7 @@ router.post<never, PostTerraformBlueprintResponse, PostTerraformBlueprintRequest
         `Generating Terraform blueprint using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
     );
 
-    const result = renderBlueprint(req.body, res);
+    const result = renderTerraformBlueprint(req.body, res);
 
     res.setHeader('content-type', 'text/x-yaml');
     res.send(result);
@@ -141,7 +141,7 @@ router.post<
         `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
     );
 
-    const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
+    const result = renderTerraformBlueprint({ ...req.body, terraformTemplate }, res);
 
     const archive = archiver('zip');
 

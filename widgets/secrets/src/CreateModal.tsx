@@ -48,7 +48,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
         if (useSecretProvider) {
             if (isEmpty(secretProvider)) {
-                validationErrors.secretProvider = translateForm('errors.validation.secretProviderName');
+                validationErrors.secretProvider = translateForm('errors.validation.secretProvider');
             }
             if (isEmpty(secretProviderPath)) {
                 validationErrors.secretProviderPath = translateForm('errors.validation.secretProviderPath');
@@ -65,11 +65,9 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretProviderOptions = useSecretProvider ? { path: secretProviderPath } : undefined;
-
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
-            .doCreate(secretKey, secretValue, visibility, isHiddenValue, secretProvider, secretProviderOptions)
+            .doCreate(secretKey, secretValue, visibility, isHiddenValue, secretProvider, secretProviderPath)
             .then(() => {
                 doClose();
                 toolbox.refresh();
@@ -186,7 +184,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                         </>
                     ) : (
                         <>
-                            <Form.Field error={errors.secretValue}>
+                            <Form.Field error={errors.secretValue} label={translateForm('inputs.secretValue.label')}>
                                 <MultilineInput
                                     name="secretValue"
                                     placeholder={translateForm('inputs.secretValue.placeholder')}

@@ -1,38 +1,30 @@
-import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { FilterRule } from '../../../app/widgets/common/filters/types';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
+import type { FilterRule } from 'app/widgets/common/filters/types';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
-const tConfiguration = (suffix: string) => t(`configuration.${suffix}`);
+const translateConfiguration = Stage.Utils.getT(`widgets.${widgetId}.configuration`);
 
-type DeploymentButtonConfiguration = {
+interface DeploymentButtonConfiguration extends ButtonConfiguration {
     toolbox: Stage.Types.Toolbox;
-    basic: boolean;
-    color: SemanticCOLORS;
-    icon: SemanticICONS;
-    label: string;
     blueprintFilterRules: FilterRule[];
-};
+}
 
 Stage.defineWidget({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 3,
     initialHeight: 3,
     showHeader: false,
     showBorder: false,
-    isReact: true,
     hasReadme: true,
     initialConfiguration: [
         ...Stage.Common.Configuration.Button.getInitialConfiguration({
             icon: 'rocket',
-            label: tConfiguration('label.default')
+            label: translateConfiguration('label.default')
         }),
         {
             id: 'blueprintFilterRules',
-            name: tConfiguration('labelFilterRules.name'),
+            name: translateConfiguration('labelFilterRules.name'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Common.Blueprints.LabelFilter

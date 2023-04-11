@@ -212,7 +212,10 @@ a:hover {
             border: 1px solid rgba(34, 36, 38, 0.15);
         }
     }
-
+    .rowActions {
+        min-width: 60px;
+        text-align: right !important;
+    }
     .row {
         cursor: pointer;
 
@@ -447,12 +450,6 @@ table.servicesData button.refreshButton {
 
 .leftFloated {
     float: left;
-}
-
-.verticalCenter {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .alignCenter {

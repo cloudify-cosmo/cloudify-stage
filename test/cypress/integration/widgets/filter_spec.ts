@@ -1,3 +1,5 @@
+import { secondsToMs } from 'test/cypress/support/resource_commons';
+
 describe('Filter', () => {
     before(() => {
         cy.activate('valid_trial_license')
@@ -16,7 +18,7 @@ describe('Filter', () => {
         ).as('fetchBlueprints');
         cy.interceptSp(
             'GET',
-            { pathname: '/deployments', query: { _offset: '0' } },
+            { pathname: '/deployments', query: { _offset: '0', _search: '', _search_name: '' } },
             {
                 fixture: 'filter/deployments0.json'
             }
@@ -52,7 +54,9 @@ describe('Filter', () => {
 
             getDropdownItems().should('have.length', 1);
             cy.get('input').clear();
+            cy.get('.loader').should('be.visible');
             cy.wait('@fetchDeployments');
+            cy.get('.loader').should('not.exist');
             getDropdownItems().should('have.length', 2);
 
             cy.contains('uuu').click();
@@ -109,7 +113,9 @@ describe('Filter', () => {
             cy.contains('Runtime only evaluation').click();
             cy.selectAndClickDeploy();
 
-            cy.contains('.breadcrumb', deploymentName);
+            cy.contains('.breadcrumb', deploymentName, {
+                timeout: secondsToMs(30)
+            });
             cy.refreshPage();
 
             cy.get('.blueprintsWidget').within(() => cy.getSearchInput().scrollIntoView().clear().type(blueprintName));

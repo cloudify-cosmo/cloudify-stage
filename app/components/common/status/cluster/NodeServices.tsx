@@ -78,7 +78,7 @@ const NodeServices: FunctionComponent<NodeServicesProps> = ({ name, type, servic
     return (
         <div>
             <StatusHeader nodeName={name} nodeType={type} />
-            <Table celled basic="very" collapsing className="servicesData">
+            <Table basic="very" collapsing className="servicesData">
                 <Table.Body style={{ display: 'block', paddingRight: 10, maxHeight: '60vh', overflowY: 'auto' }}>
                     {_.map(formattedServices, service => {
                         const { description, name: serviceName, status: serviceStatus } = service;
