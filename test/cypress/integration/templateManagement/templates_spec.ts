@@ -21,8 +21,6 @@ describe('Templates segment', () => {
             .within(() => {
                 roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
             })
-            .find('.header')
-            .as('template')
             .click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
             pageMenuItems.forEach((pageMenuItemId, index) =>
@@ -35,7 +33,7 @@ describe('Templates segment', () => {
             )
         );
 
-        cy.get('@template').click();
+        cy.contains('tr', id).click();
     };
 
     const getTemplateRow = (templateId: string) =>
