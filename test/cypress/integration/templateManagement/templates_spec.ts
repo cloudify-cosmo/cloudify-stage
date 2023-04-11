@@ -18,10 +18,11 @@ describe('Templates segment', () => {
 
     const verifyTemplateRow = (id: string, pageMenuItems: string[], roles: string[], tenants: string[]) => {
         cy.contains('tr', id)
-            .as('templateRow')
             .within(() => {
                 roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
             })
+            .find('.header')
+            .as('template')
             .click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
             pageMenuItems.forEach((pageMenuItemId, index) =>
@@ -34,7 +35,7 @@ describe('Templates segment', () => {
             )
         );
 
-        cy.get('@templateRow').click();
+        cy.get('@template').click();
     };
 
     const getTemplateRow = (templateId: string) =>
