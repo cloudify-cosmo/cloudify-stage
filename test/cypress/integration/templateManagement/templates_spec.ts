@@ -17,10 +17,11 @@ describe('Templates segment', () => {
     const users = [defaultUser];
 
     const verifyTemplateRow = (id: string, pageMenuItems: string[], roles: string[], tenants: string[]) => {
-        roles.forEach(role => cy.contains('tr', id).find(`td:nth-of-type(2)`).should('contain.text', role));
-
-        cy.contains(id).click();
-
+        cy.contains('tr', id)
+            .within(() => {
+                roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
+            })
+            .click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
             pageMenuItems.forEach((pageMenuItemId, index) =>
                 cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', pageMenuItemId)
@@ -115,6 +116,7 @@ describe('Templates segment', () => {
         cy.log('Edit template');
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
 
+        cy.intercept({ method: 'PUT', path: '/console/templates' }).as('updateTemplate');
         cy.get('.modal').within(() => {
             cy.log('Change template name');
             cy.get('.field > .ui > input').clear().type('Another Template');
@@ -148,6 +150,7 @@ describe('Templates segment', () => {
 
         cy.get('.modal').should('not.exist');
         cy.get('.loading').should('not.exist');
+        cy.wait('@updateTemplate');
 
         cy.log('Verify template changes');
         verifyTemplateRow(
