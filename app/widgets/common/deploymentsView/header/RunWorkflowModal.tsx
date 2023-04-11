@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
+import { isEmpty } from 'lodash';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
@@ -36,7 +37,6 @@ export interface RunWorkflowModalProps {
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
-// TODO Norbert: Add form validation (Ensure that form states are being cleared between selecting workflow
 // TODO Norbert: Consider using namespaces for extracted files
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     filterRules,
@@ -51,7 +51,6 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     >(undefined);
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
-    // TODO Norbert: Consider extracting form elements & mechanisms as external component, to omit usage of custom hook
     const [parametersInputs, setParametersInputs, resetParametersInputs] = useParametersInputs();
 
     const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
@@ -88,12 +87,35 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     }, []);
 
     async function runWorkflow() {
+        const validationErrors: Record<string, string> = {};
+
         if (!selectedWorkflow) {
-            setErrors({ error: tModal('errors.noWorkflowError') });
+            validationErrors.error = tModal('errors.noWorkflowError');
+        }
+
+        if (selectedWorkflow) {
+            const requiredParameters = selectedWorkflow.parameters.filter(parameter => parameter.required);
+
+            requiredParameters.forEach(parameter => {
+                const parameterValue = parametersInputs[parameter.name];
+                // TODO Norbert: Check if that assumption is correct
+                const parameterHasValue = typeof parameterValue !== 'undefined' && parameterValue !== '';
+
+                if (!parameterHasValue) {
+                    validationErrors[parameter.name] = tModal('errors.noParameterValue', {
+                        parameter: parameter.name
+                    });
+                }
+            });
+        }
+
+        if (!isEmpty(validationErrors)) {
+            setErrors(validationErrors);
             return;
         }
 
         try {
+            clearErrors();
             setLoadingMessage(tModal('messages.creatingDeploymentGroup'));
             const groupId = getGroupIdForBatchAction();
             const deploymentGroupsActions = new DeploymentGroupsActions(toolbox);
@@ -101,7 +123,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
             setLoadingMessage(tModal('messages.startingExecutionGroup'));
             const executionGroupsActions = new ExecutionGroupsActions(toolbox);
-            await executionGroupsActions.doStart(groupId, selectedWorkflow.name, parametersInputs);
+            await executionGroupsActions.doStart(groupId, selectedWorkflow!.name, parametersInputs);
 
             toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');
             setExecutionGroupStarted();
@@ -113,12 +135,12 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     }
 
     const initializeParametersInputs = () => {
-        // TODO Norbert: Simplify by using lodash `map` function
-        const defaultParametersData =
-            selectedWorkflow?.parameters.reduce((parameters, parameter) => {
-                parameters[parameter.name] = parameter.default;
-                return parameters;
-            }, {} as Record<string, unknown>) || {};
+        const defaultParametersData = selectedWorkflow?.parameters
+            ? selectedWorkflow.parameters.reduce((parameters, parameter) => {
+                  parameters[parameter.name] = parameter.default;
+                  return parameters;
+              }, {} as Record<string, unknown>)
+            : {};
 
         resetParametersInputs(defaultParametersData);
     };
@@ -161,6 +183,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                     label={parameters.name}
                                     key={parameters.name}
                                     required={parameters.required}
+                                    error={errors[parameters.name]}
                                 >
                                     <InputField
                                         onChange={setParametersInputs}
@@ -178,8 +201,6 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                 </Form.Field>
                             );
                         })}
-                    {/* TODO Norbert: Ask if the message below should be modified */}
-                    {/* Currently it's saying "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'." */}
                     <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>
