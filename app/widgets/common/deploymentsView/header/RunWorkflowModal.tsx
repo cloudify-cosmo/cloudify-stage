@@ -113,6 +113,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     }
 
     const initializeParametersInputs = () => {
+        // TODO Norbert: Simplify by using lodash `map` function
         const defaultParametersData =
             selectedWorkflow?.parameters.reduce((parameters, parameter) => {
                 parameters[parameter.name] = parameter.default;
@@ -156,13 +157,15 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                     {selectedWorkflow &&
                         selectedWorkflow.parameters.map(parameters => {
                             return (
-                                <Form.Field label={parameters.name} key={parameters.name}>
+                                <Form.Field
+                                    label={parameters.name}
+                                    key={parameters.name}
+                                    required={parameters.required}
+                                >
                                     <InputField
                                         onChange={setParametersInputs}
                                         toolbox={toolbox}
-                                        // TODO Norbert: Get to know what condition should be applied to determine if input field should be required
-                                        // TODO Norbert: Handle form error validations
-                                        error={false}
+                                        error={errors[parameters.name]}
                                         value={parametersInputs[parameters.name]}
                                         input={{
                                             type: parameters.type as Input['type'],

@@ -31,8 +31,9 @@ const mapFetchedWorkflowParameters = (
 ): SimplifiedWorkflowParameter[] => {
     return map(workflowParameters, (parameterFields, parameterName) => ({
         ...parameterFields,
-        name: parameterName
-    })) as SimplifiedWorkflowParameter[];
+        name: parameterName,
+        required: parameterFields.default !== undefined
+    }));
 };
 
 const filterSupportedWorkflowParameters = (

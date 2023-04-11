@@ -3,7 +3,8 @@ import type { Workflow } from '../../executeWorkflow';
 
 export type FetchedWorkflow = Pick<Workflow, typeof fetchedWorkflowFields[number]>;
 
-export type SimplifiedWorkflowParameter = FetchedWorkflow['parameters'] & {
+export type SimplifiedWorkflowParameter = FetchedWorkflow['parameters'][string] & {
+    required: boolean;
     name: string;
 };
 
