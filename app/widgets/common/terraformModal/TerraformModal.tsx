@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import type { InputProps } from 'semantic-ui-react';
 import { chain, entries, get, head, isEmpty, omit, set, some } from 'lodash';
-import { Credentials, OptionalCredentialsInput } from 'cloudify-ui-components';
+import { AccordionSection, Credentials, OptionalCredentialsInput, UnmaskableSecretInput } from 'cloudify-ui-components';
 import styled from 'styled-components';
 import type { Output, Variable } from 'backend/handler/TerraformHandler.types';
 import BlueprintActions from '../blueprints/BlueprintActions';
-import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
 import Consts from '../Consts';
 import SecretActions from '../secrets/SecretActions';
 import type { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
@@ -15,7 +14,6 @@ import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../utils/StageAPI';
 import terraformLogo from '../../../images/terraform_logo.png';
-import SinglelineInput from '../secrets/SinglelineInput';
 import './TerraformModal.css';
 import StageUtils from '../../../utils/stageUtils';
 import {
@@ -63,7 +61,7 @@ function TerraformVariableValueInput({
     ...rest
 }: TerraformVariableValueInputProps) {
     const secretSource = rowValues?.source === 'secret';
-    const InputComponent = secretSource ? SinglelineInput : Form.Input;
+    const InputComponent = secretSource ? UnmaskableSecretInput : Form.Input;
     const externalValue = secretSource && !rowValues?.name.added;
 
     const handleChange: InputProps['onChange'] = (event, { value: valuePassed }) => {
@@ -710,7 +708,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         />
                     </Form.Field>
                     <Accordion>
-                        <AccordionSectionWithDivider title={t('terraformModuleDetails')} initialActive>
+                        <AccordionSection divider title={t('terraformModuleDetails')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={getContextError('template')}>
                                 <Form.UrlOrFile
@@ -741,7 +739,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                     disabled={isEmpty(templateModules)}
                                 />
                             </Form.Field>
-                        </AccordionSectionWithDivider>
+                        </AccordionSection>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
                             title={t('variables')}

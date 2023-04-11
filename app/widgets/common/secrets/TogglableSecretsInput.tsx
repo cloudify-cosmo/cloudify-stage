@@ -1,9 +1,9 @@
 import type { ChangeEvent } from 'react';
 import React from 'react';
 import type { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
+import { UnmaskableSecretInput } from 'cloudify-ui-components';
 import type { MultilineInputProps } from './MultilineInput';
 import MultilineInput from './MultilineInput';
-import SinglelineInput from './SinglelineInput';
 
 interface TogglableSecretsInputProps extends Omit<MultilineInputProps, 'onChange'> {
     showMultilineInput?: boolean;
@@ -15,7 +15,7 @@ interface TogglableSecretsInputProps extends Omit<MultilineInputProps, 'onChange
 
 const TogglableSecretsInput = (props: TogglableSecretsInputProps) => {
     const { showMultilineInput } = props;
-    return showMultilineInput ? <MultilineInput {...props} /> : <SinglelineInput {...props} />;
+    return showMultilineInput ? <MultilineInput {...props} /> : <UnmaskableSecretInput {...props} />;
 };
 
 export default TogglableSecretsInput;

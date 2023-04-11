@@ -103,8 +103,8 @@ const commands = {
         cy.contains('Loading...').should('not.exist');
         return cy.waitUntilWidgetsDataLoaded();
     },
-    waitUntilWidgetsDataLoaded: (timeout: number = secondsToMs(10)) =>
-        cy.get('div.loader:visible', { timeout }).should('not.exist'),
+    waitUntilWidgetsDataLoaded: (timeout = 10) =>
+        cy.get('div.loader:visible', { timeout: secondsToMs(timeout) }).should('not.exist'),
     waitUntilAppLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
