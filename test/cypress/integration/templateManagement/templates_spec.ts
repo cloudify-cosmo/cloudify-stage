@@ -17,7 +17,7 @@ describe('Templates segment', () => {
     const users = [defaultUser];
 
     const verifyTemplateRow = (id: string, pageMenuItems: string[], roles: string[], tenants: string[]) => {
-        cy.contains('tr', id)
+        getTemplateRow(id)
             .within(() => {
                 roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
             })
@@ -33,14 +33,11 @@ describe('Templates segment', () => {
             )
         );
 
-        cy.contains(id).click();
+        getTemplateRow(id).click();
     };
 
     const getTemplateRow = (templateId: string) =>
-        cy
-            .get('.blue.segment')
-            .should('be.visible', true)
-            .within(() => cy.contains(templateId).parent().parent());
+        cy.get('.blue.segment').should('be.visible').contains('.header', templateId).parents('tr');
 
     before(() => {
         cy.activate().deleteAllUsersAndTenants().removeUserPages().removeUserTemplates();
@@ -114,9 +111,8 @@ describe('Templates segment', () => {
         verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs', 'deployments'], ['user', 'viewer'], ['all']);
 
         cy.log('Edit template');
-        getTemplateRow('Template 1').within(() => cy.get('.edit').click());
+        getTemplateRow('Template 1').find('.edit').click();
 
-        cy.intercept({ method: 'PUT', path: '/console/templates' }).as('updateTemplate');
         cy.get('.modal').within(() => {
             cy.log('Change template name');
             cy.get('.field > .ui > input').clear().type('Another Template');
@@ -150,7 +146,6 @@ describe('Templates segment', () => {
 
         cy.get('.modal').should('not.exist');
         cy.get('.loading').should('not.exist');
-        cy.wait('@updateTemplate');
 
         cy.log('Verify template changes');
         verifyTemplateRow(
@@ -161,8 +156,7 @@ describe('Templates segment', () => {
         );
 
         cy.log('Remove template');
-        cy.get('.blue.segment');
-        getTemplateRow('Another Template').within(() => cy.get('.remove').click());
+        getTemplateRow('Another Template').find('.remove').click();
         cy.get('.popup button.green').click({ force: true });
         cy.get('.main .loading').should('not.exist');
 
