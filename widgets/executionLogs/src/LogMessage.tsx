@@ -1,10 +1,12 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import styled from 'styled-components';
+import { useIsOverflow } from './useIsOverflow';
 
-const StyledDiv = styled.div<{ expanded: boolean }>`
+const ExpandableMessage = styled.div<{ expanded: boolean }>`
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: pre-wrap;
     ${props =>
         !props.expanded
             ? `
@@ -12,18 +14,31 @@ const StyledDiv = styled.div<{ expanded: boolean }>`
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;`
             : undefined}
-    max-width: 100%;
-    white-space: pre-wrap;
 `;
 
-const LogMessage: FunctionComponent = ({ children }) => {
+interface LogMessageProps {
+    message: string;
+}
+const LogMessage: FunctionComponent<LogMessageProps> = ({ message }) => {
     const { Icon } = Stage.Basic;
-    const [expanded, changeExpanded] = Stage.Hooks.useToggle(false);
+    const [isExpanded, toggleExpandCollapse] = Stage.Hooks.useToggle(false);
+    const expandableMessageRef = React.useRef<HTMLDivElement>(null);
+    const isMessageOverflowing = useIsOverflow(expandableMessageRef);
+    const showExpandCollapseIcon = isMessageOverflowing || isExpanded;
 
     return (
         <>
-            <StyledDiv expanded={expanded}>{children ?? ''}</StyledDiv>
-            <Icon name={expanded ? 'chevron down' : 'chevron up'} onClick={changeExpanded} style={{ float: 'right' }} />
+            {showExpandCollapseIcon && (
+                <Icon
+                    link
+                    name={isExpanded ? 'chevron up' : 'chevron down'}
+                    onClick={toggleExpandCollapse}
+                    style={{ float: 'right', verticalAlign: 'top' }}
+                />
+            )}
+            <ExpandableMessage expanded={isExpanded} ref={expandableMessageRef}>
+                {message}
+            </ExpandableMessage>
         </>
     );
 };

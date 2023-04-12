@@ -1,24 +1,12 @@
 import type { PaginatedResponse } from 'backend/types';
 import type { PageSizeConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { CloudifyEventPart, CloudifyLogEventPart, Event } from 'app/widgets/common/events/types';
 import LogsTable from './LogsTable';
 
 const widgetId = 'executionLogs';
 // const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
-export interface Event {
-    /* eslint-disable camelcase */
-    _storage_id: string;
-    execution_id: string;
-    message: string;
-    error_causes: { message: string; traceback: string; type: string }[] | null;
-    event_type: string;
-    level: string;
-    reported_timestamp: string;
-    type: 'cloudify_event' | 'cloudify_log';
-    /* eslint-enable camelcase */
-}
-
-const eventKeys: (keyof Event)[] = [
+const eventKeys: (keyof Event | keyof CloudifyLogEventPart | keyof CloudifyEventPart)[] = [
     '_storage_id',
     'execution_id',
     'message',
