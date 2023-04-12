@@ -135,14 +135,10 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
         const { configuration, toolbox } = this.props;
         const { allowMultipleSelection } = configuration;
         const context = toolbox.getContext();
+        const isSingleValue = (value: string | string[] | null | undefined) => !Array.isArray(value) && !!value;
 
         if (!allowMultipleSelection) {
-            if (
-                !Array.isArray(selectedNodeId) &&
-                !Array.isArray(selectedDeploymentId) &&
-                !!selectedDeploymentId &&
-                !!selectedNodeId
-            ) {
+            if (isSingleValue(selectedDeploymentId) && isSingleValue(selectedNodeId)) {
                 const oldDepNodeId = context.getValue('depNodeId');
                 const newDepNodeId = selectedNodeId + selectedDeploymentId;
                 if (oldDepNodeId !== newDepNodeId) {
