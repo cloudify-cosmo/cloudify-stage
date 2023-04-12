@@ -1,5 +1,5 @@
-import { each, isEqual, lowerFirst } from 'lodash';
-import type { DynamicDropdownProps } from 'app/widgets/common/components/DynamicDropdown';
+import { each, isEqual } from 'lodash';
+import FilterDropdown from './FilterDropdown';
 import type { FilterConfiguration } from './types';
 
 const deploymentFilter = { deployment_id: 'deploymentId' };
@@ -165,158 +165,100 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
 
     render() {
         const { Form } = Stage.Basic;
-
-        interface FilterDropdownProps {
-            entityName:
-                | 'Blueprint'
-                | 'Deployment'
-                | 'Node'
-                | 'Node Instance'
-                | 'Execution'
-                | 'Execution Status'
-                | 'Site Name';
-            onChange: DynamicDropdownProps['onChange'];
-            stateProp: keyof FilterState;
-            enabledConfigurationKey: keyof FilterConfiguration;
-            fetchAll?: DynamicDropdownProps['fetchAll'];
-            fetchIncludeExtra?: string;
-            fetchManagerEndpoint?: string;
-            filter?: DynamicDropdownProps['filter'];
-            flushOnRefreshEvent?: boolean;
-            pageSize?: DynamicDropdownProps['pageSize'];
-            searchParams?: DynamicDropdownProps['searchParams'];
-            textFormatter?: DynamicDropdownProps['textFormatter'];
-            valueProp?: DynamicDropdownProps['valueProp'];
-        }
-
-        const createDropdown = ({
-            entityName,
-            onChange,
-            stateProp,
-            enabledConfigurationKey,
-            fetchAll,
-            fetchIncludeExtra,
-            fetchManagerEndpoint,
-            filter,
-            flushOnRefreshEvent,
-            pageSize,
-            searchParams,
-            textFormatter,
-            valueProp
-        }: FilterDropdownProps) => {
-            const { DynamicDropdown } = Stage.Common.Components;
-            const { appendQueryParam } = Stage.Utils.Url;
-            const { configuration, toolbox } = this.props;
-
-            if (configuration[enabledConfigurationKey]) {
-                const camelCaseEntityName = lowerFirst(entityName.replace(' ', ''));
-                const { [stateProp]: value } = this.state;
-                const url = `/${fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`}`;
-
-                return (
-                    <Form.Field key={entityName}>
-                        <DynamicDropdown
-                            multiple={configuration.allowMultipleSelection}
-                            fetchUrl={appendQueryParam(url, {
-                                _include: _(filter)
-                                    .keys()
-                                    .concat(valueProp || 'id')
-                                    .concat(fetchIncludeExtra || [])
-                                    .join()
-                            })}
-                            searchParams={searchParams}
-                            onChange={onChange}
-                            toolbox={toolbox}
-                            value={value}
-                            placeholder={entityName}
-                            fetchAll={fetchAll}
-                            textFormatter={textFormatter}
-                            valueProp={valueProp}
-                            pageSize={pageSize}
-                            filter={filter}
-                            className={`${camelCaseEntityName}FilterField`}
-                            refreshEvent={flushOnRefreshEvent ? `${camelCaseEntityName}s:refresh` : undefined}
-                        />
-                    </Form.Field>
-                );
-            }
-
-            return null;
-        };
+        const { configuration, toolbox } = this.props;
+        const { blueprintId, deploymentId, executionId, executionStatus, nodeId, nodeInstanceId, siteName } =
+            this.state;
 
         return (
             <Form size="small">
                 <Form.Group inline widths="equal">
-                    {[
-                        createDropdown({
-                            entityName: 'Blueprint',
-                            stateProp: 'blueprintId',
-                            enabledConfigurationKey: 'filterByBlueprints',
-                            onChange: this.selectBlueprint,
-                            fetchManagerEndpoint: 'blueprints?state=uploaded',
-                            flushOnRefreshEvent: true
-                        }),
-                        createDropdown({
-                            entityName: 'Deployment',
-                            stateProp: 'deploymentId',
-                            enabledConfigurationKey: 'filterByDeployments',
-                            onChange: this.selectDeployment,
-                            filter: blueprintFilter,
-                            pageSize: 20,
-                            textFormatter: item =>
-                                Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name }),
-                            fetchIncludeExtra: 'display_name',
-                            searchParams: ['_search', '_search_name'],
-                            flushOnRefreshEvent: true
-                        }),
-                        createDropdown({
-                            entityName: 'Node',
-                            stateProp: 'nodeId',
-                            enabledConfigurationKey: 'filterByNodes',
-                            onChange: this.selectNode,
-                            filter: blueprintDeploymentFilter,
-                            pageSize: 40
-                        }),
-                        createDropdown({
-                            entityName: 'Node Instance',
-                            stateProp: 'nodeInstanceId',
-                            enabledConfigurationKey: 'filterByNodeInstances',
-                            onChange: this.selectNodeInstance,
-                            filter: { ...deploymentFilter, node_id: 'nodeId' },
-                            pageSize: 40
-                        }),
-                        createDropdown({
-                            entityName: 'Execution',
-                            stateProp: 'executionId',
-                            enabledConfigurationKey: 'filterByExecutions',
-                            onChange: this.selectExecution,
-                            fetchIncludeExtra: 'workflow_id',
-                            textFormatter: item => (item.workflow_id ? `${item.id} (${item.workflow_id})` : item.id),
-                            filter: blueprintDeploymentFilter,
-                            pageSize: 20
-                        }),
-                        createDropdown({
-                            entityName: 'Execution Status',
-                            stateProp: 'executionStatus',
-                            enabledConfigurationKey: 'filterByExecutionsStatus',
-                            onChange: this.selectExecutionStatus,
-                            fetchManagerEndpoint: 'executions',
-                            fetchAll: true,
-                            valueProp: 'status_display',
-                            filter: {
-                                ...blueprintDeploymentFilter,
-                                id: 'executionId'
+                    {configuration.filterByBlueprints && (
+                        <FilterDropdown
+                            entityName="Blueprint"
+                            value={blueprintId}
+                            onChange={this.selectBlueprint}
+                            toolbox={toolbox}
+                            fetchManagerEndpoint="blueprints?state=uploaded"
+                            flushOnRefreshEvent
+                            multiple={configuration.allowMultipleSelection}
+                        />
+                    )}
+                    {configuration.filterByDeployments && (
+                        <FilterDropdown
+                            entityName="Deployment"
+                            value={deploymentId}
+                            onChange={this.selectDeployment}
+                            toolbox={toolbox}
+                            fetchIncludeExtra="display_name"
+                            filter={blueprintFilter}
+                            flushOnRefreshEvent
+                            multiple={configuration.allowMultipleSelection}
+                            pageSize={20}
+                            searchParams={['_search', '_search_name']}
+                            textFormatter={item =>
+                                Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })
                             }
-                        }),
-                        createDropdown({
-                            entityName: 'Site Name',
-                            stateProp: 'siteName',
-                            enabledConfigurationKey: 'filterBySiteName',
-                            onChange: this.selectSiteName,
-                            fetchManagerEndpoint: 'sites',
-                            valueProp: 'name'
-                        })
-                    ]}
+                        />
+                    )}
+                    {configuration.filterByNodes && (
+                        <FilterDropdown
+                            entityName="Node"
+                            value={nodeId}
+                            onChange={this.selectNode}
+                            toolbox={toolbox}
+                            filter={blueprintDeploymentFilter}
+                            multiple={configuration.allowMultipleSelection}
+                            pageSize={40}
+                        />
+                    )}
+                    {configuration.filterByNodeInstances && (
+                        <FilterDropdown
+                            entityName="Node Instance"
+                            value={nodeInstanceId}
+                            onChange={this.selectNodeInstance}
+                            toolbox={toolbox}
+                            filter={{ ...deploymentFilter, node_id: 'nodeId' }}
+                            multiple={configuration.allowMultipleSelection}
+                            pageSize={40}
+                        />
+                    )}
+                    {configuration.filterByExecutions && (
+                        <FilterDropdown
+                            entityName="Execution"
+                            value={executionId}
+                            onChange={this.selectExecution}
+                            toolbox={toolbox}
+                            fetchIncludeExtra="workflow_id"
+                            filter={blueprintDeploymentFilter}
+                            multiple={configuration.allowMultipleSelection}
+                            textFormatter={item => (item.workflow_id ? `${item.id} (${item.workflow_id})` : item.id)}
+                            pageSize={20}
+                        />
+                    )}
+                    {configuration.filterByExecutionsStatus && (
+                        <FilterDropdown
+                            entityName="Execution Status"
+                            value={executionStatus}
+                            onChange={this.selectExecutionStatus}
+                            toolbox={toolbox}
+                            fetchManagerEndpoint="executions"
+                            fetchAll
+                            filter={{ ...blueprintDeploymentFilter, id: 'executionId' }}
+                            multiple={configuration.allowMultipleSelection}
+                            valueProp="status_display"
+                        />
+                    )}
+                    {configuration.filterBySiteName && (
+                        <FilterDropdown
+                            entityName="Site Name"
+                            value={siteName}
+                            onChange={this.selectSiteName}
+                            toolbox={toolbox}
+                            fetchManagerEndpoint="sites"
+                            multiple={configuration.allowMultipleSelection}
+                            valueProp="name"
+                        />
+                    )}
                 </Form.Group>
             </Form>
         );
