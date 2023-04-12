@@ -26,9 +26,9 @@ type FilterState = Stage.ContextEntries;
 
 export default class Filter extends React.Component<FilterProps, FilterState> {
     private eventHandlers: {
-        'deployments:refresh': (deploymentIds?: any) => void;
+        'deployments:refresh': (deploymentIds?: Stage.ContextEntries['deploymentId']) => void;
         'filter:refresh': () => void;
-        'blueprints:refresh': (blueprintIds?: any) => void;
+        'blueprints:refresh': (blueprintIds?: Stage.ContextEntries['blueprintId']) => void;
     };
 
     constructor(props: FilterProps) {
@@ -178,15 +178,15 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
             onChange: DynamicDropdownProps['onChange'];
             stateProp: keyof FilterState;
             enabledConfigurationKey: keyof FilterConfiguration;
-            fetchAll?: boolean;
+            fetchAll?: DynamicDropdownProps['fetchAll'];
             fetchIncludeExtra?: string;
             fetchManagerEndpoint?: string;
-            filter?: Record<string, string>;
+            filter?: DynamicDropdownProps['filter'];
             flushOnRefreshEvent?: boolean;
-            pageSize?: number;
-            searchParams?: string[];
-            textFormatter?: (...args: any) => string;
-            valueProp?: string;
+            pageSize?: DynamicDropdownProps['pageSize'];
+            searchParams?: DynamicDropdownProps['searchParams'];
+            textFormatter?: DynamicDropdownProps['textFormatter'];
+            valueProp?: DynamicDropdownProps['valueProp'];
         }
 
         const createDropdown = ({
