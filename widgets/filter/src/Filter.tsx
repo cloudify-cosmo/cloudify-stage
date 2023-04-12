@@ -1,5 +1,6 @@
-import type { FilterConfiguration } from 'widgets/filter/src/types';
+import { each, isEqual, lowerFirst } from 'lodash';
 import type { DynamicDropdownProps } from 'app/widgets/common/components/DynamicDropdown';
+import type { FilterConfiguration } from './types';
 
 const deploymentFilter = { deployment_id: 'deploymentId' };
 const blueprintFilter = { blueprint_id: 'blueprintId' };
@@ -46,12 +47,12 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
 
     componentDidMount() {
         const { toolbox } = this.props;
-        _.each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().on(eventName, handler, this));
+        each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().on(eventName, handler, this));
     }
 
     shouldComponentUpdate(nextProps: FilterProps, nextState: FilterState) {
         const { configuration } = this.props;
-        return !_.isEqual(configuration, nextProps.configuration) || !_.isEqual(this.state, nextState);
+        return !isEqual(configuration, nextProps.configuration) || !isEqual(this.state, nextState);
     }
 
     componentDidUpdate(prevProps: FilterProps) {
@@ -67,7 +68,7 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
 
     componentWillUnmount() {
         const { toolbox } = this.props;
-        _.each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().off(eventName, handler));
+        each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().off(eventName, handler));
     }
 
     getStateFromContext() {
@@ -208,7 +209,7 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
             const { configuration, toolbox } = this.props;
 
             if (configuration[enabledConfigurationKey]) {
-                const camelCaseEntityName = _.lowerFirst(entityName.replace(' ', ''));
+                const camelCaseEntityName = lowerFirst(entityName.replace(' ', ''));
                 const { [stateProp]: value } = this.state;
                 const url = `/${fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`}`;
 
