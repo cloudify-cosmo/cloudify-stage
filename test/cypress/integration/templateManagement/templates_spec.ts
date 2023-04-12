@@ -140,11 +140,13 @@ describe('Templates segment', () => {
             });
 
             cy.log('Save template');
+            cy.intercept({ method: 'GET', pathname: '/console/templates' }).as('refreshTemplates');
             cy.get('.actions > .ok').click();
         });
 
         cy.get('.modal').should('not.exist');
         cy.get('.loading').should('not.exist');
+        cy.wait('@refreshTemplates');
 
         cy.log('Verify template changes');
         verifyTemplateRow(
