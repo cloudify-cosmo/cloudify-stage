@@ -1,21 +1,37 @@
-// @ts-nocheck File not migrated fully to TS
+import type { FilterConfiguration } from 'widgets/filter/src/types';
+import type { DynamicDropdownProps } from 'app/widgets/common/components/DynamicDropdown';
+
 const deploymentFilter = { deployment_id: 'deploymentId' };
 const blueprintFilter = { blueprint_id: 'blueprintId' };
 const blueprintDeploymentFilter = { ...deploymentFilter, ...blueprintFilter };
 
-const filterFields = [
+type FilterField = keyof Stage.ContextEntries;
+const filterFields: FilterField[] = [
     'blueprintId',
     'deploymentId',
     'nodeId',
     'nodeInstanceId',
     'executionId',
     'executionStatus',
-    'siteName'
+    'siteName',
+    'depNodeId'
 ];
 
-export default class Filter extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface FilterProps {
+    configuration: FilterConfiguration;
+    toolbox: Stage.Types.Toolbox;
+}
+type FilterState = Stage.ContextEntries;
+
+export default class Filter extends React.Component<FilterProps, FilterState> {
+    private eventHandlers: {
+        'deployments:refresh': (deploymentIds?: any) => void;
+        'filter:refresh': () => void;
+        'blueprints:refresh': (blueprintIds?: any) => void;
+    };
+
+    constructor(props: FilterProps) {
+        super(props);
 
         this.state = {
             ...this.getStateFromContext()
@@ -33,12 +49,12 @@ export default class Filter extends React.Component {
         _.each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().on(eventName, handler, this));
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: FilterProps, nextState: FilterState) {
         const { configuration } = this.props;
         return !_.isEqual(configuration, nextProps.configuration) || !_.isEqual(this.state, nextState);
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: FilterProps) {
         const { configuration } = this.props;
         const oldAllowMultipleSelection = prevProps.configuration.allowMultipleSelection;
         const newAllowMultipleSelection = configuration.allowMultipleSelection;
@@ -56,19 +72,22 @@ export default class Filter extends React.Component {
 
     getStateFromContext() {
         const { toolbox } = this.props;
-        return _(filterFields)
-            .keyBy()
-            .mapValues(filterField => toolbox.getContext().getValue(filterField) || null)
-            .value();
+
+        return filterFields.reduce((newState, fieldName) => {
+            return {
+                ...newState,
+                [fieldName]: toolbox.getContext().getValue(fieldName) || null
+            };
+        }, {} as FilterState);
     }
 
-    setValue(name, value) {
+    setValue(name: FilterField, value: Stage.ContextEntries[FilterField]) {
         const { toolbox } = this.props;
         toolbox.getContext().setValue(name, value);
-        this.setState({ [name]: value });
+        this.setState((prevState: FilterState) => ({ ...prevState, [name]: value }));
     }
 
-    selectBlueprint = (blueprintIds = null) => {
+    selectBlueprint = (blueprintIds: Stage.ContextEntries['blueprintId'] = null) => {
         this.setValue('blueprintId', blueprintIds);
         this.setValue('deploymentId', null);
         this.setValue('nodeId', null);
@@ -76,7 +95,7 @@ export default class Filter extends React.Component {
         this.updateDeplomentNodeIdValue(null, null);
     };
 
-    selectDeployment = (deploymentIds = null) => {
+    selectDeployment = (deploymentIds: Stage.ContextEntries['deploymentId'] = null) => {
         this.setValue('deploymentId', deploymentIds);
         this.setValue('nodeInstanceId', null);
         this.setValue('nodeId', null);
@@ -84,7 +103,7 @@ export default class Filter extends React.Component {
         this.updateDeplomentNodeIdValue(null, null);
     };
 
-    selectNode = nodeIds => {
+    selectNode = (nodeIds: Stage.ContextEntries['nodeId']) => {
         const { deploymentId } = this.state;
         this.setValue('nodeId', nodeIds);
         this.setValue('nodeInstanceId', null);
@@ -92,29 +111,37 @@ export default class Filter extends React.Component {
         this.updateTopologyWidget(nodeIds);
     };
 
-    selectNodeInstance = nodeInstanceIds => {
+    selectNodeInstance = (nodeInstanceIds: Stage.ContextEntries['nodeInstanceId']) => {
         this.setValue('nodeInstanceId', nodeInstanceIds);
     };
 
-    selectExecution = executionIds => {
+    selectExecution = (executionIds: Stage.ContextEntries['executionId']) => {
         this.setValue('executionId', executionIds);
     };
 
-    selectExecutionStatus = executionStatuses => {
+    selectExecutionStatus = (executionStatuses: Stage.ContextEntries['executionStatus']) => {
         this.setValue('executionStatus', executionStatuses);
     };
 
-    selectSiteName = siteNames => {
+    selectSiteName = (siteNames: Stage.ContextEntries['siteName']) => {
         this.setValue('siteName', siteNames);
     };
 
-    updateDeplomentNodeIdValue(selectedDeploymentId, selectedNodeId) {
+    updateDeplomentNodeIdValue(
+        selectedDeploymentId: Stage.ContextEntries['deploymentId'] | undefined,
+        selectedNodeId: Stage.ContextEntries['nodeId']
+    ) {
         const { configuration, toolbox } = this.props;
         const { allowMultipleSelection } = configuration;
         const context = toolbox.getContext();
 
         if (!allowMultipleSelection) {
-            if (!_.isEmpty(selectedDeploymentId) && !_.isEmpty(selectedNodeId)) {
+            if (
+                !Array.isArray(selectedNodeId) &&
+                !Array.isArray(selectedDeploymentId) &&
+                !!selectedDeploymentId &&
+                !!selectedNodeId
+            ) {
                 const oldDepNodeId = context.getValue('depNodeId');
                 const newDepNodeId = selectedNodeId + selectedDeploymentId;
                 if (oldDepNodeId !== newDepNodeId) {
@@ -126,7 +153,7 @@ export default class Filter extends React.Component {
         }
     }
 
-    updateTopologyWidget(selectedNodeId) {
+    updateTopologyWidget(selectedNodeId: Stage.ContextEntries['nodeId']) {
         const { configuration, toolbox } = this.props;
         const { allowMultipleSelection } = configuration;
 
@@ -138,29 +165,53 @@ export default class Filter extends React.Component {
     render() {
         const { Form } = Stage.Basic;
 
+        interface FilterDropdownProps {
+            entityName:
+                | 'Blueprint'
+                | 'Deployment'
+                | 'Node'
+                | 'Node Instance'
+                | 'Execution'
+                | 'Execution Status'
+                | 'Site Name';
+            onChange: DynamicDropdownProps['onChange'];
+            stateProp: keyof FilterState;
+            enabledConfigurationKey: keyof FilterConfiguration;
+            fetchAll?: boolean;
+            fetchIncludeExtra?: string;
+            fetchManagerEndpoint?: string;
+            filter?: Record<string, string>;
+            flushOnRefreshEvent?: boolean;
+            pageSize?: number;
+            searchParams?: string[];
+            textFormatter?: (...args: any) => string;
+            valueProp?: string;
+        }
+
         const createDropdown = ({
+            entityName,
+            onChange,
             stateProp,
             enabledConfigurationKey,
             fetchAll,
             fetchIncludeExtra,
             fetchManagerEndpoint,
-            searchParams,
-            entityName,
-            textFormatter,
-            valueProp,
-            pageSize,
             filter,
-            flushOnRefreshEvent
-        }) => {
+            flushOnRefreshEvent,
+            pageSize,
+            searchParams,
+            textFormatter,
+            valueProp
+        }: FilterDropdownProps) => {
             const { DynamicDropdown } = Stage.Common.Components;
             const { appendQueryParam } = Stage.Utils.Url;
             const { configuration, toolbox } = this.props;
 
-            const joinedEntityName = entityName.replace(' ', '');
-            if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
-                const camelCaseEntityName = _.lowerFirst(joinedEntityName);
-                const { [stateProp || `${camelCaseEntityName}Id`]: value } = this.state;
+            if (configuration[enabledConfigurationKey]) {
+                const camelCaseEntityName = _.lowerFirst(entityName.replace(' ', ''));
+                const { [stateProp]: value } = this.state;
                 const url = `/${fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`}`;
+
                 return (
                     <Form.Field key={entityName}>
                         <DynamicDropdown
@@ -173,7 +224,7 @@ export default class Filter extends React.Component {
                                     .join()
                             })}
                             searchParams={searchParams}
-                            onChange={this[`select${joinedEntityName}`]}
+                            onChange={onChange}
                             toolbox={toolbox}
                             value={value}
                             placeholder={entityName}
@@ -183,7 +234,7 @@ export default class Filter extends React.Component {
                             pageSize={pageSize}
                             filter={filter}
                             className={`${camelCaseEntityName}FilterField`}
-                            refreshEvent={flushOnRefreshEvent ? `${camelCaseEntityName}s:refresh` : null}
+                            refreshEvent={flushOnRefreshEvent ? `${camelCaseEntityName}s:refresh` : undefined}
                         />
                     </Form.Field>
                 );
@@ -198,11 +249,17 @@ export default class Filter extends React.Component {
                     {[
                         createDropdown({
                             entityName: 'Blueprint',
+                            stateProp: 'blueprintId',
+                            enabledConfigurationKey: 'filterByBlueprints',
+                            onChange: this.selectBlueprint,
                             fetchManagerEndpoint: 'blueprints?state=uploaded',
                             flushOnRefreshEvent: true
                         }),
                         createDropdown({
                             entityName: 'Deployment',
+                            stateProp: 'deploymentId',
+                            enabledConfigurationKey: 'filterByDeployments',
+                            onChange: this.selectDeployment,
                             filter: blueprintFilter,
                             pageSize: 20,
                             textFormatter: item =>
@@ -213,16 +270,25 @@ export default class Filter extends React.Component {
                         }),
                         createDropdown({
                             entityName: 'Node',
+                            stateProp: 'nodeId',
+                            enabledConfigurationKey: 'filterByNodes',
+                            onChange: this.selectNode,
                             filter: blueprintDeploymentFilter,
                             pageSize: 40
                         }),
                         createDropdown({
                             entityName: 'Node Instance',
+                            stateProp: 'nodeInstanceId',
+                            enabledConfigurationKey: 'filterByNodeInstances',
+                            onChange: this.selectNodeInstance,
                             filter: { ...deploymentFilter, node_id: 'nodeId' },
                             pageSize: 40
                         }),
                         createDropdown({
                             entityName: 'Execution',
+                            stateProp: 'executionId',
+                            enabledConfigurationKey: 'filterByExecutions',
+                            onChange: this.selectExecution,
                             fetchIncludeExtra: 'workflow_id',
                             textFormatter: item => (item.workflow_id ? `${item.id} (${item.workflow_id})` : item.id),
                             filter: blueprintDeploymentFilter,
@@ -232,6 +298,7 @@ export default class Filter extends React.Component {
                             entityName: 'Execution Status',
                             stateProp: 'executionStatus',
                             enabledConfigurationKey: 'filterByExecutionsStatus',
+                            onChange: this.selectExecutionStatus,
                             fetchManagerEndpoint: 'executions',
                             fetchAll: true,
                             valueProp: 'status_display',
@@ -244,6 +311,7 @@ export default class Filter extends React.Component {
                             entityName: 'Site Name',
                             stateProp: 'siteName',
                             enabledConfigurationKey: 'filterBySiteName',
+                            onChange: this.selectSiteName,
                             fetchManagerEndpoint: 'sites',
                             valueProp: 'name'
                         })
@@ -253,8 +321,3 @@ export default class Filter extends React.Component {
         );
     }
 }
-
-Filter.propTypes = {
-    configuration: PropTypes.shape({ allowMultipleSelection: PropTypes.bool }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
