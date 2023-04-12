@@ -17,11 +17,10 @@ describe('Templates segment', () => {
     const users = [defaultUser];
 
     const verifyTemplateRow = (id: string, pageMenuItems: string[], roles: string[], tenants: string[]) => {
-        getTemplateRow(id)
-            .within(() => {
-                roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
-            })
-            .click();
+        getTemplateRow(id).within(() => {
+            roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
+        });
+        getTemplateRow(id).click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
             pageMenuItems.forEach((pageMenuItemId, index) =>
                 cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', pageMenuItemId)
