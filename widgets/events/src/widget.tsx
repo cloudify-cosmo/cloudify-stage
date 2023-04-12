@@ -1,5 +1,5 @@
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
-import type { Event } from './types';
+import type { Event } from '../../../app/widgets/common/events';
 import EventsTable from './EventsTable';
 import './widget.css';
 
@@ -48,14 +48,7 @@ export interface EventsWidgetParams {
     /* eslint-enable camelcase */
 }
 
-export interface EventsWidgetData {
-    items: ({
-        /* eslint-disable camelcase */
-        _storage_id: string;
-        reported_timestamp: string;
-        /* eslint-enable camelcase */
-    } & Event)[];
-}
+export type EventsWidgetData = Stage.Types.PaginatedResponse<Event & { timestamp: string }>;
 
 Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfiguration>({
     id: widgetId,
@@ -161,7 +154,7 @@ Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfigurati
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
@@ -178,7 +171,7 @@ Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfigurati
         const executionId = CONTEXT_PARAMS.execution_id;
 
         const formattedData = {
-            items: _.map(data?.items, item => {
+            items: data.items.map(item => {
                 // eslint-disable-next-line no-underscore-dangle
                 const id = item._storage_id;
                 return {
@@ -192,7 +185,7 @@ Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfigurati
                     isSelected: id === SELECTED_EVENT_ID || (widget.configuration.showLogs && id === SELECTED_LOG_ID)
                 };
             }),
-            total: _.get(data, 'metadata.pagination.total', 0),
+            total: data.metadata.pagination.total,
             blueprintId,
             deploymentId,
             nodeId,
