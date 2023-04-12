@@ -4,7 +4,7 @@ import type { CloudifyEventPart, CloudifyLogEventPart, Event } from 'app/widgets
 import LogsTable from './LogsTable';
 
 const widgetId = 'executionLogs';
-// const translate = Stage.Utils.getT(`widgets.${widgetId}`);
+const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
 const eventKeys: (keyof Event | keyof CloudifyLogEventPart | keyof CloudifyEventPart)[] = [
     '_storage_id',
@@ -32,7 +32,7 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
     initialHeight: 18,
     fetchUrl: `[manager]/events?_include=${eventKeys.join(',')}[params]`,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('events'), // TODO: Change to `executionLogs`
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('executionLogs'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(2), Stage.GenericConfig.PAGE_SIZE_CONFIG(50)],
@@ -55,7 +55,7 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
         const executionId = toolbox.getContext().getValue('executionId');
 
         if (!executionId) {
-            return <Message>Please select execution in order to see execution logs.</Message>;
+            return <Message>{translate('noExecutionSelectedMessage')}</Message>;
         }
 
         return <LogsTable data={data} />;
