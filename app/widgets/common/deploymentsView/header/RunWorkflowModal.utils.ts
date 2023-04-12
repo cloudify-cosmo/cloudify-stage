@@ -54,9 +54,9 @@ const filterSupportedWorkflowParameters = (
     return filteredWorkflowParameters;
 };
 
-// TODO Norbert: Add note to PR about the reason behind doing mapping first (from performance POV it's not the best) - the reason is DX and not having a need of doing additional, complicated Array.prototype.reduce operations
 export const initializeWorkflowParameters = (
     workflowParameters: FetchedWorkflow['parameters']
 ): SimplifiedWorkflowParameter[] => {
-    return filterSupportedWorkflowParameters(mapFetchedWorkflowParameters(workflowParameters));
+    const mappedParameters = mapFetchedWorkflowParameters(workflowParameters);
+    return filterSupportedWorkflowParameters(mappedParameters);
 };
