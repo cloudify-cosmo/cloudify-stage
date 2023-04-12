@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNumber } from 'lodash';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
@@ -37,7 +37,6 @@ export interface RunWorkflowModalProps {
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
-// TODO Norbert: Consider using namespaces for extracted files
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     filterRules,
     onHide,
@@ -98,10 +97,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
             requiredParameters.forEach(parameter => {
                 const parameterValue = parametersInputs[parameter.name];
-                // TODO Norbert: Check if that assumption is correct
-                const parameterHasValue = typeof parameterValue !== 'undefined' && parameterValue !== '';
-
-                if (!parameterHasValue) {
+                if (isEmpty(parameterValue) && !isNumber(parameterValue)) {
                     validationErrors[parameter.name] = tModal('errors.noParameterValue', {
                         parameter: parameter.name
                     });

@@ -1,4 +1,4 @@
-import { chain, find, capitalize, map } from 'lodash';
+import { chain, find, capitalize, map, isEmpty, isNumber } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import type { FetchedWorkflow, EnhancedWorkflow, SimplifiedWorkflowParameter } from './RunWorkflowModal.types';
 
@@ -26,14 +26,20 @@ export const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemP
     return [...enabledOptions, ...disabledOptions];
 };
 
+const isParameterRequired = (parameter: FetchedWorkflow['parameters'][string]) => {
+    return isNumber(parameter.default) || !isEmpty(parameter.default);
+};
+
 const mapFetchedWorkflowParameters = (
     workflowParameters: FetchedWorkflow['parameters']
 ): SimplifiedWorkflowParameter[] => {
-    return map(workflowParameters, (parameterFields, parameterName) => ({
-        ...parameterFields,
-        name: parameterName,
-        required: parameterFields.default !== undefined
-    }));
+    return map(workflowParameters, (parameterFields, parameterName) => {
+        return {
+            ...parameterFields,
+            name: parameterName,
+            required: isParameterRequired(parameterFields)
+        };
+    });
 };
 
 const filterSupportedWorkflowParameters = (
