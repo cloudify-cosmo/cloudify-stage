@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useMemo } from 'react';
-import { isEmpty, isNumber } from 'lodash';
+import { isEmpty } from 'lodash';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../../utils/hooks';
 import {
@@ -97,7 +97,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
 
             requiredParameters.forEach(parameter => {
                 const parameterValue = parametersInputs[parameter.name];
-                if (isEmpty(parameterValue) && !isNumber(parameterValue)) {
+                if (isEmpty(parameterValue)) {
                     validationErrors[parameter.name] = tModal('errors.noParameterValue', {
                         parameter: parameter.name
                     });
