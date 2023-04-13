@@ -94,15 +94,10 @@ export default function Templates({
                                 <DataTable.Data>{template.updatedBy}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     {template.custom && (
-                                        <div>
+                                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+                                        <div onClick={event => event.stopPropagation()}>
                                             <PopupConfirm
-                                                trigger={
-                                                    <Icon
-                                                        name="remove"
-                                                        link
-                                                        onClick={(event: Event) => event.stopPropagation()}
-                                                    />
-                                                }
+                                                trigger={<Icon name="remove" link />}
                                                 content={tTemplateManagement('removeConfirm')}
                                                 onConfirm={() => onDeleteTemplate(template)}
                                             />
@@ -112,14 +107,7 @@ export default function Templates({
                                                 initialRoles={data.roles}
                                                 initialTenants={data.tenants}
                                                 onCreateTemplate={(...args) => onModifyTemplate(template, ...args)}
-                                                trigger={
-                                                    <Icon
-                                                        name="edit"
-                                                        link
-                                                        className="updateTemplateIcon"
-                                                        onClick={(event: Event) => event.stopPropagation()}
-                                                    />
-                                                }
+                                                trigger={<Icon name="edit" link className="updateTemplateIcon" />}
                                             />
                                         </div>
                                     )}
