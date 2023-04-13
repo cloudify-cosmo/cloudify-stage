@@ -1,11 +1,16 @@
 import type { PageSizeConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
-import type { ExecutionLogsData } from 'widgets/executionLogs/src/types';
+import type { CloudifyEventPart, CloudifyLogEventPart, FullEventData } from 'app/widgets/common/events';
+import type { ExecutionLogsData } from './types';
 import { commonIncludeKeys } from './consts';
 import LogsTable from './LogsTable';
 
 const widgetId = 'executionLogs';
 const translate = Stage.Utils.getT(`widgets.${widgetId}`);
-const includeKeys = [...commonIncludeKeys, 'event_type', 'level'];
+const includeKeys: (keyof FullEventData | keyof CloudifyLogEventPart | keyof CloudifyEventPart)[] = [
+    ...commonIncludeKeys,
+    'event_type',
+    'level'
+];
 
 interface ExecutionLogsParams {
     // eslint-disable-next-line camelcase

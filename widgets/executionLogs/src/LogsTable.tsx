@@ -18,9 +18,7 @@ export default function LogsTable({ data }: LogsTableProps) {
                 <Table.Body>
                     {data.items.map(item => {
                         const messageText = Json.stringify(item.message, false);
-
                         const isErrorLog = Utils.isError(item);
-
                         const hasErrorCauses = !isEmpty(item.error_causes);
                         const timestamp = Time.formatTimestamp(
                             item.reported_timestamp,
