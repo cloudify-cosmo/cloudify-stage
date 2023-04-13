@@ -1,4 +1,4 @@
-import { chain, find, capitalize, map } from 'lodash';
+import { chain, capitalize, map } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import type { FetchedWorkflow, EnhancedWorkflow, SimplifiedWorkflowParameter } from './RunWorkflowModal.types';
 
@@ -11,7 +11,6 @@ export const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemP
     type GroupedOptions = Partial<Record<OptionsGroupName, DropdownItemProps[]>>;
 
     const { enabledOptions = [], disabledOptions = [] } = chain(workflows)
-        .filter(workflow => !find(workflow.parameters, parameter => parameter.default === undefined))
         .sortBy('name')
         .map(workflow => ({
             text: getWorkflowOptionText(workflow),

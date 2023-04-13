@@ -184,7 +184,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                     <InputField
                                         onChange={setParametersInputs}
                                         toolbox={toolbox}
-                                        error={errors[parameters.name]}
+                                        error={!!errors[parameters.name]}
                                         value={parametersInputs[parameters.name]}
                                         input={{
                                             type: parameters.type as Input['type'],
