@@ -2647,6 +2647,23 @@
                 "submit": "Create",
                 "cancelConfirm": "Are you sure you would like to discard the filled data and close?"
             }
+        },
+        "filter": {
+            "name": "Resource filter",
+            "description": "Adds a filter section for resources - blueprints, deployments, nodes, node instances and executions",
+            "configuration": {
+                "filterByBlueprints": "Show blueprint filter",
+                "filterByDeployments": "Show deployment filter",
+                "filterByExecutions": "Show execution filter",
+                "filterByNodes": "Show node filter",
+                "filterByNodeInstances": "Show node instance filter",
+                "filterByExecutionsStatus": "Show execution status filter",
+                "filterBySiteName": "Show site name filter",
+                "allowMultipleSelection": {
+                    "name": "Allow multiple selection",
+                    "description": "Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter"
+                }
+            }
         }
     }
 }
