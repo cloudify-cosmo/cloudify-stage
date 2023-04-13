@@ -48,7 +48,7 @@ export interface EventsWidgetParams {
     /* eslint-enable camelcase */
 }
 
-export type EventsWidgetData = Stage.Types.PaginatedResponse<Event & { timestamp: string }>;
+export type EventsWidgetData = Stage.Types.PaginatedResponse<Event>;
 
 Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfiguration>({
     id: widgetId,

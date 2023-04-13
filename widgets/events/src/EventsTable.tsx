@@ -11,7 +11,7 @@ type Event = FullEventData & {
     isSelected: boolean;
 };
 
-export function isEventType(event: Event): event is Event & CloudifyEventPart {
+function isEventType(event: Event): event is Event & CloudifyEventPart {
     return event.type === Stage.Common.Events.Utils.eventType;
 }
 

@@ -10,6 +10,7 @@ import {
     Segment
 } from '../../../components/basic';
 import Json from '../../../utils/shared/JsonUtils';
+import StageUtils from '../../../utils/stageUtils';
 import type { Event } from './types';
 
 export interface ErrorCausesModalProps {
@@ -17,7 +18,7 @@ export interface ErrorCausesModalProps {
     onClose: () => void;
 }
 
-const t = Stage.Utils.getT('widgets.events.detailsModal');
+const t = StageUtils.getT('widgets.events.detailsModal');
 
 const ErrorCausesModal: FunctionComponent<ErrorCausesModalProps> = ({ event, onClose }) => {
     const numberOfErrorCauses = _.size(event.error_causes);
