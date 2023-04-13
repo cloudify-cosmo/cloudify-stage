@@ -1,6 +1,6 @@
 import { icons } from 'cloudify-ui-common-frontend';
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { Event } from './types';
+import type { CloudifyEventPart, CloudifyLogEventPart } from './types';
 
 type EventTypeOptions = Record<
     string,
@@ -162,7 +162,7 @@ export default class EventUtils {
         return { ...{ icon: 'question', color: 'orange' as const }, ...EventUtils.logLevelOptions[log] };
     }
 
-    static isError(event: Event) {
+    static isError(event: CloudifyEventPart | CloudifyLogEventPart) {
         return (
             (event.type === 'cloudify_event' &&
                 event.event_type in EventUtils.eventTypeOptions &&

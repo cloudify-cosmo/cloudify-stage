@@ -10,7 +10,7 @@ export interface CloudifyLogEventPart {
     level: string;
 }
 
-export type Event = {
+export type FullEventData = {
     _storage_id: string;
     blueprint_id: string;
     deployment_display_name: string;

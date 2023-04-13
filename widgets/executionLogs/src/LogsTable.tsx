@@ -1,10 +1,9 @@
 import { isEmpty } from 'lodash';
-import type { PaginatedResponse } from 'backend/types';
-import type { Event } from 'app/widgets/common/events';
 import LogMessage from './LogMessage';
+import type { Event, ExecutionLogsData } from './types';
 
 interface LogsTableProps {
-    data: PaginatedResponse<Event>;
+    data: ExecutionLogsData;
 }
 export default function LogsTable({ data }: LogsTableProps) {
     const { Icon, Table } = Stage.Basic;

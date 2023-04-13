@@ -11,10 +11,10 @@ import {
 } from '../../../components/basic';
 import Json from '../../../utils/shared/JsonUtils';
 import StageUtils from '../../../utils/stageUtils';
-import type { Event } from './types';
+import type { FullEventData } from './types';
 
 export interface ErrorCausesModalProps {
-    event: Pick<Event, 'message' | 'error_causes'>;
+    event: Pick<FullEventData, 'message' | 'error_causes'>;
     onClose: () => void;
 }
 

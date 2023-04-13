@@ -1,7 +1,7 @@
 import type { FetchDataFunction } from 'cloudify-ui-components';
 import type { EventsWidgetConfiguration } from 'widgets/events/src/widget';
 import DetailsIcon from './DetailsIcon';
-import type { Event as FullEventData, CloudifyEventPart } from '../../../app/widgets/common/events';
+import type { FullEventData, CloudifyEventPart } from '../../../app/widgets/common/events';
 
 const translate = Stage.Utils.getT('widgets.events');
 

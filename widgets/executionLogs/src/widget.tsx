@@ -1,38 +1,26 @@
-import type { PaginatedResponse } from 'backend/types';
 import type { PageSizeConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
-import type { CloudifyEventPart, CloudifyLogEventPart, Event } from 'app/widgets/common/events/types';
+import type { ExecutionLogsData } from 'widgets/executionLogs/src/types';
+import { commonIncludeKeys } from './consts';
 import LogsTable from './LogsTable';
 
 const widgetId = 'executionLogs';
 const translate = Stage.Utils.getT(`widgets.${widgetId}`);
-
-const eventKeys: (keyof Event | keyof CloudifyLogEventPart | keyof CloudifyEventPart)[] = [
-    '_storage_id',
-    'execution_id',
-    'message',
-    'error_causes',
-    'event_type',
-    'level',
-    'reported_timestamp',
-    'type'
-];
+const includeKeys = [...commonIncludeKeys, 'event_type', 'level'];
 
 interface ExecutionLogsParams {
     // eslint-disable-next-line camelcase
     execution_id: string;
 }
 
-type ExecutionLogsData = PaginatedResponse<Event>;
-
 type ExecutionLogsConfiguration = PollingTimeConfiguration & PageSizeConfiguration;
 
 Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfiguration>({
     id: widgetId,
     initialWidth: 12,
-    initialHeight: 18,
-    fetchUrl: `[manager]/events?_include=${eventKeys.join(',')}[params]`,
+    initialHeight: 24,
+    fetchUrl: `[manager]/events?_include=${includeKeys.join(',')}[params]`,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('executionLogs'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(2), Stage.GenericConfig.PAGE_SIZE_CONFIG(50)],

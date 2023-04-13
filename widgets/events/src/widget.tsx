@@ -1,5 +1,5 @@
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
-import type { Event } from '../../../app/widgets/common/events';
+import type { FullEventData } from '../../../app/widgets/common/events';
 import EventsTable from './EventsTable';
 import './widget.css';
 
@@ -48,7 +48,7 @@ export interface EventsWidgetParams {
     /* eslint-enable camelcase */
 }
 
-export type EventsWidgetData = Stage.Types.PaginatedResponse<Event>;
+export type EventsWidgetData = Stage.Types.PaginatedResponse<FullEventData>;
 
 Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfiguration>({
     id: widgetId,
