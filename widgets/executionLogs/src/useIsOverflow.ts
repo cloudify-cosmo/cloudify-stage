@@ -1,5 +1,10 @@
 import * as React from 'react';
 
+/**
+ * For HTML element defined by RefObject returns boolean variable indicating if an element's content has overflow
+ *
+ * Inspired by: https://www.robinwieruch.de/react-custom-hook-check-if-overflow/
+ */
 export const useIsOverflow = (ref: React.RefObject<any>) => {
     const [isOverflow, setIsOverflow] = React.useState<boolean | undefined>(undefined);
 
