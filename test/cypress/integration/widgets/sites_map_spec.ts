@@ -7,7 +7,7 @@ describe('Sites Map', () => {
     };
 
     before(() => {
-        cy.activate().deleteSites().mockLogin().addPage(sitesMapWidgetPageName).addWidget('sitesMap');
+        cy.activate().deleteSites().mockLogin().addPage(sitesMapWidgetPageName, 'sitesMap');
         navigateToMapPage();
     });
 

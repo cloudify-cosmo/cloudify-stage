@@ -54,9 +54,12 @@ const SuggestedBlueprintDropdown = ({
         setLoading();
 
         searchActions
-            .doListBlueprints<keyof FetchedBlueprint>(filterRules, {
-                _search: searchQuery,
-                _include: fetchedBlueprintFields.join(',')
+            .doListBlueprints<keyof FetchedBlueprint>({
+                filterRules,
+                params: {
+                    _search: searchQuery,
+                    _include: fetchedBlueprintFields.join(',')
+                }
             })
             .then(data => {
                 const filteredBlueprints = filterBlueprints(data.items, environmentCapabilities);

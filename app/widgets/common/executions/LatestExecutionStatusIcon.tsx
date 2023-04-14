@@ -254,7 +254,7 @@ export default class LatestExecutionStatusIcon extends React.Component<
                             {execution.deployment_id}&apos; deployment
                         </Modal.Header>
                         <Modal.Content>
-                            <HighlightText language="json">{execution.error || t('noErrorDetails')}</HighlightText>
+                            <HighlightText>{execution.error || t('noErrorDetails')}</HighlightText>
                         </Modal.Content>
                         <Modal.Actions>
                             <CopyToClipboardButton content="Copy Error" text={execution.error} />
