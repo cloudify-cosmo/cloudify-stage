@@ -12,7 +12,7 @@ describe('Number of Blueprints widget', () => {
     }
 
     it('opens the default page on click', () => {
-        cy.activate().mockLogin().addWidget(widgetId);
+        cy.activate().mockLogin().enterEditMode().addWidgets(widgetId).exitEditMode();
         clickOnWidget();
         cy.verifyLocationByPageId('blueprints');
     });
