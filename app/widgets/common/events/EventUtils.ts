@@ -1,6 +1,7 @@
 import { icons } from 'cloudify-ui-common-frontend';
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { CloudifyEventPart, CloudifyLogEventPart } from './types';
+import type { CloudifyEventPart, CloudifyLogEventPart, FullEventData } from './types';
+import TimeUtils from '../../../utils/shared/TimeUtils';
 
 type EventTypeOptions = Record<
     string,
@@ -165,11 +166,12 @@ export default class EventUtils {
     static isError(event: CloudifyEventPart | CloudifyLogEventPart) {
         return (
             (event.type === 'cloudify_event' &&
-                event.event_type in EventUtils.eventTypeOptions &&
                 EventUtils.eventTypeOptions[event.event_type]?.rowClass === 'row-error') ||
-            (event.type === 'cloudify_log' &&
-                event.level in EventUtils.logLevelOptions &&
-                EventUtils.logLevelOptions[event.level]?.rowClass === 'row-error')
+            (event.type === 'cloudify_log' && EventUtils.logLevelOptions[event.level]?.rowClass === 'row-error')
         );
+    }
+
+    static getFormattedTimestamp(event: Pick<FullEventData, 'reported_timestamp'>) {
+        return TimeUtils.formatTimestamp(event.reported_timestamp, 'DD-MM-YYYY HH:mm:ss.SSS', moment.ISO_8601);
     }
 }

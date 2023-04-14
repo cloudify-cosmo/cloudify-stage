@@ -177,11 +177,7 @@ Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfigurati
                 return {
                     ...item,
                     id,
-                    timestamp: Stage.Utils.Time.formatTimestamp(
-                        item.reported_timestamp,
-                        'DD-MM-YYYY HH:mm:ss.SSS',
-                        moment.ISO_8601
-                    ),
+                    timestamp: Stage.Common.Events.Utils.getFormattedTimestamp(item),
                     isSelected: id === SELECTED_EVENT_ID || (widget.configuration.showLogs && id === SELECTED_LOG_ID)
                 };
             }),

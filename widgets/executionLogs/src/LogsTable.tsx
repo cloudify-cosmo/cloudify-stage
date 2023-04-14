@@ -8,7 +8,7 @@ interface LogsTableProps {
 export default function LogsTable({ data }: LogsTableProps) {
     const { Icon, Table } = Stage.Basic;
     const { ErrorCausesModal, Utils } = Stage.Common.Events;
-    const { Json, Time } = Stage.Utils;
+    const { Json } = Stage.Utils;
     const { useResettableState } = Stage.Hooks;
     const [event, setEvent, resetEvent] = useResettableState<Event | undefined>(undefined);
 
@@ -20,17 +20,13 @@ export default function LogsTable({ data }: LogsTableProps) {
                         const messageText = Json.stringify(item.message, false);
                         const isErrorLog = Utils.isError(item);
                         const hasErrorCauses = !isEmpty(item.error_causes);
-                        const timestamp = Time.formatTimestamp(
-                            item.reported_timestamp,
-                            'DD-MM-YYYY HH:mm:ss.SSS',
-                            moment.ISO_8601
-                        );
+                        const timestamp = Utils.getFormattedTimestamp(item);
 
                         return (
                             // eslint-disable-next-line no-underscore-dangle
                             <Table.Row key={item._storage_id} error={isErrorLog} verticalAlign="top">
                                 <Table.Cell collapsing>{timestamp}</Table.Cell>
-                                <Table.Cell colspan={hasErrorCauses ? 1 : 2}>
+                                <Table.Cell colSpan={hasErrorCauses ? 1 : 2}>
                                     <LogMessage message={messageText} />
                                 </Table.Cell>
                                 {hasErrorCauses && (
