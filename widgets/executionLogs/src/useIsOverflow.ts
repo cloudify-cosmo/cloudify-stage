@@ -8,7 +8,7 @@ import * as React from 'react';
 export const useIsOverflow = (ref: React.RefObject<any>) => {
     const [isOverflow, setIsOverflow] = React.useState<boolean | undefined>(undefined);
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
         const { current } = ref;
 
         const trigger = () => {
@@ -23,7 +23,7 @@ export const useIsOverflow = (ref: React.RefObject<any>) => {
 
             trigger();
         }
-    }, [ref]);
+    }, [ref, ref?.current?.innerText]);
 
     return isOverflow;
 };
