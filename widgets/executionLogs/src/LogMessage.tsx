@@ -7,13 +7,13 @@ const ExpandableMessage = styled.div<{ expanded: boolean }>`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: pre-wrap;
-    ${props =>
-        !props.expanded
-            ? `
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;`
-            : undefined}
+    ${({ expanded }) =>
+        !expanded &&
+        `
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        `}
 `;
 
 interface LogMessageProps {
