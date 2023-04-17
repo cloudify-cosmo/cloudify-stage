@@ -40,10 +40,10 @@ const mapFetchedWorkflowParameters = (
 const filterSupportedWorkflowParameters = (
     workflowParameters: EnhancedWorkflow['parameters']
 ): EnhancedWorkflow['parameters'] => {
-    const supportedParameterTypes = ['string', 'integer', 'float', 'boolean', 'list', 'textarea'];
+    const supportedParameterTypes = ['string', 'integer', 'float', 'boolean', 'list', 'textarea', undefined];
 
     const filteredWorkflowParameters = workflowParameters.filter(
-        parameter => parameter.type === undefined || supportedParameterTypes.includes(parameter.type as string)
+        parameter => parameter.type === undefined || supportedParameterTypes.includes(parameter.type)
     );
 
     return filteredWorkflowParameters;

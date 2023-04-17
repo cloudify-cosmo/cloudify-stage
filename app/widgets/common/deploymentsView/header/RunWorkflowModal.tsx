@@ -88,21 +88,19 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     async function runWorkflow() {
         const validationErrors: Record<string, string> = {};
 
-        if (!selectedWorkflow) {
-            validationErrors.error = tModal('errors.noWorkflowError');
-        }
-
         if (selectedWorkflow) {
             const requiredParameters = selectedWorkflow.parameters.filter(parameter => parameter.required);
 
-            requiredParameters.forEach(parameter => {
-                const parameterValue = parametersInputs[parameter.name];
+            requiredParameters.forEach(({ name: parameterName }) => {
+                const parameterValue = parametersInputs[parameterName];
                 if (isEmpty(parameterValue)) {
-                    validationErrors[parameter.name] = tModal('errors.noParameterValue', {
-                        parameter: parameter.name
+                    validationErrors[parameterName] = tModal('errors.noParameterValue', {
+                        parameter: parameterName
                     });
                 }
             });
+        } else {
+            validationErrors.error = tModal('errors.noWorkflowError');
         }
 
         if (!isEmpty(validationErrors)) {
@@ -173,30 +171,28 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                         />
                     </Form.Field>
                     {selectedWorkflow &&
-                        selectedWorkflow.parameters.map(parameters => {
-                            return (
-                                <Form.Field
-                                    label={parameters.name}
-                                    key={parameters.name}
-                                    required={parameters.required}
-                                    error={errors[parameters.name]}
-                                >
-                                    <InputField
-                                        onChange={setParametersInputs}
-                                        toolbox={toolbox}
-                                        error={!!errors[parameters.name]}
-                                        value={parametersInputs[parameters.name]}
-                                        input={{
-                                            type: parameters.type as Input['type'],
-                                            name: parameters.name,
-                                            display: {},
-                                            constraints: [],
-                                            default: parameters.default
-                                        }}
-                                    />
-                                </Form.Field>
-                            );
-                        })}
+                        selectedWorkflow.parameters.map(parameters => (
+                            <Form.Field
+                                label={parameters.name}
+                                key={parameters.name}
+                                required={parameters.required}
+                                error={errors[parameters.name]}
+                            >
+                                <InputField
+                                    onChange={setParametersInputs}
+                                    toolbox={toolbox}
+                                    error={!!errors[parameters.name]}
+                                    value={parametersInputs[parameters.name]}
+                                    input={{
+                                        type: parameters.type,
+                                        name: parameters.name,
+                                        display: {},
+                                        constraints: [],
+                                        default: parameters.default
+                                    }}
+                                />
+                            </Form.Field>
+                        ))}
                     <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>
