@@ -51,9 +51,6 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
     const [parametersInputs, setParametersInputs, resetParametersInputs] = useParametersInputs();
 
-    // eslint-disable-next-line
-    console.log(parametersInputs);
-
     const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
     const searchActions = new SearchActions(toolbox);
 
