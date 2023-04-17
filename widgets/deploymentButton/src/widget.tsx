@@ -1,16 +1,11 @@
-import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
-import type { FilterRule } from 'app/widgets/common/filters/types';
 import DeploymentButton from './DeploymentButton';
+import type { DeploymentButtonWidget } from './widget.types';
 
 const widgetId = 'deploymentButton';
 const translateConfiguration = Stage.Utils.getT(`widgets.${widgetId}.configuration`);
+const SearchActions = Stage.Common.Actions.Search;
 
-interface DeploymentButtonConfiguration extends ButtonConfiguration {
-    toolbox: Stage.Types.Toolbox;
-    blueprintFilterRules: FilterRule[];
-}
-
-Stage.defineWidget({
+Stage.defineWidget<unknown, DeploymentButtonWidget.Data, DeploymentButtonWidget.Configuration>({
     id: widgetId,
     initialWidth: 3,
     initialHeight: 3,
@@ -33,8 +28,21 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
+    fetchData(widget, toolbox) {
+        const searchActions = new SearchActions(toolbox);
+        return searchActions.doListBlueprints({
+            filterRules: widget.configuration.blueprintFilterRules,
+            params: {
+                _include: 'id',
+                _size: 1
+            }
+        });
+    },
+
+    render(widget, data, _error, toolbox) {
         const { basic, color, icon, label, blueprintFilterRules } = widget.configuration;
+        const disableDeploymentButton = Stage.Utils.isEmptyWidgetData(data) || data!.items.length === 0;
+
         return (
             <DeploymentButton
                 toolbox={toolbox}
@@ -43,6 +51,7 @@ Stage.defineWidget({
                 icon={icon}
                 label={label}
                 blueprintFilterRules={blueprintFilterRules}
+                disabled={disableDeploymentButton}
             />
         );
     }

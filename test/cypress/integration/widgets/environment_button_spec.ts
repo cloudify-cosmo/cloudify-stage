@@ -1,10 +1,26 @@
 describe('Environment button widget', () => {
+    const resourcePrefix = 'environment_button_spec_';
+    const blueprintName = `${resourcePrefix}environment`;
+
     before(() => {
-        cy.activate().useWidgetWithDefaultConfiguration('environmentButton');
+        cy.activate()
+            .useWidgetWithDefaultConfiguration('environmentButton')
+            .deleteBlueprints(resourcePrefix, true)
+            .uploadBlueprint('blueprints/deploy_on_environment.zip', blueprintName);
+    });
+
+    beforeEach(() => {
+        cy.refreshPage();
     });
 
     it('opens From Blueprint modal and lists only environment blueprints', () => {
-        cy.interceptSp('POST', '/searches/blueprints').as('blueprintsRequest');
+        cy.interceptSp('POST', {
+            pathname: '/searches/blueprints',
+            query: {
+                _include: 'id',
+                _sort: 'id'
+            }
+        }).as('blueprintsRequest');
 
         cy.contains('Create Environment').click();
         cy.contains('From Blueprint').click();
@@ -16,6 +32,28 @@ describe('Environment button widget', () => {
             })
         );
         cy.clickButton('Cancel');
+    });
+
+    it('disables clicking environment button when there are no blueprints available', () => {
+        const checkIfEnvironmentButtonIsEnabled = (isEnabled: boolean) => {
+            const chainerQuery = isEnabled ? 'not.have.class' : 'have.class';
+            cy.contains('.ui.dropdown', 'Create Environment').should(chainerQuery, 'disabled');
+        };
+
+        checkIfEnvironmentButtonIsEnabled(true);
+
+        cy.interceptSp(
+            'POST',
+            { pathname: '/searches/blueprints', query: { _include: 'id', _size: '1' } },
+            {
+                items: []
+            }
+        ).as('blueprints');
+
+        cy.refreshPage();
+        cy.wait('@blueprints');
+
+        checkIfEnvironmentButtonIsEnabled(false);
     });
 
     describe('opens New modal and', () => {
@@ -68,7 +106,18 @@ describe('Environment button widget', () => {
                         cy.get('tr').eq(1).contains('Please provide capability source');
                         cy.get('tr').eq(3).contains('Capability name already defined');
                     });
-
+                cy.contains('Capabilities')
+                    .next()
+                    .find('tbody')
+                    .within(() => {
+                        fillCapabilityInputs(0, 'secret_capability_key', 'Secret', '');
+                    });
+                cy.clickButton('Create');
+                cy.contains('Capabilities')
+                    .next()
+                    .within(() => {
+                        cy.get('tr').eq(1).contains('Please provide capability value');
+                    });
                 cy.clickButton('Cancel');
             });
             cy.contains('Are you sure you would like to discard the filled data and close?').should('be.visible');
