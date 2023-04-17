@@ -25,7 +25,7 @@ import InputField from '../../inputs/InputField';
 import useParametersInputs from './useParametersInputs';
 import { initializeWorkflowParameters, getWorkflowOptions } from './RunWorkflowModal.utils';
 import { fetchedWorkflowFields } from './RunWorkflowModal.consts';
-import type { EnhancedWorkflow, FetchedWorkflow } from './RunWorkflowModal.types';
+import type { EnhancedWorkflow, FetchedWorkflow, ParameterInputs } from './RunWorkflowModal.types';
 
 export interface RunWorkflowModalProps {
     filterRules: FilterRule[];
@@ -132,7 +132,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
             ? selectedWorkflow.parameters.reduce((parameters, parameter) => {
                   parameters[parameter.name] = parameter.default;
                   return parameters;
-              }, {} as Record<string, unknown>)
+              }, {} as ParameterInputs)
             : {};
 
         resetParametersInputs(defaultParametersData);

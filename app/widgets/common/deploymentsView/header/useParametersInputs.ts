@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Form } from '../../../../components/basic';
+import type { ParameterInputs } from './RunWorkflowModal.types';
 
 const initialValues = {};
-type ParameterInputs = Record<string, unknown>;
 
 function useParametersInputs() {
     const [inputs, setInputs] = useState<ParameterInputs>(initialValues);

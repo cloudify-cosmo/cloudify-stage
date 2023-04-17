@@ -12,3 +12,5 @@ export interface EnhancedWorkflow extends Omit<FetchedWorkflow, 'parameters'> {
     disabled: boolean;
     parameters: SimplifiedWorkflowParameter[];
 }
+
+export type ParameterInputs = Record<string, unknown>;
