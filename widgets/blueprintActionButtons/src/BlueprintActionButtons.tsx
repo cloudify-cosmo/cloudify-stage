@@ -168,7 +168,7 @@ export default class BlueprintActionButtons extends React.Component<
                         />
 
                         {!manager.isCommunityEdition() &&
-                            Stage.Common.Blueprints.Actions.shouldHideComposerLink(toolbox.getManagerState()) &&
+                            Stage.Common.Blueprints.Actions.shouldShowComposerLink(toolbox.getManagerState()) &&
                             showEditCopyInComposerButton && (
                                 <Button
                                     className="labeled icon"
