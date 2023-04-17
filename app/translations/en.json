@@ -1600,7 +1600,12 @@
             "name": "Execution Logs",
             "description": "This widget shows the execution logs",
             "noExecutionSelectedMessage": "Please select execution in order to see execution logs.",
-            "showMoreLogs": "Show more logs"
+            "buttons": {
+              "showMoreLogs": "Show more logs",
+              "expandMessage": "Expand message",
+              "collapseMessage": "Collapse message",
+              "showErrorCauses": "Show error causes"
+            }
         },
         "executions": {
             "name": "Executions",

@@ -35,7 +35,7 @@ export default function LogsTable({ items, executionId, moreItemsAvailable, page
                                 <Button
                                     basic
                                     compact
-                                    content={translate('showMoreLogs')}
+                                    content={translate('buttons.showMoreLogs')}
                                     inverted
                                     onClick={showMoreLogs}
                                 />
@@ -63,7 +63,12 @@ export default function LogsTable({ items, executionId, moreItemsAvailable, page
                                 </Table.Cell>
                                 {hasErrorCauses && (
                                     <Table.Cell collapsing>
-                                        <Icon name="zoom" link onClick={() => setEvent(item)} />
+                                        <Icon
+                                            aria-label={translate('buttons.showErrorCauses')}
+                                            name="zoom"
+                                            link
+                                            onClick={() => setEvent(item)}
+                                        />
                                     </Table.Cell>
                                 )}
                             </Table.Row>

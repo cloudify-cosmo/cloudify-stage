@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import styled from 'styled-components';
 import { useIsOverflow } from './useIsOverflow';
+import { translate } from './consts';
 
 const ExpandableMessage = styled.div<{ expanded: boolean }>`
     overflow: hidden;
@@ -30,6 +31,7 @@ const LogMessage: FunctionComponent<LogMessageProps> = ({ message }) => {
         <>
             {showExpandCollapseIcon && (
                 <Icon
+                    aria-label={translate(isExpanded ? 'buttons.collapseMessage' : 'buttons.expandMessage')}
                     link
                     name={isExpanded ? 'chevron up' : 'chevron down'}
                     onClick={toggleExpandCollapse}
