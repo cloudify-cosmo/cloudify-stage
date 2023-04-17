@@ -1,16 +1,24 @@
 import type { FetchDataFunction } from 'cloudify-ui-components';
 import type { EventsWidgetConfiguration } from 'widgets/events/src/widget';
 import DetailsIcon from './DetailsIcon';
-import DetailsModal from './DetailsModal';
-import type { Event } from './types';
-import { isEventType } from './types';
+import type { FullEventData, CloudifyEventPart } from '../../../app/widgets/common/events';
 
 const translate = Stage.Utils.getT('widgets.events');
+
+type Event = FullEventData & {
+    id: FullEventData['_storage_id'];
+    timestamp: string;
+    isSelected: boolean;
+};
+
+function isEventType(event: Event): event is Event & CloudifyEventPart {
+    return event.type === Stage.Common.Events.Utils.eventType;
+}
 
 export interface EventsTableProps {
     data: {
         items: Event[];
-        total: any;
+        total: number;
         blueprintId: string[] | undefined;
         deploymentId: string[] | undefined;
         nodeId: string[] | undefined;
@@ -116,7 +124,7 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Events/Logs available. Probably there's no deployment created, yet.";
         const { DataTable, Icon, Popup } = Stage.Basic;
-        const { EventUtils } = Stage.Common;
+        const { ErrorCausesModal, Utils } = Stage.Common.Events;
         const { Json } = Stage.Utils;
         const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
 
@@ -216,8 +224,8 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
                         const showDetailsIcon = !_.isEmpty(item.error_causes) || messageText.length > maxMessageLength;
 
                         const eventOptions = isEventType(item)
-                            ? EventUtils.getEventTypeOptions(item.event_type)
-                            : EventUtils.getLogLevelOptions(item.level);
+                            ? Utils.getEventTypeOptions(item.event_type)
+                            : Utils.getLogLevelOptions(item.level);
                         const eventName =
                             eventOptions.text ||
                             _.capitalize(_.lowerCase(isEventType(item) ? item.event_type : item.level));
@@ -290,7 +298,7 @@ export default class EventsTable extends React.Component<EventsTableProps, Event
                         );
                     })}
                 </DataTable>
-                {event && <DetailsModal event={event} onClose={this.hideDetailsModal} />}
+                {event && <ErrorCausesModal event={event} onClose={this.hideDetailsModal} />}
             </div>
         );
     }

@@ -1597,6 +1597,11 @@
                 }
             }
         },
+        "executionLogs": {
+            "name": "Execution Logs",
+            "description": "This widget shows the execution logs",
+            "noExecutionSelectedMessage": "Please select execution in order to see execution logs."
+        },
         "executions": {
             "name": "Executions",
             "description": "This widget shows the deployment executions",
