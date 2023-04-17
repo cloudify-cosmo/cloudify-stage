@@ -295,13 +295,14 @@ describe('Deployments widget', () => {
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
-                cy.contains('Upload from Terraform').click();
-                cy.contains('Create blueprint from Terraform')
-                    .parent()
-                    .within(() => {
-                        cy.contains('button', 'Cancel').click();
-                    });
-                cy.contains('button', 'Yes').click();
+                // TODO: RND-292 - remove as part of dedicated ticket once confirmed
+                // cy.contains('Upload from Terraform').click();
+                // cy.contains('Create blueprint from Terraform')
+                //     .parent()
+                //     .within(() => {
+                //         cy.contains('button', 'Cancel').click();
+                //     });
+                // cy.contains('button', 'Yes').click();
 
                 cy.contains('Create new Deployment').click();
                 cy.contains('Blueprint Marketplace').should('be.visible');
