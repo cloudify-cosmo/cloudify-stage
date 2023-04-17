@@ -135,9 +135,6 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
               }, {} as Record<string, unknown>)
             : {};
 
-        // eslint-disable-next-line
-        console.log(defaultParametersData);
-
         resetParametersInputs(defaultParametersData);
     };
 
@@ -188,7 +185,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                                     input={{
                                         type: parameters.type,
                                         name: parameters.name,
-                                        display: {},
+                                        display: parameters.display || {},
                                         constraints: [],
                                         default: parameters.default
                                     }}

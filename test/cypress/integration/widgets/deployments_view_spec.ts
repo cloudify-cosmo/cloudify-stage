@@ -1339,7 +1339,8 @@ describe('Deployments View widget', () => {
                     default: 'test'
                 },
                 [parameterNames.visibleAndRequired]: {
-                    description: 'This option should be visible and required'
+                    description: 'This option should be visible and required',
+                    type: 'string'
                 },
                 [parameterNames.visibleAndNotRequired]: {
                     description: 'This option should be visible, but not required',
@@ -1386,7 +1387,7 @@ describe('Deployments View widget', () => {
                 cy.interceptSp('POST', '/execution-groups', request => {
                     const { default_parameters: defaultParameters } = request.body;
 
-                    expect(defaultParameters[parameterNames.notVisible]).to.be.an('undefined');
+                    expect(defaultParameters[parameterNames.notVisible]).to.be('undefined');
                     expect(defaultParameters[parameterNames.visibleAndRequired]).to.equal('test');
                     expect(defaultParameters[parameterNames.visibleAndNotRequired]).to.equal(
                         mockedParameters[parameterNames.visibleAndNotRequired].default
