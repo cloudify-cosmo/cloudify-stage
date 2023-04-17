@@ -31,7 +31,7 @@ const LogMessage: FunctionComponent<LogMessageProps> = ({ message }) => {
         <>
             {showExpandCollapseIcon && (
                 <Icon
-                    aria-label={translate(isExpanded ? 'buttons.collapseMessage' : 'buttons.expandMessage')}
+                    title={translate(isExpanded ? 'buttons.collapseMessage' : 'buttons.expandMessage')}
                     link
                     name={isExpanded ? 'chevron up' : 'chevron down'}
                     onClick={toggleExpandCollapse}

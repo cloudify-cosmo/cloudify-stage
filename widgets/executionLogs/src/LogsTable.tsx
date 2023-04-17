@@ -64,7 +64,7 @@ export default function LogsTable({ items, executionId, moreItemsAvailable, page
                                 {hasErrorCauses && (
                                     <Table.Cell collapsing>
                                         <Icon
-                                            aria-label={translate('buttons.showErrorCauses')}
+                                            title={translate('buttons.showErrorCauses')}
                                             name="zoom"
                                             link
                                             onClick={() => setEvent(item)}

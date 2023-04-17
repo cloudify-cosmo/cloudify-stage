@@ -35,8 +35,8 @@ describe('Execution logs widget', () => {
             const visibleMessagePart = "'install' workflow execution failed";
             const hiddenMessagePart = 'Traceback of cloudify_agent.installer.operations.create';
 
-            const getExpandMessageIcon = () => cy.get('[aria-label="Expand message"]');
-            const getCollapseMessageIcon = () => cy.get('[aria-label="Collapse message"]');
+            const getExpandMessageIcon = () => cy.get('[title="Expand message"]');
+            const getCollapseMessageIcon = () => cy.get('[title="Collapse message"]');
 
             cy.contains('td', visibleFullMessage).within(() => {
                 getExpandMessageIcon().should('not.exist');
@@ -53,7 +53,7 @@ describe('Execution logs widget', () => {
         it('allows to show error causes', () => {
             const errorCausesMessagePart = "Task failed 'cloudify_agent.installer.operations.create'";
             const errorCauseType = 'AgentInstallerConfigurationError';
-            const getErrorCausesIcon = () => cy.get('[aria-label="Show error causes"]');
+            const getErrorCausesIcon = () => cy.get('[title="Show error causes"]');
 
             cy.contains('tr', errorCausesMessagePart).within(() => getErrorCausesIcon().click());
             cy.get('.modal').within(() => {
