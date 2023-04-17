@@ -1,16 +1,26 @@
+import React from 'react';
 import type { FunctionComponent } from 'react';
-import type { Event } from './types';
+import {
+    CancelButton,
+    CopyToClipboardButton,
+    Divider,
+    Header,
+    Message,
+    Modal,
+    Segment
+} from '../../../components/basic';
+import Json from '../../../utils/shared/JsonUtils';
+import StageUtils from '../../../utils/stageUtils';
+import type { FullEventData } from './types';
 
-interface DetailsModalProps {
-    event: Event;
+export interface ErrorCausesModalProps {
+    event: Pick<FullEventData, 'message' | 'error_causes'>;
     onClose: () => void;
 }
 
-const t = Stage.Utils.getT('widgets.events.detailsModal');
+const t = StageUtils.getT('widgets.events.detailsModal');
 
-const DetailsModal: FunctionComponent<DetailsModalProps> = ({ event, onClose }) => {
-    const { Json } = Stage.Utils;
-    const { CancelButton, CopyToClipboardButton, Divider, Header, Message, Modal, Segment } = Stage.Basic;
+const ErrorCausesModal: FunctionComponent<ErrorCausesModalProps> = ({ event, onClose }) => {
     const numberOfErrorCauses = _.size(event.error_causes);
 
     return (
@@ -64,4 +74,4 @@ const DetailsModal: FunctionComponent<DetailsModalProps> = ({ event, onClose }) 
     );
 };
 
-export default DetailsModal;
+export default ErrorCausesModal;

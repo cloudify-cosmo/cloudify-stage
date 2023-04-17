@@ -31,6 +31,7 @@ describe('WidgetHandler', () => {
             { id: 'environmentButton', isCustom: false },
             { id: 'events', isCustom: false },
             { id: 'eventsFilter', isCustom: false },
+            { id: 'executionLogs', isCustom: false },
             { id: 'executionNum', isCustom: false },
             { id: 'executions', isCustom: false },
             { id: 'executionsStatus', isCustom: false },
