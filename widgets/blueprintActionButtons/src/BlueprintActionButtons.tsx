@@ -126,7 +126,6 @@ export default class BlueprintActionButtons extends React.Component<
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
         const { error, force, loading } = this.state;
-        const { shouldShowComposerLink } = Stage.Utils;
         const manager = toolbox.getManager();
         const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
         const disableButtons = _.isEmpty(blueprintId) || loading;
@@ -169,7 +168,7 @@ export default class BlueprintActionButtons extends React.Component<
                         />
 
                         {!manager.isCommunityEdition() &&
-                            shouldShowComposerLink(toolbox.getManagerState()) &&
+                            Stage.Common.Blueprints.Actions.shouldHideComposerLink(toolbox.getManagerState()) &&
                             showEditCopyInComposerButton && (
                                 <Button
                                     className="labeled icon"
