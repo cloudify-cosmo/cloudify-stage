@@ -21,11 +21,11 @@ import { getGroupIdForBatchAction } from './common';
 import ExecutionGroupsActions from './ExecutionGroupsActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
 import StageUtils from '../../../../utils/stageUtils';
-import InputField from '../../inputs/InputField';
 import useParametersInputs from './useParametersInputs';
 import { initializeWorkflowParameters, getWorkflowOptions } from './RunWorkflowModal.utils';
 import { fetchedWorkflowFields } from './RunWorkflowModal.consts';
 import type { EnhancedWorkflow, FetchedWorkflow, ParameterInputs } from './RunWorkflowModal.types';
+import InputFields from '../../inputs/InputFields';
 
 export interface RunWorkflowModalProps {
     filterRules: FilterRule[];
@@ -50,6 +50,9 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<EnhancedWorkflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
     const [parametersInputs, setParametersInputs, resetParametersInputs] = useParametersInputs();
+
+    // eslint-disable-next-line
+    console.log(parametersInputs);
 
     const workflowsOptions = useMemo(() => getWorkflowOptions(workflows), [workflows]);
     const searchActions = new SearchActions(toolbox);
@@ -169,29 +172,23 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                             value={selectedWorkflow?.name}
                         />
                     </Form.Field>
-                    {selectedWorkflow &&
-                        selectedWorkflow.parameters.map(parameters => (
-                            <Form.Field
-                                label={parameters.name}
-                                key={parameters.name}
-                                required={parameters.required}
-                                error={errors[parameters.name]}
-                            >
-                                <InputField
-                                    onChange={setParametersInputs}
-                                    toolbox={toolbox}
-                                    error={!!errors[parameters.name]}
-                                    value={parametersInputs[parameters.name]}
-                                    input={{
-                                        type: parameters.type,
-                                        name: parameters.name,
-                                        display: parameters.display || {},
-                                        constraints: [],
-                                        default: parameters.default
-                                    }}
-                                />
-                            </Form.Field>
-                        ))}
+                    {selectedWorkflow && (
+                        <InputFields
+                            inputs={selectedWorkflow.parameters.map(parameter => ({
+                                type: parameter.type,
+                                name: parameter.name,
+                                display_label: parameter.name,
+                                display: parameter.display || {},
+                                constraints: [],
+                                default: parameter.default
+                            }))}
+                            onChange={setParametersInputs}
+                            inputsState={parametersInputs}
+                            errorsState={errors}
+                            toolbox={toolbox}
+                            origin="workflow"
+                        />
+                    )}
                     <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>

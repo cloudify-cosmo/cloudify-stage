@@ -1325,7 +1325,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it.only('should allow to manipulate workflow parameters', () => {
+        it('should allow to manipulate workflow parameters', () => {
             const parameterNames = {
                 notVisible: 'not_visible',
                 visibleAndRequired: 'visible_and_required',
@@ -1387,7 +1387,7 @@ describe('Deployments View widget', () => {
                 cy.interceptSp('POST', '/execution-groups', request => {
                     const { default_parameters: defaultParameters } = request.body;
 
-                    expect(defaultParameters[parameterNames.notVisible]).to.be('undefined');
+                    expect(defaultParameters[parameterNames.notVisible]).to.be.an('undefined');
                     expect(defaultParameters[parameterNames.visibleAndRequired]).to.equal('test');
                     expect(defaultParameters[parameterNames.visibleAndNotRequired]).to.equal(
                         mockedParameters[parameterNames.visibleAndNotRequired].default
