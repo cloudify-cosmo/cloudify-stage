@@ -43,13 +43,11 @@ export const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemP
 const mapFetchedWorkflowParameters = (
     workflowParameters: FetchedWorkflow['parameters']
 ): SimplifiedWorkflowParameter[] => {
-    return map(workflowParameters, (parameterFields, parameterName) => {
-        return {
-            ...parameterFields,
-            name: parameterName,
-            required: isParameterRequired(parameterFields)
-        };
-    });
+    return map(workflowParameters, (parameterFields, parameterName) => ({
+        ...parameterFields,
+        name: parameterName,
+        required: isParameterRequired(parameterFields)
+    }));
 };
 
 const filterSupportedWorkflowParameters = (
