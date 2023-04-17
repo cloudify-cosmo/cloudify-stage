@@ -22,7 +22,6 @@ import ExecutionGroupsActions from './ExecutionGroupsActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
 import StageUtils from '../../../../utils/stageUtils';
 import InputField from '../../inputs/InputField';
-import type { Input } from '../../inputs/types';
 import useParametersInputs from './useParametersInputs';
 import { initializeWorkflowParameters, getWorkflowOptions } from './RunWorkflowModal.utils';
 import { fetchedWorkflowFields } from './RunWorkflowModal.consts';
@@ -135,6 +134,9 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({
                   return parameters;
               }, {} as Record<string, unknown>)
             : {};
+
+        // eslint-disable-next-line
+        console.log(defaultParametersData);
 
         resetParametersInputs(defaultParametersData);
     };

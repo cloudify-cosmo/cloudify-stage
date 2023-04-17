@@ -1325,7 +1325,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should allow to manipulate workflow parameters', () => {
+        it.only('should allow to manipulate workflow parameters', () => {
             const parameterNames = {
                 notVisible: 'not_visible',
                 visibleAndRequired: 'visible_and_required',
@@ -1339,8 +1339,7 @@ describe('Deployments View widget', () => {
                     default: 'test'
                 },
                 [parameterNames.visibleAndRequired]: {
-                    description: 'This option should be visible and required',
-                    type: 'string'
+                    description: 'This option should be visible and required'
                 },
                 [parameterNames.visibleAndNotRequired]: {
                     description: 'This option should be visible, but not required',

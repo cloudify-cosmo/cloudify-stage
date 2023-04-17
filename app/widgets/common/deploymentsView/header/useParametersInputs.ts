@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from 'cloudify-ui-components';
+import { Form } from '../../../../components/basic';
 
 const initialValues = {};
 type ParameterInputs = Record<string, unknown>;

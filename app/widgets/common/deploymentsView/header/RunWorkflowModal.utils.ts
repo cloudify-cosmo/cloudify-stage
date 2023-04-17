@@ -1,9 +1,15 @@
-import { chain, capitalize, map } from 'lodash';
+import { chain, capitalize, map, find } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import type { FetchedWorkflow, EnhancedWorkflow, SimplifiedWorkflowParameter } from './RunWorkflowModal.types';
 
+const supportedParameterTypes = ['string', 'integer', 'float', 'boolean', 'list', 'textarea', undefined];
+
 const getWorkflowOptionText = (workflow: EnhancedWorkflow) => {
     return capitalize(workflow.name.replaceAll('_', ' '));
+};
+
+const isParameterRequired = (parameter: FetchedWorkflow['parameters'][string]) => {
+    return parameter.default === undefined;
 };
 
 export const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemProps[] => {
@@ -11,6 +17,15 @@ export const getWorkflowOptions = (workflows: EnhancedWorkflow[]): DropdownItemP
     type GroupedOptions = Partial<Record<OptionsGroupName, DropdownItemProps[]>>;
 
     const { enabledOptions = [], disabledOptions = [] } = chain(workflows)
+        .filter(
+            workflow =>
+                !find(workflow.parameters, parameter => {
+                    const parameterIsRequiredButNotSupported =
+                        isParameterRequired(parameter) && !supportedParameterTypes.includes(parameter.type);
+
+                    return parameterIsRequiredButNotSupported;
+                })
+        )
         .sortBy('name')
         .map(workflow => ({
             text: getWorkflowOptionText(workflow),
@@ -32,7 +47,7 @@ const mapFetchedWorkflowParameters = (
         return {
             ...parameterFields,
             name: parameterName,
-            required: parameterFields.default === undefined
+            required: isParameterRequired(parameterFields)
         };
     });
 };
@@ -40,10 +55,8 @@ const mapFetchedWorkflowParameters = (
 const filterSupportedWorkflowParameters = (
     workflowParameters: EnhancedWorkflow['parameters']
 ): EnhancedWorkflow['parameters'] => {
-    const supportedParameterTypes = ['string', 'integer', 'float', 'boolean', 'list', 'textarea', undefined];
-
-    const filteredWorkflowParameters = workflowParameters.filter(
-        parameter => parameter.type === undefined || supportedParameterTypes.includes(parameter.type)
+    const filteredWorkflowParameters = workflowParameters.filter(parameter =>
+        supportedParameterTypes.includes(parameter.type)
     );
 
     return filteredWorkflowParameters;
