@@ -4,11 +4,8 @@ import type { ExecutionLogsData } from './types';
 import { basePageSize, commonIncludeKeys, translate, widgetId } from './consts';
 import LogsTable from './LogsTable';
 
-const includeKeys: (keyof FullEventData | keyof CloudifyLogEventPart | keyof CloudifyEventPart)[] = [
-    ...commonIncludeKeys,
-    'event_type',
-    'level'
-];
+type IncludeKey = keyof FullEventData | keyof CloudifyLogEventPart | keyof CloudifyEventPart;
+const includeKeys: IncludeKey[] = [...commonIncludeKeys, 'event_type', 'level'];
 
 interface ExecutionLogsParams {
     // eslint-disable-next-line camelcase
@@ -29,7 +26,7 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(basePageSize),
-        Stage.GenericConfig.SORT_COLUMN_CONFIG('reported_timestamp'),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG<IncludeKey>('reported_timestamp'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
 
