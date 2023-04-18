@@ -1387,7 +1387,7 @@
                     "runWorkflow": {
                         "title": "Run Workflow",
                         "modal": {
-                            "header": "Run workflow on filtered deployments",
+                            "header": "Run workflow on {{deploymentsCount}} deployments",
                             "inputs": {
                                 "workflowId": {
                                     "label": "Workflow",
@@ -1399,7 +1399,7 @@
                                 "close": "Close"
                             },
                             "messages": {
-                                "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
+                                "limitations": "The workflow will run without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
                                 "executionGroupStarted": "Workflow has been started.",
                                 "fetchingWorkflows": "Fetching workflows...",
                                 "creatingDeploymentGroup": "1/2: Creating deployment group...",
@@ -1407,6 +1407,7 @@
                             },
                             "errors": {
                                 "noWorkflowError": "Please select a workflow",
+                                "noParameterValue": "Please provide \"{{parameter}}\" value",
                                 "workflowsFetchFailed": "Error occurred when fetching workflows"
                             }
                         }
