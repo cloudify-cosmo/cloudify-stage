@@ -29,6 +29,13 @@ describe('Blueprint Action Buttons widget', () => {
         getEditACopyInComposerButton().should('not.exist');
     });
 
+    it('should not show the "Edit a copy in Composer" button for operator user', () => {
+        cy.mockUserRole('operations');
+        useBlueprintActionButtonsWidget({ showEditCopyInComposerButton: true });
+
+        getEditACopyInComposerButton().should('not.exist');
+    });
+
     it('should open Composer with imported blueprint on "Edit a copy in Composer" button click', () => {
         useBlueprintActionButtonsWidget({ showEditCopyInComposerButton: true });
 
