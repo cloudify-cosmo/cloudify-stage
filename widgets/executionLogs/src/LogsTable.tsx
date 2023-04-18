@@ -53,7 +53,7 @@ export default function LogsTable({ items, executionId, moreItemsAvailable, page
                         return (
                             <Table.Row
                                 // eslint-disable-next-line no-underscore-dangle
-                                key={`${item._storage_id} + ${item.reported_timestamp}`}
+                                key={item._storage_id + item.reported_timestamp}
                                 error={isErrorLog}
                                 verticalAlign="top"
                             >
