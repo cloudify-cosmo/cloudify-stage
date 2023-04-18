@@ -1,12 +1,13 @@
 import type { ComponentProps } from 'react';
 import type { Checkbox, Dropdown } from '../../../components/basic';
+import type { Input } from '../inputs/types';
 
 export type OnDropdownChange = ComponentProps<typeof Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Checkbox>['onChange'];
 
 export type Workflow = {
     name: string;
-    parameters: Record<string, { description?: string; default?: any; type?: any }>;
+    parameters: Record<string, { description?: string; default?: any; type?: any; display?: Input['display'] }>;
     plugin: string;
     // eslint-disable-next-line camelcase
     is_available: boolean;
