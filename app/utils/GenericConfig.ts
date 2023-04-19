@@ -24,7 +24,9 @@ export default class GenericConfig {
         };
     };
 
-    static SORT_COLUMN_CONFIG = (sortColumn: string): WidgetConfigurationDefinition => {
+    static SORT_COLUMN_CONFIG = <ColumnName extends string = string>(
+        sortColumn: ColumnName
+    ): WidgetConfigurationDefinition => {
         return {
             id: 'sortColumn',
             default: sortColumn,
