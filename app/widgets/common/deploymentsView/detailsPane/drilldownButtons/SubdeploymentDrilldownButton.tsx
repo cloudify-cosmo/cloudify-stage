@@ -29,7 +29,10 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
     return (
         <>
             {shouldBeDisplayed && (
-                <DrilldownButton onClick={() => drilldownToSubdeployments(deploymentName, drillDown, type, mapOpen)}>
+                <DrilldownButton
+                    onClick={() => drilldownToSubdeployments(deploymentName, drillDown, type, mapOpen)}
+                    title={tDrillDownButtons(`${type}.title`)}
+                >
                     <Icon name={icon} />
                     {tDrillDownButtons(`${type}.label`)} ({(result as LoadedSubdeploymentsResult).count})
                     <SubdeploymentStatusIcon
