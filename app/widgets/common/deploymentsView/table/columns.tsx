@@ -8,6 +8,9 @@ import { DeploymentStatusIcon, SubdeploymentStatusIcon } from '../StatusIcon';
 import type { Deployment } from '../types';
 import { IdPopup, TextEllipsis } from '../../../../components/shared';
 import { Icon } from '../../../../components/basic';
+import DrilldownButton from '../detailsPane/drilldownButtons/DrilldownButton';
+import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
+import type { SubdeploymentDrilldownButtonProps } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -33,6 +36,7 @@ export interface DeploymentsViewColumnDefinition {
     width?: string;
     tooltip?: ReactNode;
     render(deployment: Deployment): ReactNode;
+    drillDown?: SubdeploymentDrilldownButtonProps['drillDown'];
 }
 
 const i18nColumnsPrefix = `${i18nPrefix}.columns`;
@@ -95,10 +99,27 @@ const partialDeploymentsViewColumnDefinitions: Record<
     subservicesCount: {
         label: <Icon name={subservicesIcon} />,
         width: '1em',
-        render({ sub_services_count, sub_services_status }) {
+        render({ sub_services_count, sub_services_status, display_name }) {
             return (
                 <div className="subdeploymentColumn">
-                    {sub_services_count} <SubdeploymentStatusIcon status={sub_services_status} />
+                    <DrilldownButton
+                        title={`Drilldown to subservices of ${display_name}`}
+                        onClick={() => {
+                            const subdeploymentTypeFilter = deploymentTypeFilterRule.services;
+                            const filterRules = [subdeploymentTypeFilter];
+                            const drilldownName = `${display_name} [widgets.deploymentsView.drillDown.breadcrumbs.services]`;
+
+                            partialDeploymentsViewColumnDefinitions.subservicesCount.drillDown?.(
+                                'drilldownDeployments',
+                                { filterRules },
+                                drilldownName
+                            );
+                        }}
+                        style={{ minWidth: 'unset' }}
+                    >
+                        {sub_services_count}
+                    </DrilldownButton>
+                    <SubdeploymentStatusIcon status={sub_services_status} />
                 </div>
             );
         }
