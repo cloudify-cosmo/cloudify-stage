@@ -1,10 +1,16 @@
 import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
+import type { FilterRule } from 'app/widgets/common/filters/types';
 import EnvironmentButton from './EnvironmentButton';
 import type { EnvironmentButtonWidget } from './widget.types';
 
 const translate = Stage.Utils.getT('widgets.environmentButton');
 const SearchActions = Stage.Common.Actions.Search;
-const environmentFilterId = 'csys-environment-filter';
+const environmentFilterRules: FilterRule = {
+    key: 'csys-obj-type',
+    operator: Stage.Common.Filters.FilterRuleOperators.AnyOf,
+    type: Stage.Common.Filters.FilterRuleType.Label,
+    values: ['environment']
+};
 
 Stage.defineWidget<never, EnvironmentButtonWidget.Data, ButtonConfiguration>({
     id: 'environmentButton',
@@ -26,11 +32,11 @@ Stage.defineWidget<never, EnvironmentButtonWidget.Data, ButtonConfiguration>({
         const searchActions = new SearchActions(toolbox);
 
         return searchActions.doListBlueprints({
-            filterId: environmentFilterId,
             params: {
                 _include: 'id',
                 _size: 1
-            }
+            },
+            filterRules: [environmentFilterRules]
         });
     },
 
