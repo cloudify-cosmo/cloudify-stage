@@ -1,23 +1,18 @@
-import type { PageSizeConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { DataTableConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
 import type { CloudifyEventPart, CloudifyLogEventPart, FullEventData } from 'app/widgets/common/events';
 import type { ExecutionLogsData } from './types';
-import { commonIncludeKeys } from './consts';
+import { basePageSize, commonIncludeKeys, translate, widgetId } from './consts';
 import LogsTable from './LogsTable';
 
-const widgetId = 'executionLogs';
-const translate = Stage.Utils.getT(`widgets.${widgetId}`);
-const includeKeys: (keyof FullEventData | keyof CloudifyLogEventPart | keyof CloudifyEventPart)[] = [
-    ...commonIncludeKeys,
-    'event_type',
-    'level'
-];
+type IncludeKey = keyof FullEventData | keyof CloudifyLogEventPart | keyof CloudifyEventPart;
+const includeKeys: IncludeKey[] = [...commonIncludeKeys, 'event_type', 'level'];
 
 interface ExecutionLogsParams {
     // eslint-disable-next-line camelcase
     execution_id: string;
 }
 
-type ExecutionLogsConfiguration = PollingTimeConfiguration & PageSizeConfiguration;
+type ExecutionLogsConfiguration = PollingTimeConfiguration & DataTableConfiguration;
 
 Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfiguration>({
     id: widgetId,
@@ -28,7 +23,12 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
-    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(2), Stage.GenericConfig.PAGE_SIZE_CONFIG(50)],
+    initialConfiguration: [
+        Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(basePageSize),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG<IncludeKey>('reported_timestamp'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+    ],
 
     fetchParams(_widget, toolbox) {
         const executionId = toolbox.getContext().getValue('executionId');
@@ -38,7 +38,7 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
         };
     },
 
-    render(_widget, data, _error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading, Message } = Stage.Basic;
 
         if (Stage.Utils.isEmptyWidgetData(data)) {
@@ -51,6 +51,17 @@ Stage.defineWidget<ExecutionLogsParams, ExecutionLogsData, ExecutionLogsConfigur
             return <Message>{translate('noExecutionSelectedMessage')}</Message>;
         }
 
-        return <LogsTable data={data} />;
+        const items = [...data.items].reverse();
+        const moreItemsAvailable = data.metadata.pagination.size >= data.metadata.pagination.total;
+
+        return (
+            <LogsTable
+                items={items}
+                executionId={executionId}
+                moreItemsAvailable={moreItemsAvailable}
+                pageSize={widget.configuration.pageSize}
+                toolbox={toolbox}
+            />
+        );
     }
 });
