@@ -9,9 +9,7 @@ import type { Deployment } from '../types';
 import { IdPopup, TextEllipsis } from '../../../../components/shared';
 import { Icon } from '../../../../components/basic';
 import DrilldownButton from '../detailsPane/drilldownButtons/DrilldownButton';
-import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { SubdeploymentDrilldownButtonProps } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton';
-
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
     'status',
@@ -104,17 +102,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
                 <div className="subdeploymentColumn">
                     <DrilldownButton
                         title={`Drilldown to subservices of ${display_name}`}
-                        onClick={() => {
-                            const subdeploymentTypeFilter = deploymentTypeFilterRule.services;
-                            const filterRules = [subdeploymentTypeFilter];
-                            const drilldownName = `${display_name} [widgets.deploymentsView.drillDown.breadcrumbs.services]`;
-
-                            partialDeploymentsViewColumnDefinitions.subservicesCount.drillDown?.(
-                                'drilldownDeployments',
-                                { filterRules },
-                                drilldownName
-                            );
-                        }}
+                        drillDown={() => {}}
                         style={{ minWidth: 'unset' }}
                     >
                         {sub_services_count}
