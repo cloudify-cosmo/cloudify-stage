@@ -8,7 +8,6 @@ import { DeploymentStatusIcon, SubdeploymentStatusIcon } from '../StatusIcon';
 import type { Deployment } from '../types';
 import { IdPopup, TextEllipsis } from '../../../../components/shared';
 import { Icon } from '../../../../components/basic';
-import DrilldownButton from '../detailsPane/drilldownButtons/DrilldownButton';
 import type { SubdeploymentDrilldownButtonProps } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton';
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -97,16 +96,10 @@ const partialDeploymentsViewColumnDefinitions: Record<
     subservicesCount: {
         label: <Icon name={subservicesIcon} />,
         width: '1em',
-        render({ sub_services_count, sub_services_status, display_name }) {
+        render({ sub_services_count, sub_services_status }) {
             return (
                 <div className="subdeploymentColumn">
-                    <DrilldownButton
-                        title={`Drilldown to subservices of ${display_name}`}
-                        drillDown={() => {}}
-                        style={{ minWidth: 'unset' }}
-                    >
-                        {sub_services_count}
-                    </DrilldownButton>
+                    {sub_services_count}
                     <SubdeploymentStatusIcon status={sub_services_status} />
                 </div>
             );

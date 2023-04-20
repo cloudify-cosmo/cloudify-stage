@@ -10,6 +10,8 @@ import { selectDeployment } from '../common';
 
 import { DataTable, Label } from '../../../../components/basic';
 import StageUtils from '../../../../utils/stageUtils';
+import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
+import type { FilterRule } from '../../filters/types';
 
 const renderDeploymentRow =
     (
@@ -22,6 +24,34 @@ const renderDeploymentRow =
         const progressUnderline = getDeploymentProgressUnderline(deployment);
         const labelsDict = groupBy(deployment.labels, 'key');
 
+        const handleCellClick = (columnId: DeploymentsViewColumnId) => {
+            if (columnId === 'subservicesCount' && deployment.sub_services_count !== 0) {
+                drillDown(deployment, deploymentTypeFilterRule.services, 'Services');
+            } else if (columnId === 'subenvironmentsCount' && deployment.sub_environments_count !== 0) {
+                drillDown(deployment, deploymentTypeFilterRule.environments, 'Environments');
+            }
+        };
+
+        const drillDown = (deploymentName: Deployment, filterRule: FilterRule, displaySuffix: string) => {
+            const drilldownPageName = `${deploymentName.id} [${displaySuffix}]`;
+            toolbox.drillDown(
+                toolbox.getWidget(),
+                'drilldownDeployments',
+                { filterRules: [filterRule] },
+                drilldownPageName
+            );
+        };
+
+        const getCellClassName = (columnId: DeploymentsViewColumnId) => {
+            return isDrillDownCell(columnId) ? 'drilldown-cell' : '';
+        };
+
+        const isDrillDownCell = (columnId: DeploymentsViewColumnId) => {
+            const isSubService = columnId === 'subservicesCount' && deployment.sub_services_count !== 0;
+            const isSubEnvironment = columnId === 'subenvironmentsCount' && deployment.sub_environments_count !== 0;
+            return isSubService || isSubEnvironment;
+        };
+
         return [
             <DataTable.Row
                 key={deployment.id}
@@ -30,7 +60,14 @@ const renderDeploymentRow =
                 onClick={() => selectDeployment(toolbox, deployment.id)}
             >
                 {Object.entries(getDeploymentsViewColumnDefinitions()).map(([columnId, columnDefinition]) => (
-                    <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
+                    <DataTable.Data
+                        key={columnId}
+                        onClick={() => handleCellClick(columnId as DeploymentsViewColumnId)}
+                        className={getCellClassName(columnId as DeploymentsViewColumnId)}
+                        title={isDrillDownCell(columnId as DeploymentsViewColumnId) ? 'Drill down' : undefined}
+                    >
+                        {columnDefinition.render(deployment)}
+                    </DataTable.Data>
                 ))}
                 {keysOfLabelsToShow.map(labelKey => (
                     <DataTable.Data key={labelKey}>
