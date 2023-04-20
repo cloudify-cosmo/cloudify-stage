@@ -23,6 +23,8 @@ export interface SubdeploymentDrilldownButtonProps {
     mapOpen: boolean;
 }
 
+const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
+
 const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButtonProps> = ({
     type,
     drillDown,
@@ -32,8 +34,6 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
 }) => {
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
     const shouldBeDisplayed = useMemo(() => shouldDisplaySubdeploymentButton(result), [result]);
-
-    const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
 
     const drilldownToSubdeployments = () => {
         drillDown(
