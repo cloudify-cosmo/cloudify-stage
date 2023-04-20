@@ -8,6 +8,7 @@ import { DeploymentStatusIcon, SubdeploymentStatusIcon } from '../StatusIcon';
 import type { Deployment } from '../types';
 import { IdPopup, TextEllipsis } from '../../../../components/shared';
 import { Icon } from '../../../../components/basic';
+
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
     'status',
