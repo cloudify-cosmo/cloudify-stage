@@ -4,7 +4,6 @@ import type { EnvironmentButtonWidget } from './widget.types';
 
 const translate = Stage.Utils.getT('widgets.environmentButton');
 const SearchActions = Stage.Common.Actions.Search;
-const environmentFilterId = 'csys-environment-filter';
 
 Stage.defineWidget<never, EnvironmentButtonWidget.Data, ButtonConfiguration>({
     id: 'environmentButton',
@@ -26,11 +25,11 @@ Stage.defineWidget<never, EnvironmentButtonWidget.Data, ButtonConfiguration>({
         const searchActions = new SearchActions(toolbox);
 
         return searchActions.doListBlueprints({
-            filterId: environmentFilterId,
             params: {
                 _include: 'id',
                 _size: 1
-            }
+            },
+            filterRules: [Stage.Common.Filters.environmentFilterRule]
         });
     },
 
