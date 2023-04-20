@@ -891,6 +891,12 @@ describe('Deployments View widget', () => {
                 getSubservicesButton().containsNumber(50);
             });
         });
+
+        it('should allow drilling down to a subdeployment through table cell link', () => {
+            useEnvironmentsWidget();
+
+            getDeploymentsViewTable().within(() => cy.get('.subservices.drilldown-cell').click());
+        });
     });
 
     it('should display an error message when using the drilled-down widget on a top-level page', () => {

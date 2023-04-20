@@ -42,16 +42,20 @@ const renderDeploymentRow =
             );
         };
 
+        const isSubServicesCountCell = (columnId: DeploymentsViewColumnId) => columnId === 'subservicesCount';
+        const isSubEnvironmentsCountCell = (columnId: DeploymentsViewColumnId) => columnId === 'subenvironmentsCount';
+
+        const isDrillDownCell = (columnId: DeploymentsViewColumnId) =>
+            isSubServicesCountCell(columnId) || isSubEnvironmentsCountCell(columnId);
         const getCellClassName = (columnId: DeploymentsViewColumnId) => {
-            return isDrillDownCell(columnId) ? 'drilldown-cell' : '';
+            if (isSubServicesCountCell(columnId) && deployment.sub_services_count !== 0) {
+                return 'subservices drilldown-cell';
+            }
+            if (isSubEnvironmentsCountCell(columnId) && deployment.sub_environments_count !== 0) {
+                return 'environments drilldown-cell';
+            }
+            return undefined;
         };
-
-        const isDrillDownCell = (columnId: DeploymentsViewColumnId) => {
-            const isSubService = columnId === 'subservicesCount' && deployment.sub_services_count !== 0;
-            const isSubEnvironment = columnId === 'subenvironmentsCount' && deployment.sub_environments_count !== 0;
-            return isSubService || isSubEnvironment;
-        };
-
         return [
             <DataTable.Row
                 key={deployment.id}
