@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 
+import i18n from 'i18next';
 import { groupBy } from 'lodash';
 import type { DeploymentsViewColumnId } from './columns';
 import { getDeploymentsViewColumnDefinitions } from './columns';
@@ -12,6 +13,8 @@ import { DataTable, Label } from '../../../../components/basic';
 import StageUtils from '../../../../utils/stageUtils';
 import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { FilterRule } from '../../filters/types';
+
+const title = (suffix: string) => i18n.t(`widgets.deploymentsView.drillDown.table.buttons.${suffix}`);
 
 const renderDeploymentRow =
     (
@@ -47,15 +50,17 @@ const renderDeploymentRow =
 
         const isDrillDownCell = (columnId: DeploymentsViewColumnId) =>
             isSubServicesCountCell(columnId) || isSubEnvironmentsCountCell(columnId);
-        const getCellClassName = (columnId: DeploymentsViewColumnId) => {
+
+        const getCellTitle = (columnId: DeploymentsViewColumnId) => {
             if (isSubServicesCountCell(columnId) && deployment.sub_services_count !== 0) {
-                return 'subservices drilldown-cell';
+                return title('services');
             }
             if (isSubEnvironmentsCountCell(columnId) && deployment.sub_environments_count !== 0) {
-                return 'environments drilldown-cell';
+                return title('environments');
             }
             return undefined;
         };
+
         return [
             <DataTable.Row
                 key={deployment.id}
@@ -67,8 +72,8 @@ const renderDeploymentRow =
                     <DataTable.Data
                         key={columnId}
                         onClick={() => handleCellClick(columnId as DeploymentsViewColumnId)}
-                        className={getCellClassName(columnId as DeploymentsViewColumnId)}
-                        title={isDrillDownCell(columnId as DeploymentsViewColumnId) ? 'Drill down' : undefined}
+                        className={isDrillDownCell(columnId as DeploymentsViewColumnId) ? 'drilldown-cell' : undefined}
+                        title={getCellTitle(columnId as DeploymentsViewColumnId)}
                     >
                         {columnDefinition.render(deployment)}
                     </DataTable.Data>

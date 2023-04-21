@@ -1474,6 +1474,12 @@
                     "environments": "Environments",
                     "services": "Services"
                 },
+                "table": {
+                    "buttons": {
+                        "environments": "Click to drill down to subenvironments",
+                        "services": "Click to drill down to subservices"
+                    }
+                },
                 "buttons": {
                     "detailsFetchingError": "Could not fetch deployment details",
                     "details": {
@@ -1602,10 +1608,10 @@
             "description": "This widget shows the execution logs",
             "noExecutionSelectedMessage": "Please select execution in order to see execution logs.",
             "buttons": {
-              "showMoreLogs": "Show more logs",
-              "expandMessage": "Expand message",
-              "collapseMessage": "Collapse message",
-              "showErrorCauses": "Show error causes"
+                "showMoreLogs": "Show more logs",
+                "expandMessage": "Expand message",
+                "collapseMessage": "Collapse message",
+                "showErrorCauses": "Show error causes"
             }
         },
         "executions": {
