@@ -27,12 +27,19 @@ const renderDeploymentRow =
         const progressUnderline = getDeploymentProgressUnderline(deployment);
         const labelsDict = groupBy(deployment.labels, 'key');
 
-        const handleCellClick = (columnId: DeploymentsViewColumnId) => {
-            if (columnId === 'subservicesCount' && deployment.sub_services_count !== 0) {
-                drillDown(deployment, deploymentTypeFilterRule.services, 'Services');
-            } else if (columnId === 'subenvironmentsCount' && deployment.sub_environments_count !== 0) {
-                drillDown(deployment, deploymentTypeFilterRule.environments, 'Environments');
+        const isSubServicesCountCell = (columnId: DeploymentsViewColumnId) =>
+            columnId === 'subservicesCount' && deployment.sub_services_count !== 0;
+        const isSubEnvironmentsCountCell = (columnId: DeploymentsViewColumnId) =>
+            columnId === 'subenvironmentsCount' && deployment.sub_environments_count !== 0;
+
+        const getCellTitle = (columnId: DeploymentsViewColumnId) => {
+            if (isSubServicesCountCell(columnId)) {
+                return cellTitle('services');
             }
+            if (isSubEnvironmentsCountCell(columnId)) {
+                return cellTitle('environments');
+            }
+            return undefined;
         };
 
         const drillDown = (deploymentName: Deployment, filterRule: FilterRule, displaySuffix: string) => {
@@ -45,17 +52,13 @@ const renderDeploymentRow =
             );
         };
 
-        const isSubServicesCountCell = (columnId: DeploymentsViewColumnId) => columnId === 'subservicesCount';
-        const isSubEnvironmentsCountCell = (columnId: DeploymentsViewColumnId) => columnId === 'subenvironmentsCount';
-
-        const getCellTitle = (columnId: DeploymentsViewColumnId) => {
-            if (isSubServicesCountCell(columnId) && deployment.sub_services_count !== 0) {
-                return cellTitle('services');
+        const handleCellClick = (columnId: DeploymentsViewColumnId) => {
+            if (isSubServicesCountCell(columnId)) {
+                drillDown(deployment, deploymentTypeFilterRule.services, 'Services');
             }
-            if (isSubEnvironmentsCountCell(columnId) && deployment.sub_environments_count !== 0) {
-                return cellTitle('environments');
+            if (isSubEnvironmentsCountCell(columnId)) {
+                drillDown(deployment, deploymentTypeFilterRule.environments, 'Environments');
             }
-            return undefined;
         };
 
         return [
