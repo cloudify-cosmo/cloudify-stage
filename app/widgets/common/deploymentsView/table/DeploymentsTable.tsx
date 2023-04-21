@@ -12,6 +12,7 @@ import { DataTable, Loader } from '../../../../components/basic';
 import StageUtils from '../../../../utils/stageUtils';
 import mapGridParamsToManagerGridParams from '../../../../utils/shared/mapGridParamsToManagerGridParams';
 import type { FetchParams } from '../../types';
+import colors from '../../../../styles/colors.scss';
 
 const TableContainer = styled.div`
     position: relative;
@@ -34,6 +35,11 @@ const NoDataMessageTextWrapper = styled.p`
     }
 `;
 
+const StyledDataTable = styled(DataTable)`
+    td[title^='Click to drill down to']:hover {
+        color: ${colors.cloudifyBlue};
+    }
+`;
 interface DeploymentsTableProps {
     setGridParams: (params: Stage.Types.ManagerGridParams) => void;
     toolbox: Stage.Types.Toolbox;
@@ -62,7 +68,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
     return (
         <TableContainer>
             <TableLoadingIndicator active={loadingIndicatorVisible} />
-            <DataTable
+            <StyledDataTable
                 fetchData={(params: FetchParams) => setGridParams(mapGridParamsToManagerGridParams(params.gridParams))}
                 pageSize={pageSize}
                 selectable
@@ -97,7 +103,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 {deployments.flatMap(
                     renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment, keysOfLabelsToShow)
                 )}
-            </DataTable>
+            </StyledDataTable>
         </TableContainer>
     );
 };

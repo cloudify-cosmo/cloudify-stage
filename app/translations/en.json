@@ -1475,7 +1475,7 @@
                     "services": "Services"
                 },
                 "table": {
-                    "buttons": {
+                    "cells": {
                         "environments": "Click to drill down to subenvironments",
                         "services": "Click to drill down to subservices"
                     }

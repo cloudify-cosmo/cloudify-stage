@@ -14,7 +14,7 @@ import StageUtils from '../../../../utils/stageUtils';
 import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { FilterRule } from '../../filters/types';
 
-const title = (suffix: string) => i18n.t(`widgets.deploymentsView.drillDown.table.buttons.${suffix}`);
+const cellTitle = (suffix: string) => i18n.t(`widgets.deploymentsView.drillDown.table.cells.${suffix}`);
 
 const renderDeploymentRow =
     (
@@ -48,15 +48,12 @@ const renderDeploymentRow =
         const isSubServicesCountCell = (columnId: DeploymentsViewColumnId) => columnId === 'subservicesCount';
         const isSubEnvironmentsCountCell = (columnId: DeploymentsViewColumnId) => columnId === 'subenvironmentsCount';
 
-        const isDrillDownCell = (columnId: DeploymentsViewColumnId) =>
-            isSubServicesCountCell(columnId) || isSubEnvironmentsCountCell(columnId);
-
         const getCellTitle = (columnId: DeploymentsViewColumnId) => {
             if (isSubServicesCountCell(columnId) && deployment.sub_services_count !== 0) {
-                return title('services');
+                return cellTitle('services');
             }
             if (isSubEnvironmentsCountCell(columnId) && deployment.sub_environments_count !== 0) {
-                return title('environments');
+                return cellTitle('environments');
             }
             return undefined;
         };
@@ -72,7 +69,6 @@ const renderDeploymentRow =
                     <DataTable.Data
                         key={columnId}
                         onClick={() => handleCellClick(columnId as DeploymentsViewColumnId)}
-                        className={isDrillDownCell(columnId as DeploymentsViewColumnId) ? 'drilldown-cell' : undefined}
                         title={getCellTitle(columnId as DeploymentsViewColumnId)}
                     >
                         {columnDefinition.render(deployment)}
