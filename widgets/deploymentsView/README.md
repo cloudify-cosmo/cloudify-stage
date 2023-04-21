@@ -276,8 +276,9 @@ The newly created child deployments will be automatically installed.
 #### Run Workflow
 
 The _Run Workflow_ bulk action will show a modal that allows selecting a
-workflow that will be executed on each deployment that matches the current
-filter.
+workflow, that will be executed on each deployment that matches the current filter. Note that only workflows which are common for filtered deployments can be selected within the modal.
+
+After selecting a workflow, user will be able to adjust workflow parameters. Only simple type parameters (`string`, `integer`, `float`, `boolean`, `list`, `textarea`) which are common for deployments matching the current filter are presented. Parameters with default values will have the initial value set.
 
 ![Run Workflow modal](/images/ui/widgets/deployments-view-run-workflow-modal.png)
 
