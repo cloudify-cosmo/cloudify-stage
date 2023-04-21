@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 
-import i18n from 'i18next';
 import { groupBy } from 'lodash';
 import type { DeploymentsViewColumnId } from './columns';
 import { getDeploymentsViewColumnDefinitions } from './columns';
@@ -14,7 +13,9 @@ import StageUtils from '../../../../utils/stageUtils';
 import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { FilterRule } from '../../filters/types';
 
-const cellTitle = (suffix: string) => i18n.t(`widgets.deploymentsView.drillDown.table.cells.${suffix}`);
+const translateCellTitle = (suffix: string) =>
+    StageUtils.getT(`widgets.deploymentsView.drillDown.table.cells.${suffix}`);
+const translateBreadcrumb = StageUtils.getT(`widgets.deploymentsView.drillDown.breadcrumbs`);
 
 const renderDeploymentRow =
     (
@@ -34,10 +35,10 @@ const renderDeploymentRow =
 
         const getCellTitle = (columnId: DeploymentsViewColumnId) => {
             if (isSubServicesCountCell(columnId)) {
-                return cellTitle('services');
+                return translateCellTitle('services');
             }
             if (isSubEnvironmentsCountCell(columnId)) {
-                return cellTitle('environments');
+                return translateCellTitle('environments');
             }
             return undefined;
         };
@@ -54,10 +55,10 @@ const renderDeploymentRow =
 
         const handleCellClick = (columnId: DeploymentsViewColumnId) => {
             if (isSubServicesCountCell(columnId)) {
-                drillDown(deployment, deploymentTypeFilterRule.services, 'Services');
+                drillDown(deployment, deploymentTypeFilterRule.services, translateBreadcrumb('serivces'));
             }
             if (isSubEnvironmentsCountCell(columnId)) {
-                drillDown(deployment, deploymentTypeFilterRule.environments, 'Environments');
+                drillDown(deployment, deploymentTypeFilterRule.environments, translateBreadcrumb('environments'));
             }
         };
 
