@@ -366,7 +366,7 @@ const commands = {
                                               configuration: {
                                                   filterByBlueprints: true,
                                                   filterByDeployments: true,
-                                                  filterByExecutionsStatus: true,
+                                                  filterByExecutions: true,
                                                   allowMultipleSelection: true
                                               },
                                               drillDownPages: {},
@@ -416,6 +416,9 @@ const commands = {
 
     setDeploymentContext: (value: string) => setContext('deployment', value),
     clearDeploymentContext: () => clearContext('deployment'),
+
+    setExecutionContext: (value: string) => setContext('execution', value, false),
+    clearExecutionContext: () => clearContext('execution'),
 
     interceptSp: (method: string, spRouteMatcher: GlobPattern | RouteMatcherOptions, routeHandler?: RouteHandler) => {
         const routeMatcher: RouteMatcherOptions = { method };
@@ -554,13 +557,15 @@ Cypress.Commands.add('getTable', { prevSubject: true }, (subject: any) => {
     return cy.wrap(mappedTableValues);
 });
 
-function setContext(field: string, value: string) {
-    cy.get(`.${field}FilterField`)
+function setContext(field: string, value: string, exactValue = true) {
+    return cy
+        .get(`.${field}FilterField`)
         .click()
         .within(() => {
             cy.get('input').clear({ force: true }).type(`${value}`, { force: true });
             cy.waitUntilWidgetsDataLoaded();
-            cy.get(`[option-value="${value}"]`).click();
+            if (exactValue) cy.get(`[option-value="${value}"]`).click();
+            else cy.contains('div[role="option"]', value).click();
             cy.get('input').type('{esc}', { force: true });
         });
 }

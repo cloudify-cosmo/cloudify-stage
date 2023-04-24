@@ -29,7 +29,7 @@ const initialFields: Fields = Object.freeze({
     logLevel: []
 });
 
-const { EventUtils } = Stage.Common;
+const { Utils: EventUtils } = Stage.Common.Events;
 
 const defaultEventTypeOptions = sortBy(
     map(keys(EventUtils.eventTypeOptions), event => ({
