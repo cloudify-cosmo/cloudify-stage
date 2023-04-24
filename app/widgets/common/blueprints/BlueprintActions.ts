@@ -3,9 +3,7 @@ import i18n from 'i18next';
 import type { GetExternalContentQueryParams } from 'backend/routes/External.types';
 import type { PutSourceListYamlQueryParams, PutSourceListYamlResponse } from 'backend/routes/SourceBrowser.types';
 import type { Visibility } from 'app/widgets/common/types';
-import type { ManagerData } from 'app/reducers/managerReducer';
 import Consts from '../Consts';
-import UtilConsts from '../../../utils/consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
 import PollHelper from '../utils/PollHelper';
@@ -191,10 +189,6 @@ export default class BlueprintActions {
 
     static isCompleted(blueprint: { state: string }) {
         return Object.values(CompletedBlueprintStates).includes(blueprint.state);
-    }
-
-    static shouldShowComposerLink(managerData: ManagerData) {
-        return StageUtils.isUserAuthorized(UtilConsts.permissions.COMPOSER_LINK, managerData);
     }
 
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
