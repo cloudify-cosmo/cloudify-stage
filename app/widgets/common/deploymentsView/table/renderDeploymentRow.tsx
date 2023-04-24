@@ -13,13 +13,8 @@ import StageUtils from '../../../../utils/stageUtils';
 import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { FilterRule } from '../../filters/types';
 
-function getTranslateCells() {
-    return StageUtils.getT('widgets.deploymentsView.drillDown.table.cells');
-}
-
-const translateCellTitle = (suffix: string) => getTranslateCells()(suffix);
+const translateCellTitle = StageUtils.getT('widgets.deploymentsView.drillDown.table.cells');
 const translateBreadcrumb = StageUtils.getT(`widgets.deploymentsView.drillDown.breadcrumbs`);
-
 const renderDeploymentRow =
     (
         toolbox: Stage.Types.Toolbox,
