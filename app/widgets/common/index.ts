@@ -7,6 +7,7 @@ import Deployments from './deployments';
 import DeploymentsView from './deploymentsView';
 import DeployBlueprintModal from './deployModal/DeployBlueprintModal';
 import Workflows from './executeWorkflow';
+import Events from './events';
 import Executions from './executions';
 import Filters from './filters';
 import Inputs from './inputs';
@@ -18,7 +19,6 @@ import Roles from './roles';
 import TerraformModal from './terraformModal';
 import Secrets from './secrets';
 import Tenants from './tenants';
-import EventUtils from './utils/EventUtils';
 
 const StageCommon = {
     Actions,
@@ -29,6 +29,7 @@ const StageCommon = {
     DeploymentsView,
     DeployBlueprintModal,
     Workflows,
+    Events,
     Executions,
     Filters,
     Inputs,
@@ -40,7 +41,6 @@ const StageCommon = {
     Secrets,
     TerraformModal,
     Tenants,
-    EventUtils,
     Consts
 };
 

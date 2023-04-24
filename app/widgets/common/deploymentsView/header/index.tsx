@@ -10,8 +10,11 @@ import type { FilterRule } from '../../filters/types';
 import { useFilterIdFromUrl } from './common';
 import { useBoolean } from '../../../../utils/hooks';
 import type { DeployOnModalProps } from './DeployOnModal';
+import type { RunWorkflowModalProps } from './RunWorkflowModal';
 
-interface DeploymentsViewHeaderProps extends Pick<DeployOnModalProps, 'selectedDeployment'> {
+export interface DeploymentsViewHeaderProps
+    extends Pick<DeployOnModalProps, 'selectedDeployment'>,
+        Pick<RunWorkflowModalProps, 'deploymentsCount'> {
     filterRules: FilterRule[];
     mapOpen: boolean;
     toggleMap: () => void;
@@ -30,7 +33,8 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     toolbox,
     filterRules,
     disableBulkActions,
-    selectedDeployment
+    selectedDeployment,
+    deploymentsCount
 }) => {
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
     const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = useBoolean();
@@ -116,7 +120,12 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             )}
 
             {runWorkflowModalOpen && (
-                <RunWorkflowModal filterRules={filterRules} onHide={closeRunWorkflowModal} toolbox={toolbox} />
+                <RunWorkflowModal
+                    filterRules={filterRules}
+                    onHide={closeRunWorkflowModal}
+                    toolbox={toolbox}
+                    deploymentsCount={deploymentsCount}
+                />
             )}
         </>
     );

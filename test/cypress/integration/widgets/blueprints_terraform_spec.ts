@@ -1,6 +1,7 @@
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
-describe('Blueprints widget should open upload from Terraform module modal and', () => {
+// TODO: RND-292 - remove as part of dedicated ticket once confirmed
+describe.skip('Blueprints widget should open upload from Terraform module modal and', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
         displayStyle: 'table',

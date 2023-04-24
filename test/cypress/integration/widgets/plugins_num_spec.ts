@@ -7,7 +7,7 @@ describe('Number of Plugins widget', () => {
         cy.getWidget(widgetId).find('.statistic').click();
     }
 
-    before(() => cy.activate('valid_trial_license').mockLogin().addPage(page).addWidget(widgetId));
+    before(() => cy.activate('valid_trial_license').mockLogin().addPage(page, widgetId));
 
     it('opens the default page on click', () => {
         const defaultPage = 'plugins';
