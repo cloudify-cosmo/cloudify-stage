@@ -894,6 +894,7 @@ describe('Deployments View widget', () => {
 
         it('should allow drilling down to a subdeployment through table cell link', () => {
             useEnvironmentsWidget();
+            cy.getSearchInput().type(deploymentId);
 
             getDeploymentsViewTable().within(() => cy.get('[title="Click to drill down to subservices"]').click());
             getBreadcrumbs().contains('app-env [Services]').should('be.visible');

@@ -14,8 +14,6 @@ import mapGridParamsToManagerGridParams from '../../../../utils/shared/mapGridPa
 import type { FetchParams } from '../../types';
 import colors from '../../../../styles/colors.scss';
 
-const translateTitle = StageUtils.getT('widgets.deploymentsView.drillDown.table.cells');
-
 const TableContainer = styled.div`
     position: relative;
     height: 100%;
@@ -38,8 +36,7 @@ const NoDataMessageTextWrapper = styled.p`
 `;
 
 const StyledDataTable = styled(DataTable)`
-    td[title='${translateTitle('services') as string}']:hover,
-    td[title='${translateTitle('environments') as string}']:hover {
+    td[title^='Click to drill down to']:hover {
         color: ${colors.cloudifyBlue};
     }
 `;

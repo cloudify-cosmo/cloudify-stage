@@ -13,11 +13,11 @@ import StageUtils from '../../../../utils/stageUtils';
 import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { FilterRule } from '../../filters/types';
 
-function getTranslateCell() {
-    return Stage.Utils.getT('widgets.deploymentsView.drillDown.table.cells');
+function getTranslateCells() {
+    return StageUtils.getT('widgets.deploymentsView.drillDown.table.cells');
 }
 
-const translateCellTitle = (suffix: string) => getTranslateCell()(suffix);
+const translateCellTitle = (suffix: string) => getTranslateCells()(suffix);
 const translateBreadcrumb = StageUtils.getT(`widgets.deploymentsView.drillDown.breadcrumbs`);
 
 const renderDeploymentRow =
