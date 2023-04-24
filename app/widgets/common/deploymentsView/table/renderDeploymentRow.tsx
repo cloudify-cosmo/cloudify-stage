@@ -13,8 +13,11 @@ import StageUtils from '../../../../utils/stageUtils';
 import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 import type { FilterRule } from '../../filters/types';
 
-const translateCellTitle = (suffix: string) =>
-    StageUtils.getT(`widgets.deploymentsView.drillDown.table.cells.${suffix}`);
+function getTranslateCell() {
+    return Stage.Utils.getT('widgets.deploymentsView.drillDown.table.cells');
+}
+
+const translateCellTitle = (suffix: string) => getTranslateCell()(suffix);
 const translateBreadcrumb = StageUtils.getT(`widgets.deploymentsView.drillDown.breadcrumbs`);
 
 const renderDeploymentRow =
@@ -55,7 +58,7 @@ const renderDeploymentRow =
 
         const handleCellClick = (columnId: DeploymentsViewColumnId) => {
             if (isSubServicesCountCell(columnId)) {
-                drillDown(deployment, deploymentTypeFilterRule.services, translateBreadcrumb('serivces'));
+                drillDown(deployment, deploymentTypeFilterRule.services, translateBreadcrumb('services'));
             }
             if (isSubEnvironmentsCountCell(columnId)) {
                 drillDown(deployment, deploymentTypeFilterRule.environments, translateBreadcrumb('environments'));
