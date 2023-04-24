@@ -200,7 +200,7 @@ export default class StageUtils {
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 
-    static shouldShowComposerLink(managerData: ManagerData) {
+    static hasComposerPermission(managerData: ManagerData) {
         return StageUtils.isUserAuthorized(Consts.permissions.COMPOSER_LINK, managerData);
     }
 

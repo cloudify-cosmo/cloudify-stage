@@ -17,7 +17,7 @@ export default function BlueprintsTable({
     widget
 }: BlueprintsViewProps) {
     const { DataTable, Icon, ResourceVisibility, Label } = Stage.Basic;
-    const { shouldShowComposerLink } = Stage.Utils;
+    const { hasComposerPermission } = Stage.Utils;
     const { Blueprints } = Stage.Common;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
     const manager = toolbox.getManager();
@@ -116,7 +116,7 @@ export default function BlueprintsTable({
                                     <>
                                         {!manager.isCommunityEdition() &&
                                             widget.configuration.showComposerOptions &&
-                                            shouldShowComposerLink(toolbox.getManagerState()) && (
+                                            hasComposerPermission(toolbox.getManagerState()) && (
                                                 <Icon
                                                     name="external share"
                                                     title={translateBlueprintsIcons('editInComposer')}
