@@ -896,6 +896,7 @@ describe('Deployments View widget', () => {
             useEnvironmentsWidget();
 
             getDeploymentsViewTable().within(() => cy.get('[title="Click to drill down to subservices"]').click());
+            getBreadcrumbs().contains('app-env [Services]').should('be.visible');
         });
     });
 
