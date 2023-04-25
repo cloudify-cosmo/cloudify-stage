@@ -50,7 +50,8 @@ export default {
         STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
         CREATE_GLOBAL_RESOURCE: 'create_global_resource',
         LICENSE_LIST: 'license_list',
-        LICENSE_UPLOAD: 'license_upload'
+        LICENSE_UPLOAD: 'license_upload',
+        COMPOSER_LINK: 'widget_composerLink'
     },
 
     GLOBAL_VISIBILITY: 'global',
