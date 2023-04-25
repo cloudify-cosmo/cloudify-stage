@@ -17,6 +17,7 @@ export default () => {
 
     return new Strategy(
         {
+            audience: false,
             path: '/auth/saml/callback',
             entryPoint: getConfig().app.auth.loginPageUrl,
             cert,
