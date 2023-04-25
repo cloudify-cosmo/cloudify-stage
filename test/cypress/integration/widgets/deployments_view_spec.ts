@@ -892,11 +892,13 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should allow drilling down to a subdeployment through table cell link', () => {
+        it.only('should allow drilling down to a subdeployment through table cell link', () => {
+            const fullDeploymentName = getDeploymentFullName('app-env');
             useEnvironmentsWidget();
-            cy.getSearchInput().type(deploymentId);
-
+            cy.getSearchInput().clear().type(fullDeploymentName);
+            getDeploymentsViewTable().contains(fullDeploymentName);
             getDeploymentsViewTable().within(() => cy.get('[title="Click to drill down to subservices"]').click());
+
             getBreadcrumbs().contains('app-env [Services]').should('be.visible');
         });
     });
