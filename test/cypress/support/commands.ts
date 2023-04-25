@@ -353,7 +353,7 @@ const commands = {
                                               configuration: {
                                                   filterByBlueprints: true,
                                                   filterByDeployments: true,
-                                                  filterByExecutions: true,
+                                                  filterByExecutionsStatus: true,
                                                   allowMultipleSelection: true
                                               },
                                               drillDownPages: {},
