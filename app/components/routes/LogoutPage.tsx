@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import i18n from 'i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { SmartRedirect } from 'cloudify-ui-components';
+import { CONTEXT_PATH } from '../../../backend/consts';
 import type { ReduxThunkDispatch } from '../../configureStore';
 import type { LogoutAction } from '../../actions/manager/auth';
 import { logout } from '../../actions/manager/auth';
@@ -9,7 +11,6 @@ import type { ReduxState } from '../../reducers';
 import { Header, Message } from '../basic';
 import LogoPage from './LogoPage';
 import LinkToLogin from './LinkToLogin';
-import SmartRedirect from './SmartRedirect';
 
 export default function LogoutPage() {
     const error = useSelector((state: ReduxState) => state.app.error);
@@ -30,5 +31,5 @@ export default function LogoutPage() {
         );
     }
 
-    return <SmartRedirect url={afterLogoutUrl} />;
+    return <SmartRedirect contextPath={CONTEXT_PATH} url={afterLogoutUrl} />;
 }
