@@ -151,6 +151,7 @@ export default function BlueprintsCatalog({
                                 onDeleteBlueprint={handleDeleteBlueprint}
                                 onEditInComposer={handleEditInComposer}
                                 isBlueprintUploaded={Blueprints.Actions.isUploaded(item)}
+                                managerData={toolbox.getManagerState()}
                             />
                         </Grid>
                     )}

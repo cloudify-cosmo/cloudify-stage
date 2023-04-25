@@ -251,6 +251,19 @@ const commands = {
         }
         return cy;
     },
+    mockUserRole: (role: string, tenantRole = 'user') => {
+        cy.intercept('GET', '/console/auth/user', {
+            username: 'admin',
+            role,
+            groupSystemRoles: {},
+            tenantsRoles: {
+                default_tenant: {
+                    'tenant-role': tenantRole,
+                    roles: [tenantRole]
+                }
+            }
+        });
+    },
     mockLogin: ({
         username = 'admin',
         password = 'admin',
