@@ -58,7 +58,7 @@ describe('Deployments View widget', () => {
 
     beforeEach(() => {
         // NOTE: larger viewport since the widget requires more width to be comfortable to use
-        cy.viewport(800, 600);
+        cy.viewport(1600, 900);
     });
 
     const useDeploymentsViewWidget = ({
@@ -892,7 +892,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it.only('should allow drilling down to a subdeployment through table cell link', () => {
+        it('should allow drilling down to a subdeployment through table cell link', () => {
             const fullDeploymentName = getDeploymentFullName('app-env');
             useEnvironmentsWidget();
             cy.getSearchInput().clear().type(fullDeploymentName);
