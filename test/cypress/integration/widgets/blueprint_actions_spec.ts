@@ -30,7 +30,7 @@ describe('Blueprint Action Buttons widget', () => {
     });
 
     it('should not show the "Edit a copy in Composer" button for operator user', () => {
-        cy.mockUserRole('operations');
+        cy.mockUserRole('operations', 'operations');
         useBlueprintActionButtonsWidget({ showEditCopyInComposerButton: true });
 
         getEditACopyInComposerButton().should('not.exist');
