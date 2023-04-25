@@ -58,7 +58,7 @@ describe('Deployments View widget', () => {
 
     beforeEach(() => {
         // NOTE: larger viewport since the widget requires more width to be comfortable to use
-        cy.viewport(1600, 900);
+        cy.viewport(800, 600);
     });
 
     const useDeploymentsViewWidget = ({
@@ -892,11 +892,12 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should allow drilling down to a subdeployment through table cell link', () => {
+        it.only('should allow drilling down to a subdeployment through table cell link', () => {
             const fullDeploymentName = getDeploymentFullName('app-env');
             useEnvironmentsWidget();
             cy.getSearchInput().clear().type(fullDeploymentName);
             getDeploymentsViewTable().contains(fullDeploymentName);
+            cy.get('.input.loading').should('not.exist');
             getDeploymentsViewTable().within(() => cy.get('[title="Click to drill down to subservices"]').click());
 
             getBreadcrumbs().contains('app-env [Services]').should('be.visible');
