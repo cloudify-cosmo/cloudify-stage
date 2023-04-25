@@ -892,7 +892,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it.only('should allow drilling down to a subdeployment through table cell link', () => {
+        it('should allow drilling down to a subdeployment through table cell link', () => {
             const fullDeploymentName = getDeploymentFullName('app-env');
             useEnvironmentsWidget();
             cy.getSearchInput().clear().type(fullDeploymentName);
