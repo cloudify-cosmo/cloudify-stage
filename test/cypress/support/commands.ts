@@ -18,6 +18,7 @@ import { addCommands } from 'cloudify-ui-common-cypress/support';
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcher, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import type { FilterConfiguration } from 'widgets/filter/src/types';
 import { castArray, identity, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
@@ -341,8 +342,18 @@ const commands = {
         widgetConfiguration: any = {},
         {
             widgetsWidth = 8,
-            stubTemplatesResponse = true
-        }: { widgetsWidth?: number; stubTemplatesResponse?: boolean } = {}
+            stubTemplatesResponse = true,
+            filterWidgetConfiguration = {
+                filterByBlueprints: true,
+                filterByDeployments: true,
+                filterByExecutionsStatus: true,
+                allowMultipleSelection: true
+            }
+        }: {
+            widgetsWidth?: number;
+            stubTemplatesResponse?: boolean;
+            filterWidgetConfiguration?: Partial<FilterConfiguration>;
+        } = {}
     ) => {
         const widgetIdsArray = castArray(widgetIds);
         if (stubTemplatesResponse) cy.intercept('GET', '/console/templates', []);
@@ -363,12 +374,7 @@ const commands = {
                                               id: 'filter',
                                               name: 'Resource Filter',
                                               definition: 'filter',
-                                              configuration: {
-                                                  filterByBlueprints: true,
-                                                  filterByDeployments: true,
-                                                  filterByExecutions: true,
-                                                  allowMultipleSelection: true
-                                              },
+                                              configuration: filterWidgetConfiguration,
                                               drillDownPages: {},
                                               height: 2,
                                               width: widgetsWidth,
