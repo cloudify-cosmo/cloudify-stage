@@ -899,10 +899,8 @@ describe('Deployments View widget', () => {
             getDeploymentsViewTable().contains(fullDeploymentName);
             cy.get('.input.loading').should('not.exist');
             getDeploymentsViewTable()
-                .contains(fullDeploymentName)
-                .parent()
-                .parent()
-                .within(() => cy.get('[title="Click to drill down to subservices"]').click());
+                .contains('tr', fullDeploymentName)
+                .find('[title="Click to drill down to subservices"]').click();
 
             getBreadcrumbs().contains('app-env [Services]').should('be.visible');
         });
