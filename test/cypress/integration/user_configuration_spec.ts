@@ -30,7 +30,7 @@ describe('User configuration', () => {
     describe('allows to customize Login page', () => {
         before(() => {
             mockConfigResponse();
-            cy.visit('/console/login');
+            cy.visitUrlIfRedirectionIsRequired('/console/login');
             cy.get('.loginContainer').should('be.visible');
         });
 

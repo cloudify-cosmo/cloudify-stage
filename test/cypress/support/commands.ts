@@ -525,7 +525,15 @@ const commands = {
     openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
 
     getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
-    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
+    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click(),
+
+    visitUrlIfRedirectionIsRequired: (url: string) => {
+        cy.location('pathname').then(pathname => {
+            if (pathname !== url) {
+                cy.visit(url);
+            }
+        });
+    }
 };
 
 addCommands(commands);
