@@ -3,7 +3,7 @@ import i18n from 'i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { SmartRedirect } from 'cloudify-ui-components';
-import { CONTEXT_PATH } from '../../../backend/consts';
+import Consts from '../../utils/consts';
 import type { ReduxThunkDispatch } from '../../configureStore';
 import type { LogoutAction } from '../../actions/manager/auth';
 import { logout } from '../../actions/manager/auth';
@@ -31,5 +31,5 @@ export default function LogoutPage() {
         );
     }
 
-    return <SmartRedirect contextPath={CONTEXT_PATH} url={afterLogoutUrl} />;
+    return <SmartRedirect contextPath={Consts.CONTEXT_PATH} url={afterLogoutUrl} />;
 }
