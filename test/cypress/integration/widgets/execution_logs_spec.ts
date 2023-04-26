@@ -16,7 +16,18 @@ describe('Execution logs widget', () => {
                 { display_name: deploymentName }
             )
             .executeWorkflow(deploymentName, 'install')
-            .usePageMock(widgetId)
+            .usePageMock(
+                widgetId,
+                {},
+                {
+                    filterWidgetConfiguration: {
+                        allowMultipleSelection: false,
+                        filterByBlueprints: false,
+                        filterByDeployments: true,
+                        filterByExecutions: true
+                    }
+                }
+            )
             .mockLogin();
     });
 
