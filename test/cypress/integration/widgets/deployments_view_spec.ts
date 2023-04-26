@@ -897,7 +897,11 @@ describe('Deployments View widget', () => {
             useEnvironmentsWidget();
             cy.getSearchInput().clear().type(fullDeploymentName);
             getDeploymentsViewTable().contains(fullDeploymentName);
-            getDeploymentsViewTable().within(() => cy.get('[title="Click to drill down to subservices"]').click());
+            cy.get('.input.loading').should('not.exist');
+            getDeploymentsViewTable()
+                .contains('tr', fullDeploymentName)
+                .find('[title="Click to drill down to subservices"]')
+                .click();
 
             getBreadcrumbs().contains('app-env [Services]').should('be.visible');
         });

@@ -31,23 +31,21 @@ describe('User configuration', () => {
         before(() => {
             mockConfigResponse();
             cy.visitUrlIfRedirectionIsRequired('/console/login');
-            cy.get('.loginContainer').should('be.visible');
+            cy.contains('Welcome to the Cloudify Management Console').should('be.visible');
         });
 
         it('logo', () => {
-            verifyLogoUrl('.loginContainer .logo');
+            verifyLogoUrl('.logo');
         });
 
         it('colors', () => {
             cy.log('Verifying mainColor...');
             cy.get('.fullScreenSegment').should('have.css', 'background-color', colors.blue);
 
-            cy.get('.loginContainer').within(() => {
-                cy.log('Verifying loginPageHeaderColor...');
-                cy.get('h2').should('have.css', 'color', colors.lightgrey);
-                cy.log('Verifying loginPageTextColor...');
-                cy.get('p').should('have.css', 'color', colors.black);
-            });
+            cy.log('Verifying loginPageHeaderColor...');
+            cy.get('h2').should('have.css', 'color', colors.lightgrey);
+            cy.log('Verifying loginPageTextColor...');
+            cy.get('p').should('have.css', 'color', colors.black);
         });
 
         it('first login hint', () => {
