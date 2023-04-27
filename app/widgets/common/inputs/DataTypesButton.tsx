@@ -129,8 +129,11 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
                         <span
                             className={icons.metadata}
                             onClick={this.onOpen}
+                            onKeyDown={this.onOpen}
                             aria-label={buttonTitle}
-                        ></span>
+                            role="button"
+                            tabIndex={0}
+                        />
                     }
                 />
 

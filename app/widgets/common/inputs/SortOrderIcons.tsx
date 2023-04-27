@@ -42,6 +42,9 @@ const SortIcon = ({ sortOrder, selected, onChange, iconProps }: SortIconProps) =
             className={iconClassName}
             color={selected === sortOrder ? 'blue' : undefined}
             onClick={() => onChange(sortOrder)}
+            onKeyDown={() => onChange(sortOrder)}
+            role="button"
+            tabIndex={0}
             style={{ fontSize: 14, marginLeft: 8 }}
             {...iconProps}
         />

@@ -9,7 +9,7 @@ const InputsHelpIcon: FunctionComponent = () => {
     return (
         <Popup
             flowing
-            trigger={<span className={icons.helpCir}></span>}
+            trigger={<span className={icons.helpCir} />}
             header={i18n.t('widgets.common.inputs.buttons.help.header')}
             content={<InputsHelpDescription />}
         />
