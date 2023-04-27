@@ -461,7 +461,7 @@ const iconClassName = (iconSuffix: string) => `icon-button dds__icon dds__icon--
 
 const dashToCamelCase = (dashCase: string) => dashCase.replace(/-([a-z])/g, g => g[1].toUpperCase());
 
-export const icons = iconsSuffix.reduce(
+export const icons: Record<typeof iconsSuffix[number], string> = iconsSuffix.reduce(
     (a, v) => ({
         ...a,
         [dashToCamelCase(v)]: iconClassName(v)
