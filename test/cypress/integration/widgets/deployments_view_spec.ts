@@ -2,6 +2,7 @@ import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
 import type { ObjectKeys } from 'app/utils/types';
 import type { FilterRule } from 'app/widgets/common/filters/types';
+import type { Workflow } from 'app/widgets/common/executeWorkflow';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from 'app/widgets/common/filters/types';
 import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
 import { testPageName } from '../../support/commands';
@@ -890,6 +891,20 @@ describe('Deployments View widget', () => {
                 getSubservicesButton().containsNumber(50);
             });
         });
+
+        it('should allow drilling down to a subdeployment through table cell link', () => {
+            const fullDeploymentName = getDeploymentFullName('app-env');
+            useEnvironmentsWidget();
+            cy.getSearchInput().clear().type(fullDeploymentName);
+            getDeploymentsViewTable().contains(fullDeploymentName);
+            cy.get('.input.loading').should('not.exist');
+            getDeploymentsViewTable()
+                .contains('tr', fullDeploymentName)
+                .find('[title="Click to drill down to subservices"]')
+                .click();
+
+            getBreadcrumbs().contains('app-env [Services]').should('be.visible');
+        });
     });
 
     it('should display an error message when using the drilled-down widget on a top-level page', () => {
@@ -1155,6 +1170,7 @@ describe('Deployments View widget', () => {
         const siteName = 'Krakow';
         const siteFilterName = `in-${siteName}`;
         const deploymentIds = Array.from({ length: 2 }).map((_, i) => `${specPrefix}_${siteName}_deployment_${i + 1}`);
+        type SimplifiedWorkflow = Pick<Workflow, 'name' | 'parameters'>;
 
         function testDeployOnWithAction(actionType: 'deploy' | 'install') {
             cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
@@ -1261,6 +1277,136 @@ describe('Deployments View widget', () => {
             cy.contains('.modal', 'Group execution started').within(() => {
                 cy.contains('Go to Executions page');
                 cy.contains('Close').click();
+            });
+        });
+
+        it('should allow to select only workflows common across filtered deployments', () => {
+            const emptyParameters: Workflow['parameters'] = {};
+            const commonWorkflowNames = ['start', 'stop'];
+            const notCommonWorkflowNames = ['run_infracost', 'terraform_plan'];
+            const allWorkflows = [...commonWorkflowNames, ...notCommonWorkflowNames];
+
+            const getMockedWorkflows = (workflowNames: string[]): SimplifiedWorkflow[] => {
+                return workflowNames.map(commonWorkflowName => ({
+                    name: commonWorkflowName,
+                    parameters: emptyParameters
+                }));
+            };
+
+            const checkWorkflowOptionAvailability = (workflowName: string, enabled: boolean) => {
+                const classQuery = enabled ? 'not.have.class' : 'have.class';
+                cy.get(`div[option-value="${workflowName}"]`).should(classQuery, 'disabled');
+            };
+
+            cy.interceptSp(
+                'POST',
+                {
+                    pathname: '/searches/workflows'
+                },
+                {
+                    items: getMockedWorkflows(allWorkflows)
+                }
+            );
+
+            cy.interceptSp(
+                'POST',
+                {
+                    pathname: '/searches/workflows',
+                    query: {
+                        _common_only: 'true'
+                    }
+                },
+                {
+                    items: getMockedWorkflows(commonWorkflowNames)
+                }
+            );
+
+            useDeploymentsViewWidget();
+            widgetHeader.openRunWorkflowModal();
+
+            cy.get('.modal').within(() => {
+                cy.getField('Workflow').within(() => {
+                    cy.get('input').click();
+
+                    commonWorkflowNames.forEach(workflowName => {
+                        checkWorkflowOptionAvailability(workflowName, true);
+                    });
+
+                    notCommonWorkflowNames.forEach(workflowName => {
+                        checkWorkflowOptionAvailability(workflowName, false);
+                    });
+                });
+            });
+        });
+
+        it('should allow to manipulate workflow parameters', () => {
+            const parameterNames = {
+                notVisible: 'not_visible',
+                visibleAndRequired: 'visible_and_required',
+                visibleAndNotRequired: 'visible_and_not_required'
+            } as const;
+
+            const mockedParameters = {
+                [parameterNames.notVisible]: {
+                    description: 'This option should not be visible within the form',
+                    type: 'node_id',
+                    default: 'test'
+                },
+                [parameterNames.visibleAndRequired]: {
+                    description: 'This option should be visible and required',
+                    type: 'string'
+                },
+                [parameterNames.visibleAndNotRequired]: {
+                    description: 'This option should be visible, but not required',
+                    type: 'string',
+                    default: 'test'
+                }
+            };
+
+            const mockedWorkflow: SimplifiedWorkflow = {
+                name: 'test_workflow',
+                parameters: mockedParameters
+            };
+
+            cy.interceptSp(
+                'POST',
+                {
+                    pathname: '/searches/workflows'
+                },
+                {
+                    items: [mockedWorkflow]
+                }
+            );
+
+            useDeploymentsViewWidget();
+            widgetHeader.openRunWorkflowModal();
+
+            cy.get('.modal').within(() => {
+                cy.getField('Workflow').within(() => {
+                    cy.get('input').click();
+                    cy.get(`div[option-value="${mockedWorkflow.name}"]`).click();
+                });
+
+                cy.getField(parameterNames.notVisible).should('not.exist');
+                cy.getField(parameterNames.visibleAndRequired).should('be.visible');
+                cy.getField(parameterNames.visibleAndNotRequired).should('be.visible');
+
+                cy.clickButton('Run');
+
+                cy.getField(parameterNames.visibleAndRequired).should('have.class', 'error');
+                cy.typeToFieldInput(parameterNames.visibleAndRequired, 'test');
+
+                cy.clickButton('Run');
+
+                cy.interceptSp('POST', '/execution-groups', request => {
+                    const { default_parameters: defaultParameters } = request.body;
+
+                    expect(defaultParameters[parameterNames.notVisible]).to.be.an('undefined');
+                    expect(defaultParameters[parameterNames.visibleAndRequired]).to.equal('test');
+                    expect(defaultParameters[parameterNames.visibleAndNotRequired]).to.equal(
+                        mockedParameters[parameterNames.visibleAndNotRequired].default
+                    );
+                });
             });
         });
 

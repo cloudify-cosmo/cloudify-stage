@@ -12,6 +12,9 @@ import { DataTable, Loader } from '../../../../components/basic';
 import StageUtils from '../../../../utils/stageUtils';
 import mapGridParamsToManagerGridParams from '../../../../utils/shared/mapGridParamsToManagerGridParams';
 import type { FetchParams } from '../../types';
+import colors from '../../../../styles/colors.scss';
+
+const translateTitle = StageUtils.getT('widgets.deploymentsView.drillDown.table.cells');
 
 const TableContainer = styled.div`
     position: relative;
@@ -34,6 +37,12 @@ const NoDataMessageTextWrapper = styled.p`
     }
 `;
 
+const StyledDataTable = styled(DataTable)`
+    td[title='${() => translateTitle('services') as string}']:hover,
+    td[title='${() => translateTitle('environments') as string}']:hover {
+        color: ${colors.cloudifyBlue};
+    }
+`;
 interface DeploymentsTableProps {
     setGridParams: (params: Stage.Types.ManagerGridParams) => void;
     toolbox: Stage.Types.Toolbox;
@@ -62,7 +71,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
     return (
         <TableContainer>
             <TableLoadingIndicator active={loadingIndicatorVisible} />
-            <DataTable
+            <StyledDataTable
                 fetchData={(params: FetchParams) => setGridParams(mapGridParamsToManagerGridParams(params.gridParams))}
                 pageSize={pageSize}
                 selectable
@@ -97,7 +106,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 {deployments.flatMap(
                     renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment, keysOfLabelsToShow)
                 )}
-            </DataTable>
+            </StyledDataTable>
         </TableContainer>
     );
 };

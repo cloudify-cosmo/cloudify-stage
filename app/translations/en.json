@@ -1010,7 +1010,7 @@
             "name": "Blueprint action buttons",
             "description": "Provides set of action buttons for blueprint",
             "configuration": {
-                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
+                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button for users that can access it"
             },
             "buttons": {
                 "createDeployment": "Create deployment",
@@ -1061,7 +1061,7 @@
                     }
                 },
                 "hideFailedBlueprints": "Hide failed blueprints",
-                "showComposerOptions": "Show Composer options",
+                "showComposerOptions": "Show Composer options for users that can access them",
                 "labelFilterRules": "Label filter rules"
             },
             "terraformModal": {
@@ -1387,7 +1387,7 @@
                     "runWorkflow": {
                         "title": "Run Workflow",
                         "modal": {
-                            "header": "Run workflow on filtered deployments",
+                            "header": "Run workflow on {{deploymentsCount}} deployments",
                             "inputs": {
                                 "workflowId": {
                                     "label": "Workflow",
@@ -1399,7 +1399,7 @@
                                 "close": "Close"
                             },
                             "messages": {
-                                "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
+                                "limitations": "The workflow will run without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
                                 "executionGroupStarted": "Workflow has been started.",
                                 "fetchingWorkflows": "Fetching workflows...",
                                 "creatingDeploymentGroup": "1/2: Creating deployment group...",
@@ -1407,6 +1407,7 @@
                             },
                             "errors": {
                                 "noWorkflowError": "Please select a workflow",
+                                "noParameterValue": "Please provide \"{{parameter}}\" value",
                                 "workflowsFetchFailed": "Error occurred when fetching workflows"
                             }
                         }
@@ -1472,6 +1473,12 @@
                 "breadcrumbs": {
                     "environments": "Environments",
                     "services": "Services"
+                },
+                "table": {
+                    "cells": {
+                        "environments": "Click to drill down to subenvironments",
+                        "services": "Click to drill down to subservices"
+                    }
                 },
                 "buttons": {
                     "detailsFetchingError": "Could not fetch deployment details",
@@ -1594,6 +1601,17 @@
                 "resetFilter": {
                     "content": "Reset filter"
                 }
+            }
+        },
+        "executionLogs": {
+            "name": "Execution Logs",
+            "description": "This widget shows the execution logs",
+            "noExecutionSelectedMessage": "Please select execution in order to see execution logs.",
+            "buttons": {
+                "showMoreLogs": "Show more logs",
+                "expandMessage": "Expand message",
+                "collapseMessage": "Collapse message",
+                "showErrorCauses": "Show error causes"
             }
         },
         "executions": {
@@ -2625,12 +2643,12 @@
                             "secret": "Secret",
                             "input": "Input"
                         },
-                        "default": "Blueprint Default",
+                        "default": "Default",
                         "value": "Value"
                     },
                     "labels": {
                         "header": "Labels",
-                        "default": "Blueprint Default"
+                        "default": "Default"
                     },
                     "location": "Location"
                 },
@@ -2641,10 +2659,28 @@
                     "capabilityNameMissing": "Please provide capability name",
                     "capabilitySourceMissing": "Please provide capability source",
                     "capabilityNameDuplicated": "Capability name already defined",
+                    "capabilityValueMissing": "Please provide capability value",
                     "blueprintNameExists": "Blueprint with this name already exists"
                 },
                 "submit": "Create",
                 "cancelConfirm": "Are you sure you would like to discard the filled data and close?"
+            }
+        },
+        "filter": {
+            "name": "Resource filter",
+            "description": "Adds a filter section for resources - blueprints, deployments, nodes, node instances and executions",
+            "configuration": {
+                "filterByBlueprints": "Show blueprint filter",
+                "filterByDeployments": "Show deployment filter",
+                "filterByExecutions": "Show execution filter",
+                "filterByNodes": "Show node filter",
+                "filterByNodeInstances": "Show node instance filter",
+                "filterByExecutionsStatus": "Show execution status filter",
+                "filterBySiteName": "Show site name filter",
+                "allowMultipleSelection": {
+                    "name": "Allow multiple selection",
+                    "description": "Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter"
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ import { addCommands } from 'cloudify-ui-common-cypress/support';
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcher, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import type { FilterConfiguration } from 'widgets/filter/src/types';
 import { castArray, identity, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
@@ -103,8 +104,8 @@ const commands = {
         cy.contains('Loading...').should('not.exist');
         return cy.waitUntilWidgetsDataLoaded();
     },
-    waitUntilWidgetsDataLoaded: (timeout: number = secondsToMs(10)) =>
-        cy.get('div.loader:visible', { timeout }).should('not.exist'),
+    waitUntilWidgetsDataLoaded: (timeout = 10) =>
+        cy.get('div.loader:visible', { timeout: secondsToMs(timeout) }).should('not.exist'),
     waitUntilAppLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
@@ -251,6 +252,19 @@ const commands = {
         }
         return cy;
     },
+    mockUserRole: (role: string, tenantRole = 'user') => {
+        cy.intercept('GET', '/console/auth/user', {
+            username: 'admin',
+            role,
+            groupSystemRoles: {},
+            tenantsRoles: {
+                default_tenant: {
+                    'tenant-role': tenantRole,
+                    roles: [tenantRole]
+                }
+            }
+        });
+    },
     mockLogin: ({
         username = 'admin',
         password = 'admin',
@@ -328,8 +342,18 @@ const commands = {
         widgetConfiguration: any = {},
         {
             widgetsWidth = 8,
-            stubTemplatesResponse = true
-        }: { widgetsWidth?: number; stubTemplatesResponse?: boolean } = {}
+            stubTemplatesResponse = true,
+            filterWidgetConfiguration = {
+                filterByBlueprints: true,
+                filterByDeployments: true,
+                filterByExecutionsStatus: true,
+                allowMultipleSelection: true
+            }
+        }: {
+            widgetsWidth?: number;
+            stubTemplatesResponse?: boolean;
+            filterWidgetConfiguration?: Partial<FilterConfiguration>;
+        } = {}
     ) => {
         const widgetIdsArray = castArray(widgetIds);
         if (stubTemplatesResponse) cy.intercept('GET', '/console/templates', []);
@@ -350,12 +374,7 @@ const commands = {
                                               id: 'filter',
                                               name: 'Resource Filter',
                                               definition: 'filter',
-                                              configuration: {
-                                                  filterByBlueprints: true,
-                                                  filterByDeployments: true,
-                                                  filterByExecutionsStatus: true,
-                                                  allowMultipleSelection: true
-                                              },
+                                              configuration: filterWidgetConfiguration,
                                               drillDownPages: {},
                                               height: 2,
                                               width: widgetsWidth,
@@ -403,6 +422,9 @@ const commands = {
 
     setDeploymentContext: (value: string) => setContext('deployment', value),
     clearDeploymentContext: () => clearContext('deployment'),
+
+    setExecutionContext: (value: string) => setContext('execution', value, false),
+    clearExecutionContext: () => clearContext('execution'),
 
     interceptSp: (method: string, spRouteMatcher: GlobPattern | RouteMatcherOptions, routeHandler?: RouteHandler) => {
         const routeMatcher: RouteMatcherOptions = { method };
@@ -541,13 +563,15 @@ Cypress.Commands.add('getTable', { prevSubject: true }, (subject: any) => {
     return cy.wrap(mappedTableValues);
 });
 
-function setContext(field: string, value: string) {
-    cy.get(`.${field}FilterField`)
+function setContext(field: string, value: string, exactValue = true) {
+    return cy
+        .get(`.${field}FilterField`)
         .click()
         .within(() => {
             cy.get('input').clear({ force: true }).type(`${value}`, { force: true });
             cy.waitUntilWidgetsDataLoaded();
-            cy.get(`[option-value="${value}"]`).click();
+            if (exactValue) cy.get(`[option-value="${value}"]`).click();
+            else cy.contains('div[role="option"]', value).click();
             cy.get('input').type('{esc}', { force: true });
         });
 }

@@ -185,12 +185,7 @@ describe('Deployments widget', () => {
             cy.setLabels(deploymentId, [{ a: 'b' }]);
             cy.interceptSp('PATCH', `/deployments/${deploymentId}`).as('updateLabels');
             cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
-            cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
 
-            const typeInput = (name: string, value: string) => {
-                cy.get(`div[name=${name}]`).click();
-                cy.get(`div[name=${name}] input`).type(value);
-            };
             executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
             cy.get('.modal').within(() => {
                 cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
@@ -198,13 +193,7 @@ describe('Deployments widget', () => {
                 cy.get('form.loading').should('not.exist');
 
                 cy.get('.segment.dropdown').click();
-                typeInput('labelKey', labelKey);
-                typeInput('labelValue', labelValue);
-                cy.get('button .add').click();
-
-                cy.wait('@checkLabelPresence');
-                cy.get('.blue.label').should('have.text', `${labelKey} ${labelValue}`);
-
+                cy.addLabel(labelKey, labelValue);
                 cy.get('button.ok').click();
             });
             cy.wait('@updateLabels');
@@ -306,13 +295,14 @@ describe('Deployments widget', () => {
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
-                cy.contains('Upload from Terraform').click();
-                cy.contains('Create blueprint from Terraform')
-                    .parent()
-                    .within(() => {
-                        cy.contains('button', 'Cancel').click();
-                    });
-                cy.contains('button', 'Yes').click();
+                // TODO: RND-292 - remove as part of dedicated ticket once confirmed
+                // cy.contains('Upload from Terraform').click();
+                // cy.contains('Create blueprint from Terraform')
+                //     .parent()
+                //     .within(() => {
+                //         cy.contains('button', 'Cancel').click();
+                //     });
+                // cy.contains('button', 'Yes').click();
 
                 cy.contains('Create new Deployment').click();
                 cy.contains('Blueprint Marketplace').should('be.visible');
