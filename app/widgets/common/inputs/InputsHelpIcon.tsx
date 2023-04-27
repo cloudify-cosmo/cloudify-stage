@@ -3,12 +3,13 @@ import React from 'react';
 import i18n from 'i18next';
 import InputsHelpDescription from './InputsHelpDescription';
 import { Popup } from '../../../components/basic';
+import { icons } from './icons';
 
 const InputsHelpIcon: FunctionComponent = () => {
     return (
         <Popup
             flowing
-            trigger={<span className="dds__icon dds__icon--help-cir icon-button"></span>}
+            trigger={<span className={icons.helpCir}></span>}
             header={i18n.t('widgets.common.inputs.buttons.help.header')}
             content={<InputsHelpDescription />}
         />

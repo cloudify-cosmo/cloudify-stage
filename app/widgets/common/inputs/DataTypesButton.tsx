@@ -6,6 +6,7 @@ import ParameterValue from '../components/parameter/ParameterValue';
 import { CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
 import translateInputs from './utils/translateInputs';
 import type { BlueprintPlan } from '../blueprints/BlueprintActions';
+import { icons } from './icons';
 
 interface DataTypePropertyProps {
     name: string;
@@ -126,7 +127,7 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
                     content={buttonTitle}
                     trigger={
                         <span
-                            className="icon-button dds__icon dds__icon--metadata"
+                            className={icons.metadata}
                             onClick={this.onOpen}
                             aria-label={buttonTitle}
                         ></span>
