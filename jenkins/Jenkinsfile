@@ -23,7 +23,7 @@ pipeline {
   }
 
   options {
-    checkoutToSubdirectory('cloudify-stage')
+    checkoutToSubdirectory('fusion-stage')
     buildDiscarder(logRotator(numToKeepStr:'30'))
     timeout(time: 120, unit: 'MINUTES')
     timestamps()
@@ -32,12 +32,12 @@ pipeline {
   environment {
     BRANCH = "${env.BRANCH_NAME}"
     WORKSPACE = "${env.WORKSPACE}"
-    STAGE_DIR = "cloudify-stage"
+    STAGE_DIR = "fusion-stage"
 
-    CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-16.16.0-1nodesource.x86_64.rpm'
+    CFY_NODE_RPM = 'https://dell-fusion.s3.amazonaws.com/fusion/components/nodejs-16.16.0-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
-    VERSION = getVersion("cloudify-manager","${env.MAIN_BRANCH}").trim()
-    PRERELEASE = getPreRelease("cloudify-manager","${env.MAIN_BRANCH}").trim()
+    VERSION = getVersion("fusion-manager","${env.MAIN_BRANCH}").trim()
+    PRERELEASE = getPreRelease("fusion-manager","${env.MAIN_BRANCH}").trim()
     S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.STAGE_DIR}/${env.BRANCH}"
     S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
     S3_LATEST_BUILD_PATH = "${env.S3_BASE_URL}/latest"
@@ -121,23 +121,23 @@ pipeline {
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''
                 cd ~/rpmbuild/BUILD
-                rpmlint --info packaging/cloudify-stage.spec
-                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
+                rpmlint --info packaging/fusion-stage.spec
+                for i in {1..10}; do yum-builddep -y packaging/fusion-stage.spec && break || sleep 5; done
               '''
 
               echo 'Download sources for RPM spec file & Build RPM'
               sh """
                 cd ~/rpmbuild/BUILD
                 spectool \
-                  -d "CLOUDIFY_VERSION ${env.VERSION}" \
-                  -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
-                  -P packaging/cloudify-stage.spec \
+                  -d "FUSION_VERSION ${env.VERSION}" \
+                  -d "FUSION_PACKAGE_RELEASE ${env.PRERELEASE}" \
+                  -P packaging/fusion-stage.spec \
                   -S -g
 
                 rpmbuild \
-                  -D "CLOUDIFY_VERSION ${env.VERSION}" \
-                  -D "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
-                  -bb packaging/cloudify-stage.spec
+                  -D "FUSION_VERSION ${env.VERSION}" \
+                  -D "FUSION_PACKAGE_RELEASE ${env.PRERELEASE}" \
+                  -bb packaging/fusion-stage.spec
               """
 
               echo 'Save Artifacts'

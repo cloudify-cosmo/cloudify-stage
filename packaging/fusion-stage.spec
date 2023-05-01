@@ -1,29 +1,29 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 %define _libdir %{_exec_prefix}/lib
-%define stage_path /opt/cloudify-stage
-%define logs_path /var/log/cloudify/stage
+%define stage_path /opt/fusion-stage
+%define logs_path /var/log/fusion/stage
 
-Name:           cloudify-stage
-Version:        %{CLOUDIFY_VERSION}
-Release:        %{CLOUDIFY_PACKAGE_RELEASE}%{?dist}
-Summary:        Cloudify UI
+Name:           fusion-stage
+Version:        %{FUSION_VERSION}
+Release:        %{FUSION_PACKAGE_RELEASE}%{?dist}
+Summary:        Fusion UI
 Group:          Applications/Multimedia
 License:        Apache 2.0
-URL:            https://github.com/cloudify-cosmo/cloudify-stage
-Vendor:         Cloudify Platform Ltd.
-Packager:       Cloudify Platform Ltd.
+URL:            https://github.com/fusion-e/fusion-stage
+Vendor:         Dell Inc.
+Packager:       Dell Inc.
 
 BuildRequires:  nodejs >= 16.16.0, rsync
 %if "%{arch}" == "arm64"
 BuildRequires:  gcc-c++, gcc, libsass, libpng-devel
 %endif
-Requires:       nodejs >= 16.16.0, cloudify-rest-service, nginx, shadow-utils
+Requires:       nodejs >= 16.16.0, fusion-rest-service, nginx, shadow-utils
 AutoReqProv:    no
 
 
 %description
 
-Cloudify Stage provides Graphical User Interface for managing and analyzing Cloudify Manager.
+Fusion Stage provides Graphical User Interface for managing and analyzing Fusion Manager.
 
 
 %prep
@@ -57,13 +57,13 @@ mkdir -p %{buildroot}%{logs_path}
 
 %check
 
-visudo -cf %{buildroot}/etc/sudoers.d/cloudify-stage
+visudo -cf %{buildroot}/etc/sudoers.d/fusion-stage
 
 
 %pre
 
 groupadd -fr stage_group
-getent passwd stage_user >/dev/null || useradd -r -g stage_group -d /opt/cloudify-stage -s /sbin/nologin stage_user
+getent passwd stage_user >/dev/null || useradd -r -g stage_group -d /opt/fusion-stage -s /sbin/nologin stage_user
 usermod -aG cfyuser stage_user
 usermod -aG stage_group cfyuser
 getent group nginx >/dev/null || groupadd -r nginx
@@ -74,12 +74,12 @@ usermod -aG stage_group nginx
 %files
 
 %defattr(-,root,root)
-/etc/logrotate.d/cloudify-stage
-/etc/sudoers.d/cloudify-stage
-%{_libdir}/systemd/system/cloudify-stage.service
+/etc/logrotate.d/fusion-stage
+/etc/sudoers.d/fusion-stage
+%{_libdir}/systemd/system/fusion-stage.service
 %config(noreplace) %{stage_path}/conf/manager.json
 %config(noreplace) %{stage_path}/conf/app.json
-%attr(555,root,cfyuser) /opt/cloudify/stage/restore-snapshot.py
+%attr(555,root,cfyuser) /opt/fusion/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf
 %attr(-,stage_user,stage_group) %{logs_path}
