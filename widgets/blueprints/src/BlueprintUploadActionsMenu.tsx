@@ -5,7 +5,7 @@ import { isEqual, map } from 'lodash';
 const { Dropdown } = Stage.Basic;
 const { Menu, Item } = Dropdown;
 const { useBoolean } = Stage.Hooks;
-const { TerraformModal } = Stage.Common;
+// const { TerraformModal } = Stage.Common;
 const { drilldownPage } = Stage.Common.Consts;
 const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
 
@@ -26,7 +26,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     showGenerateInComposerButton = false
 }) => {
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
-    const [terraformModalVisible, _showTerraformModal, hideTerraformModal] = useBoolean();
+    // const [terraformModalVisible, _showTerraformModal, hideTerraformModal] = useBoolean();
 
     const redirectToMarketplacePage = () => {
         const widget = toolbox.getWidget();
@@ -61,7 +61,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
                 </Menu>
             </Dropdown>
             {uploadModalVisible && <UploadBlueprintModal open onHide={hideUploadModal} toolbox={toolbox} />}
-            {terraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
+            {/* {terraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />} */}
         </>
     );
 };
