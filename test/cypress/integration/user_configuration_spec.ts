@@ -64,8 +64,8 @@ describe('User configuration', () => {
         verifyLogoUrl('.sidebarContainer .logo');
 
         cy.log('Verifying showVersionDetails...');
-        const majorVersion = String(Consts.APP_VERSION)[0];
-        cy.get('.sidebar > div > a').should('not.contain.text', `v ${majorVersion}`);
+        const versionFirstDigit = String(Consts.APP_VERSION)[0];
+        cy.get('.sidebar > div > a').should('not.contain.text', `v ${versionFirstDigit}`);
         cy.get('a[href="/console/license"]').should('not.exist');
     });
 });
