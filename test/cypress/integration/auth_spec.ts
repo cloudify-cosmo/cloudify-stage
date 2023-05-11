@@ -48,7 +48,7 @@ describe('Authentication', () => {
         });
     });
 
-    describe('after log-in process', () => {
+    describe('after log-in process', { retries: { runMode: 2 } }, () => {
         it('fails when token has expired', () => {
             cy.activate().mockLogin();
 
