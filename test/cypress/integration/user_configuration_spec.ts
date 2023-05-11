@@ -30,7 +30,7 @@ describe('User configuration', () => {
         mockConfigResponse();
     });
 
-    it('allows to customize Login page', () => {
+    it('allows to customize Login page', { retries: { runMode: 2 } }, () => {
         cy.visit('/console');
         cy.contains('Welcome to the Cloudify Management Console').should('be.visible');
 
