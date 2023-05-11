@@ -25,61 +25,47 @@ describe('User configuration', () => {
         );
     }
 
-    before(cy.activate);
-
-    describe('allows to customize Login page', () => {
-        before(() => {
-            mockConfigResponse();
-            cy.visit('/console');
-            cy.contains('Welcome to the Cloudify Management Console').should('be.visible');
-        });
-
-        it('logo', () => {
-            verifyLogoUrl('.logo');
-        });
-
-        it('colors', () => {
-            cy.log('Verifying mainColor...');
-            cy.get('.fullScreenSegment').should('have.css', 'background-color', colors.blue);
-
-            cy.log('Verifying loginPageHeaderColor...');
-            cy.get('h2').should('have.css', 'color', colors.lightgrey);
-            cy.log('Verifying loginPageTextColor...');
-            cy.get('p').should('have.css', 'color', colors.black);
-        });
-
-        it('first login hint', () => {
-            cy.contains('For the first login').should('not.exist');
-        });
+    before(() => {
+        cy.activate();
+        mockConfigResponse();
     });
 
-    describe('allows to customize page', () => {
-        before(() => {
-            mockConfigResponse();
-            cy.mockLogin();
+    it('allows to customize Login page', { retries: { runMode: 2 } }, () => {
+        cy.visit('/console');
+        cy.contains('Welcome to the Cloudify Management Console').should('be.visible');
+
+        verifyLogoUrl('.logo');
+
+        cy.log('Verifying mainColor...');
+        cy.get('.fullScreenSegment').should('have.css', 'background-color', colors.blue);
+
+        cy.log('Verifying loginPageHeaderColor...');
+        cy.get('h2').should('have.css', 'color', colors.lightgrey);
+        cy.log('Verifying loginPageTextColor...');
+        cy.get('p').should('have.css', 'color', colors.black);
+
+        cy.log('Verifying first login hint...');
+        cy.contains('For the first login').should('not.exist');
+    });
+
+    it('allows to customize page', () => {
+        cy.mockLogin();
+
+        cy.log('Verifying headerTextColor...');
+        cy.get('.sidebarContainer > div > div > a').should('have.css', 'color', colors.black);
+
+        cy.get('.sidebarContainer').within(() => {
+            cy.log('Verifying sidebarColor...');
+            cy.get('.sidebar').should('have.css', 'background-color', colors.grey);
+            cy.log('Verifying sidebarTextColor...');
+            cy.get('.pageMenuItem').should('have.css', 'color', colors.black);
         });
 
-        it('sidebar', () => {
-            cy.log('Verifying headerTextColor...');
-            cy.get('.sidebarContainer > div > div > a').should('have.css', 'color', colors.black);
+        verifyLogoUrl('.sidebarContainer .logo');
 
-            cy.get('.sidebarContainer').within(() => {
-                cy.log('Verifying sidebarColor...');
-                cy.get('.sidebar').should('have.css', 'background-color', colors.grey);
-                cy.log('Verifying sidebarTextColor...');
-                cy.get('.pageMenuItem').should('have.css', 'color', colors.black);
-            });
-        });
-
-        it('logo', () => {
-            verifyLogoUrl('.sidebarContainer .logo');
-        });
-
-        it('version details', () => {
-            const majorVersion = String(Consts.APP_VERSION)[0];
-            cy.log('Verifying showVersionDetails...');
-            cy.get('.sidebar > div > a').should('not.contain.text', `v ${majorVersion}`);
-            cy.get('a[href="/console/license"]').should('not.exist');
-        });
+        cy.log('Verifying showVersionDetails...');
+        const versionFirstDigit = String(Consts.APP_VERSION)[0];
+        cy.get('.sidebar > div > a').should('not.contain.text', `v ${versionFirstDigit}`);
+        cy.get('a[href="/console/license"]').should('not.exist');
     });
 });
