@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/app/node_modules \
 
 FROM busybox
 
-RUN adduser -D stage
+RUN adduser -u 1000 -D stage
 USER stage
 WORKDIR /home/stage
 
