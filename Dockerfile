@@ -25,8 +25,8 @@ RUN --mount=type=cache,target=/app/node_modules \
 
 FROM busybox
 
-RUN adduser -u 1000 -D stage
-USER stage
+RUN adduser -u 1500 -D stage
+USER 1500
 WORKDIR /home/stage
 
 # For now, we only need the static/ subdirectory. There are other artifacts

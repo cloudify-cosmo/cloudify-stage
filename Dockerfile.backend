@@ -50,10 +50,16 @@ COPY . /app
 RUN --mount=type=cache,target=/app/node_modules \
     npm run build
 
-RUN groupadd $groupname && useradd -u 1500 -g $groupname $username
+RUN mkdir -p \
+    /etc/cloudify \
+    /var/log/cloudify/stage
+
+RUN groupadd $groupname && useradd -u 1500 -m -g $groupname $username
 
 RUN chown -R $username:$groupname \
-    /app
+    /app \
+    /etc/cloudify \
+    /var/log/cloudify
 
 USER 1500
 
