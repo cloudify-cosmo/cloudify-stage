@@ -29,7 +29,6 @@ cat <<EOF > /app/conf/manager.json
 }
 EOF
 
-mkdir -p /etc/cloudify
 cat <<EOF > /etc/cloudify/logging.conf
 EOF
 
