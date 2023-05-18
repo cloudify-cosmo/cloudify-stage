@@ -72,7 +72,7 @@
         "supertest": "^5.0.0",
         "ts-node": "^10.2.1",
         "typescript": "^4.3.5",
-        "vm2": "^3.9.11",
+        "vm2": "^3.9.19",
         "wait-on": "^6.0.1"
     },
     "devDependencies": {
