@@ -1,4 +1,5 @@
-import decompress from 'decompress';
+import AdmZip from 'adm-zip';
+import type { IZipEntry } from 'adm-zip';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import multer from 'multer';
@@ -177,14 +178,28 @@ export function storeSingleYamlFile(archivePath: string, archiveFile: string, ta
     return {};
 }
 
-export function decompressArchive(archivePath: string, targetDir: string) {
-    logger.debug('Extracting archive', pathlib.resolve(archivePath), targetDir);
+export function decompressArchive(archivePath: string | Buffer, targetDir?: string): Promise<IZipEntry[]> {
+    logger.debug(
+        'Extracting archive',
+        typeof archivePath === 'string' ? pathlib.resolve(archivePath) : 'from buffer',
+        targetDir
+    );
 
-    fs.mkdirsSync(targetDir);
+    return new Promise((resolve, reject) => {
+        const decompressedArchive = new AdmZip(archivePath);
 
-    return decompress(archivePath, targetDir, {
-        // NOTE: Workaround for https://github.com/kevva/decompress/issues/46
-        filter: file => !file.path.endsWith('/')
+        if (targetDir) {
+            fs.mkdirSync(targetDir);
+            return decompressedArchive.extractAllToAsync(targetDir, undefined, undefined, error => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(decompressedArchive.getEntries());
+            });
+        }
+
+        return resolve(decompressedArchive.getEntries());
     });
 }
 

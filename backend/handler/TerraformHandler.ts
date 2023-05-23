@@ -3,13 +3,12 @@ import tfParser from '@evops/hcl-terraform-parser';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import type { File } from 'decompress';
-import decompress from 'decompress';
 import directoryTree from 'directory-tree';
 import _, { escapeRegExp, merge, trimStart } from 'lodash';
 import type { NextFunction, Request, Response } from 'express';
 import type { Blueprint } from 'cloudify-ui-common-backend';
 import { cloneGitRepo, renderBlueprintYaml } from 'cloudify-ui-common-backend';
+import * as ArchiveHelper from './ArchiveHelper';
 import { getLogger } from './LoggerHandler';
 import type { TerraformBlueprintData, TerraformParserResult, Variable } from './TerraformHandler.types';
 import { createGetAttributeCall, createGetSecretCall, createIntrinsicFunctionCall } from './services/BlueprintBuilder';
@@ -38,11 +37,11 @@ export const getBufferFromUrl = async (url: string, authHeader?: string) => {
 };
 
 export const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
-    decompress(content)
-        .then((files: File[]) =>
-            _(files)
-                .filter(file => file.type === 'file' && file.path.endsWith('.tf'))
-                .map(file => path.dirname(file.path))
+    ArchiveHelper.decompressArchive(content)
+        .then(entries =>
+            _(entries)
+                .filter(entry => !entry.isDirectory && entry.entryName.endsWith('.tf'))
+                .map(file => path.dirname(file.entryName))
                 .uniq()
                 .sort()
                 .value()
@@ -227,10 +226,13 @@ export function checkIfFileBuffer(req: Request, res: Response, next: NextFunctio
 export async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
 
-    const files = await decompress(zipBuffer);
-    return files
-        .filter(file => file.type === 'file' && isTerraformFilePath(file.path, resourceLocationTrimmed))
-        .map(file => file?.data);
+    const entries = await ArchiveHelper.decompressArchive(zipBuffer);
+    return (
+        entries
+            .filter(entry => !entry.isDirectory && isTerraformFilePath(entry.entryName, resourceLocationTrimmed))
+            // TODO Norbert: Investigate on adjusting that function as it's synchronous
+            .map(file => file.getData())
+    );
 }
 
 export function getTerraformJsonMergedFromFileBufferList(files: Buffer[]): TerraformParserResult {

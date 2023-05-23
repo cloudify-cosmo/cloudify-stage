@@ -1,10 +1,10 @@
 import request from 'supertest';
-import decompress from 'decompress';
 import path from 'path';
 import app from 'app';
 import validateUniqueness from 'handler/widgets/validateUniqueness';
 import { importWidgetBackend } from 'handler/BackendHandler';
 import installFiles from 'handler/widgets/installFiles';
+import * as ArchiveHelper from '../../../handler/ArchiveHelper';
 
 jest.mock('handler/widgets/validateUniqueness');
 jest.mock('handler/widgets/installFiles');
@@ -18,7 +18,7 @@ describe('/snapshots/widgets endpoint', () => {
             .responseType('blob')
             .then(response => {
                 expect(response.statusCode).toBe(200);
-                return decompress(response.body);
+                return ArchiveHelper.decompressArchive(response.body);
             });
     });
 
