@@ -1,4 +1,4 @@
-import AdmZip from 'adm-zip';
+import Zip from 'adm-zip';
 import type { IZipEntry } from 'adm-zip';
 import fs from 'fs-extra';
 import _ from 'lodash';
@@ -186,7 +186,7 @@ export function decompressArchive(archivePath: string | Buffer, targetDir?: stri
     );
 
     return new Promise((resolve, reject) => {
-        const decompressedArchive = new AdmZip(archivePath);
+        const decompressedArchive = new Zip(archivePath);
 
         if (targetDir) {
             fs.ensureDirSync(targetDir);

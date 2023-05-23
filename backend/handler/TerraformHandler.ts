@@ -227,12 +227,9 @@ export async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resou
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
 
     const entries = await ArchiveHelper.decompressArchive(zipBuffer);
-    return (
-        entries
-            .filter(entry => !entry.isDirectory && isTerraformFilePath(entry.entryName, resourceLocationTrimmed))
-            // TODO Norbert: Investigate on adjusting that function as it's synchronous
-            .map(file => file.getData())
-    );
+    return entries
+        .filter(entry => !entry.isDirectory && isTerraformFilePath(entry.entryName, resourceLocationTrimmed))
+        .map(file => file.getData());
 }
 
 export function getTerraformJsonMergedFromFileBufferList(files: Buffer[]): TerraformParserResult {
