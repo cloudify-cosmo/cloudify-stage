@@ -189,7 +189,7 @@ export function decompressArchive(archivePath: string | Buffer, targetDir?: stri
         const decompressedArchive = new AdmZip(archivePath);
 
         if (targetDir) {
-            fs.mkdirSync(targetDir);
+            fs.ensureDirSync(targetDir);
             return decompressedArchive.extractAllToAsync(targetDir, undefined, undefined, error => {
                 if (error) {
                     reject(error);
