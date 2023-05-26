@@ -98,6 +98,11 @@ export function browseArchiveTree(req: Request, timestamp = Date.now().toString(
             const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
             const extractedDir = pathlib.join(data.archiveFolder, blueprintExtractDir);
 
+            // eslint-disable-next-line
+            console.log('='.repeat(25));
+            // eslint-disable-next-line
+            console.log(extractedDir);
+
             return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => {
                 const archive: ScanningDir | null = scanArchive(extractedDir);
                 if (archive === null) return null;

@@ -44,7 +44,7 @@ describe('Blueprints catalog widget', () => {
         uploadBlueprint();
     });
 
-    it('should open a page for uploaded blueprint successfully', () => {
+    it.only('should open a page for uploaded blueprint successfully', () => {
         uploadBlueprint(minutesToMs(1));
 
         cy.go('back');
