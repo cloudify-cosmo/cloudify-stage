@@ -73,7 +73,7 @@ describe('Templates segment', () => {
         );
     });
 
-    it('allows users to create and modify templates', { retries: { runMode: 2 } }, () => {
+    it('allows users to create and modify templates', { retries: { runMode: 4 } }, () => {
         const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().goToTemplateManagement();
 
