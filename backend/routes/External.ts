@@ -31,7 +31,7 @@ function pipeRequest(
         requestUrl = url;
     }
 
-    requestAndForwardResponse(requestUrl, res, { params: queryString }).catch(err =>
+    requestAndForwardResponse(requestUrl, res, { params: queryString, maxRedirects: 0 }).catch(err =>
         res.status(500).send({ message: err.message })
     );
 }
