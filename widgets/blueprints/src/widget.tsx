@@ -107,8 +107,16 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Common.Blueprints.LabelFilter
+        },
+        {
+            id: 'customTextBox',
+            name: translateBlueprints('Custom Text Box'),
+            placeholder: 'Enter text',
+            default: '',
+            type: Stage.Basic.GenericField.TEXT_TYPE
         }
-    ],
+            
+     ],
 
     async fetchData(widget, toolbox, params) {
         const result: BlueprintsWidgetData = {
@@ -118,6 +126,8 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
         const filterRules = [...(widget.configuration.filterRules || [])];
         const SearchActions = Stage.Common.Actions.Search;
         const searchActions = new SearchActions(toolbox);
+        const customValue = widget.configuration.customTextBox;
+        
 
         if (widget.configuration.hideFailedBlueprints) {
             filterRules.push({
@@ -169,6 +179,8 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
         }
 
         const formattedData = processData(data, toolbox);
+        const customValue = widget.configuration.customTextBox;
+        
 
         return (
             <div>
