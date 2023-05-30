@@ -30,10 +30,9 @@ function pipeRequest(
     } else {
         requestUrl = url;
     }
-
-    requestAndForwardResponse(requestUrl, res, { params: queryString, maxRedirects: 0 }).catch(err =>
-        res.status(500).send({ message: err.message })
-    );
+    requestAndForwardResponse(requestUrl, res, {
+        params: queryString
+    }).catch(err => res.status(500).send({ message: err.message }));
 }
 
 router.get<never, any, any, GetExternalContentQueryParams>('/content', (req, res, next) => {

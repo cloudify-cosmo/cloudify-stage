@@ -7,7 +7,6 @@ jest.mock('handler/RequestHandler');
 describe('/external/content endpoint', () => {
     const absoluteUrl = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-stage/master/package.json';
     const relativeUrl = '/relative';
-    const commonAxiosOptions = { maxRedirects: 0, params: {} };
 
     beforeEach(() => jest.resetAllMocks());
 
@@ -16,11 +15,7 @@ describe('/external/content endpoint', () => {
             .get('/console/external/content')
             .query({ url: absoluteUrl })
             .then(() => {
-                expect(requestAndForwardResponse).toHaveBeenCalledWith(
-                    absoluteUrl,
-                    expect.anything(),
-                    commonAxiosOptions
-                );
+                expect(requestAndForwardResponse).toHaveBeenCalledWith(absoluteUrl, expect.anything(), { params: {} });
             }));
 
     it('handles relative URLs', () =>
@@ -31,7 +26,7 @@ describe('/external/content endpoint', () => {
                 expect(requestAndForwardResponse).toHaveBeenCalledWith(
                     expect.stringMatching(`http://127.0.0.1:\\d+${relativeUrl}`),
                     expect.anything(),
-                    commonAxiosOptions
+                    { params: {} }
                 );
             }));
 });
