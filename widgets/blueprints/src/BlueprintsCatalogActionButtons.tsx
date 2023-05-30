@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import type Manager from 'app/utils/Manager';
+import type { ManagerData } from 'app/reducers/managerReducer';
 import { translateBlueprints } from './widget.utils';
 import type { BlueprintsViewProps } from './types';
 
@@ -20,6 +21,7 @@ export interface BlueprintsCatalogActionButtonsProps {
     isBlueprintUploaded: boolean;
     widget: BlueprintsViewProps['widget'];
     manager: Manager;
+    managerData: ManagerData;
     onCreateDeployment: () => void;
     onDeleteBlueprint: () => void;
     onEditInComposer: () => void;
@@ -29,12 +31,18 @@ const BlueprintsCatalogActionButtons = ({
     isBlueprintUploaded,
     widget,
     manager,
+    managerData,
     onCreateDeployment,
     onDeleteBlueprint,
     onEditInComposer
 }: BlueprintsCatalogActionButtonsProps) => {
+    const { hasComposerPermission } = Stage.Utils;
+
     const showEditInComposerButton =
-        isBlueprintUploaded && !manager.isCommunityEdition() && widget.configuration.showComposerOptions;
+        isBlueprintUploaded &&
+        hasComposerPermission(managerData) &&
+        !manager.isCommunityEdition() &&
+        widget.configuration.showComposerOptions;
 
     return (
         <ActionButtonWrapper className="actionButtons">

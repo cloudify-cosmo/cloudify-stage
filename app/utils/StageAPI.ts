@@ -250,6 +250,7 @@ declare global {
             nodeInstanceId: any;
             executionStatus: any;
             siteName: any;
+            depNodeId: string | null;
         }
 
         const i18n: typeof import('i18next').default;

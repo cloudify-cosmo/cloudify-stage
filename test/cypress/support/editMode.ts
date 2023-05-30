@@ -20,17 +20,13 @@ const commands = {
         });
     },
     exitEditMode: () => cy.get('.editModeSidebar').contains('Exit').click(),
-    addWidget: (widgetId: string) => {
-        cy.enterEditMode();
-
+    addWidgets: (...widgetIds: string[]) => {
         cy.contains('Add Widget').click();
-        cy.waitUntilWidgetsDataLoaded();
-        cy.get(`*[data-id=${widgetId}]`).click();
+        cy.waitUntilWidgetsDataLoaded(20);
+        widgetIds.forEach(widgetId => cy.get(`[data-id=${widgetId}]`).click());
         cy.contains('Add selected widgets').click();
-
-        return cy.exitEditMode();
     },
-    addPage: (pageName: string) => {
+    addPage: (pageName: string, widgetId?: string) => {
         cy.enterEditMode();
 
         cy.contains('Add Page').click();
@@ -40,6 +36,7 @@ const commands = {
             cy.get('.pageTitle.input input').clear().type(pageName);
         });
         cy.contains('Add Widgets').click();
+        if (widgetId) cy.addWidgets(widgetId);
 
         return cy.exitEditMode();
     },

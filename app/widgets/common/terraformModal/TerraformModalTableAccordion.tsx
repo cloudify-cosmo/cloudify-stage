@@ -1,6 +1,6 @@
 import React from 'react';
 import type { DynamicTableProps, DynamicTableValue } from 'cloudify-ui-components';
-import AccordionSection from '../components/accordion/AccordionSection';
+import { AccordionSection } from 'cloudify-ui-components';
 
 import { DynamicTable } from '../../../components/shared';
 

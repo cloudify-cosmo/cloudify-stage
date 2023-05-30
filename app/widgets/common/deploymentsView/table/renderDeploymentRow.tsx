@@ -10,6 +10,13 @@ import { selectDeployment } from '../common';
 
 import { DataTable, Label } from '../../../../components/basic';
 import StageUtils from '../../../../utils/stageUtils';
+import { deploymentTypeFilterRule } from '../detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
+import type { FilterRule } from '../../filters/types';
+
+const translatePrefix = 'widgets.deploymentsView.drillDown';
+
+const translateCellTitle = StageUtils.getT(`${translatePrefix}.table.cells`);
+const translateBreadcrumb = StageUtils.getT(`${translatePrefix}.breadcrumbs`);
 
 const renderDeploymentRow =
     (
@@ -22,6 +29,40 @@ const renderDeploymentRow =
         const progressUnderline = getDeploymentProgressUnderline(deployment);
         const labelsDict = groupBy(deployment.labels, 'key');
 
+        const isSubServicesCountCell = (columnId: DeploymentsViewColumnId) =>
+            columnId === 'subservicesCount' && deployment.sub_services_count !== 0;
+        const isSubEnvironmentsCountCell = (columnId: DeploymentsViewColumnId) =>
+            columnId === 'subenvironmentsCount' && deployment.sub_environments_count !== 0;
+
+        const getCellTitle = (columnId: DeploymentsViewColumnId) => {
+            if (isSubServicesCountCell(columnId)) {
+                return translateCellTitle('services');
+            }
+            if (isSubEnvironmentsCountCell(columnId)) {
+                return translateCellTitle('environments');
+            }
+            return undefined;
+        };
+
+        const drillDown = (deploymentName: Deployment, filterRule: FilterRule, displaySuffix: string) => {
+            const drilldownPageName = `${deploymentName.id} [${displaySuffix}]`;
+            toolbox.drillDown(
+                toolbox.getWidget(),
+                'drilldownDeployments',
+                { filterRules: [filterRule] },
+                drilldownPageName
+            );
+        };
+
+        const handleCellClick = (columnId: DeploymentsViewColumnId) => {
+            if (isSubServicesCountCell(columnId)) {
+                drillDown(deployment, deploymentTypeFilterRule.services, translateBreadcrumb('services'));
+            }
+            if (isSubEnvironmentsCountCell(columnId)) {
+                drillDown(deployment, deploymentTypeFilterRule.environments, translateBreadcrumb('environments'));
+            }
+        };
+
         return [
             <DataTable.Row
                 key={deployment.id}
@@ -30,7 +71,13 @@ const renderDeploymentRow =
                 onClick={() => selectDeployment(toolbox, deployment.id)}
             >
                 {Object.entries(getDeploymentsViewColumnDefinitions()).map(([columnId, columnDefinition]) => (
-                    <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
+                    <DataTable.Data
+                        key={columnId}
+                        onClick={() => handleCellClick(columnId as DeploymentsViewColumnId)}
+                        title={getCellTitle(columnId as DeploymentsViewColumnId)}
+                    >
+                        {columnDefinition.render(deployment)}
+                    </DataTable.Data>
                 ))}
                 {keysOfLabelsToShow.map(labelKey => (
                     <DataTable.Data key={labelKey}>
