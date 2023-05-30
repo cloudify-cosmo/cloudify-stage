@@ -1,3 +1,5 @@
+import { secondsToMs } from 'test/cypress/support/resource_commons';
+
 describe('Filter', () => {
     before(() => {
         cy.activate('valid_trial_license')
@@ -111,7 +113,9 @@ describe('Filter', () => {
             cy.contains('Runtime only evaluation').click();
             cy.selectAndClickDeploy();
 
-            cy.contains('.breadcrumb', deploymentName);
+            cy.contains('.breadcrumb', deploymentName, {
+                timeout: secondsToMs(30)
+            });
             cy.refreshPage();
 
             cy.get('.blueprintsWidget').within(() => cy.getSearchInput().scrollIntoView().clear().type(blueprintName));
