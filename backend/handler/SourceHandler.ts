@@ -103,7 +103,7 @@ export function browseArchiveTree(req: Request, timestamp = Date.now().toString(
             // eslint-disable-next-line
             console.log(extractedDir);
 
-            return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => {
+            return ArchiveHelper.extractEntriesFromArchive(archivePath, extractedDir).then(() => {
                 const archive: ScanningDir | null = scanArchive(extractedDir);
                 if (archive === null) return null;
                 return {
@@ -184,7 +184,7 @@ function getBlueprintArchiveContent(request: RequestWithQuery<any>) {
                     if (isYamlFile(archiveFile)) {
                         return ArchiveHelper.storeSingleYamlFile(archivePath, archiveFile, extractedDir);
                     }
-                    return ArchiveHelper.decompressArchive(archivePath, extractedDir);
+                    return ArchiveHelper.extractEntriesFromArchive(archivePath, extractedDir);
                 }
             })
             .then(decompressData => ({

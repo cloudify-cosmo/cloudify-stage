@@ -37,11 +37,11 @@ export const getBufferFromUrl = async (url: string, authHeader?: string) => {
 };
 
 export const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
-    ArchiveHelper.decompressArchive(content)
+    ArchiveHelper.extractEntriesFromArchive(content)
         .then(entries =>
             _(entries)
-                .filter(entry => !entry.isDirectory && entry.entryName.endsWith('.tf'))
-                .map(file => path.dirname(file.entryName))
+                .filter(entry => entry.isFile && entry.name.endsWith('.tf'))
+                .map(file => path.dirname(file.name))
                 .uniq()
                 .sort()
                 .value()
@@ -226,10 +226,13 @@ export function checkIfFileBuffer(req: Request, res: Response, next: NextFunctio
 export async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
 
-    const entries = await ArchiveHelper.decompressArchive(zipBuffer);
-    return entries
-        .filter(entry => !entry.isDirectory && isTerraformFilePath(entry.entryName, resourceLocationTrimmed))
-        .map(file => file.getData());
+    const archive = ArchiveHelper.decompressArchive(zipBuffer);
+    const entries = await archive.entries();
+    const terraformEntries = Object.values(entries).filter(
+        entry => entry.isFile && isTerraformFilePath(entry.name, resourceLocationTrimmed)
+    );
+
+    return Promise.all(terraformEntries.map(entry => archive.entryData(entry)));
 }
 
 export function getTerraformJsonMergedFromFileBufferList(files: Buffer[]): TerraformParserResult {

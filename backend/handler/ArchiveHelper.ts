@@ -1,10 +1,10 @@
-import Zip from 'adm-zip';
-import type { IZipEntry } from 'adm-zip';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import multer from 'multer';
 import pathlib from 'path';
 import sanitize from 'sanitize-filename';
+import NodeZip from 'node-stream-zip';
+import type { ZipEntry, StreamZipAsync } from 'node-stream-zip';
 
 import type { AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
 import type { Request, Response } from 'express';
@@ -178,29 +178,30 @@ export function storeSingleYamlFile(archivePath: string, archiveFile: string, ta
     return {};
 }
 
-export function decompressArchive(archivePath: string | Buffer, targetDir?: string): Promise<IZipEntry[]> {
+export function decompressArchive(archivePath: string | Buffer, targetDir?: string): StreamZipAsync {
     logger.debug(
         'Extracting archive',
         typeof archivePath === 'string' ? pathlib.resolve(archivePath) : 'from buffer',
         targetDir
     );
 
-    return new Promise((resolve, reject) => {
-        const decompressedArchive = new Zip(archivePath);
-
-        if (targetDir) {
-            fs.ensureDirSync(targetDir);
-            return decompressedArchive.extractAllToAsync(targetDir, undefined, undefined, error => {
-                if (error) {
-                    reject(error);
-                }
-
-                resolve(decompressedArchive.getEntries());
-            });
-        }
-
-        return resolve(decompressedArchive.getEntries());
+    // eslint-disable-next-line
+    return new NodeZip.async({
+        // TODO Norbert: check if buffor is working
+        file: archivePath as string
     });
+}
+
+export async function extractEntriesFromArchive(archivePath: string | Buffer, targetDir?: string): Promise<ZipEntry[]> {
+    const decompressedArchive = decompressArchive(archivePath, targetDir);
+
+    if (targetDir) {
+        fs.ensureDirSync(targetDir);
+        await decompressedArchive.extract(null, targetDir);
+    }
+
+    const entriesObject = await decompressedArchive.entries();
+    return Object.values(entriesObject);
 }
 
 export function removeOldExtracts(tempDir: string) {

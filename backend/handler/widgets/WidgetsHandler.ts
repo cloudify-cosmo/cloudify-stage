@@ -276,7 +276,7 @@ export function restoreUserWidgetsSnapshot(req: Request) {
         const archivePath = pathlib.join(archiveFolder, archiveFile);
         const extractDirPath = pathlib.join(archiveFolder, 'extract');
 
-        return ArchiveHelper.decompressArchive(archivePath, extractDirPath).then(() => {
+        return ArchiveHelper.extractEntriesFromArchive(archivePath, extractDirPath).then(() => {
             const widgetIds = fs.readdirSync(pathlib.resolve(extractDirPath));
             return Promise.all(widgetIds.map(widgetId => validateUniqueness(widgetId))).then(() =>
                 Promise.all(
