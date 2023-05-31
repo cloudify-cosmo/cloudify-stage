@@ -86,15 +86,9 @@ export function login(
         return Auth.login(username, password)
             .then(({ role }) => {
                 dispatch(loginSuccess(username, role));
-                if (redirect) {
-                    // NOTE: Using react router for internal paths to keep logged in state
-                    if (redirect.startsWith(Consts.CONTEXT_PATH)) {
-                        const routePath = redirect.replace(Consts.CONTEXT_PATH, '');
-                        dispatch(push(routePath));
-                    } else {
-                        // eslint-disable-next-line xss/no-location-href-assign
-                        window.location.href = redirect;
-                    }
+                if (redirect && redirect.startsWith(Consts.CONTEXT_PATH)) {
+                    const routePath = redirect.replace(Consts.CONTEXT_PATH, '');
+                    dispatch(push(routePath));
                 } else {
                     dispatch(push(Consts.PAGE_PATH.HOME));
                 }
