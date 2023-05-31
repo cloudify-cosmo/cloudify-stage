@@ -787,7 +787,7 @@
                 }
             },
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/staging/dev",
+                "linksBasePath": "https://docs.cloudify.co/7.0.0",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
@@ -802,7 +802,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
+                "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/getting_started.json",
                 "linkParameterExample": "https://cloudify.co"
             },
             "noDataMessage": {
