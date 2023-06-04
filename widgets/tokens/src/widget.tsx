@@ -3,7 +3,7 @@ import TokensTable from './TokensTable';
 import type { TokensWidget } from './widget.types';
 import { translationPath } from './widget.consts';
 
-const t = Stage.Utils.getT(translationPath);
+const translate = Stage.Utils.getT(translationPath);
 
 const isTokenExpired = (token: TokensWidget.DataItem): boolean => {
     return moment(token.expiration_date).isBefore();
@@ -35,10 +35,10 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'showExpiredTokens',
-            name: t('configuration.showExpiredTokens.name'),
+            name: translate('configuration.showExpiredTokens.name'),
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             default: false,
-            description: t('configuration.showExpiredTokens.description')
+            description: translate('configuration.showExpiredTokens.description')
         }
     ],
 

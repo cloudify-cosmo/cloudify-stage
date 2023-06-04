@@ -8,7 +8,7 @@ const { Icon, Confirm: DeleteModal } = Stage.Basic;
 const { getT } = Stage.Utils;
 const { useBoolean } = Stage.Hooks;
 
-const t = getT(translationPath);
+const translate = getT(translationPath);
 
 interface RemoveTokenButtonProps {
     token: TokensWidget.DataItem;
@@ -20,7 +20,7 @@ const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
     const [deletingStatus, setDeletingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
     const deleteModalContent = useMemo(() => {
         const translationSuffix = token.description ? 'withDescription' : 'withoutDescription';
-        return t(`deleteModal.content.${translationSuffix}`, {
+        return translate(`deleteModal.content.${translationSuffix}`, {
             tokenId: token.id,
             tokenDescription: token.description
         });
@@ -49,7 +49,7 @@ const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
 
     return (
         <>
-            <Icon link name="trash" title={t('table.buttons.removeToken')} onClick={showModal} />
+            <Icon link name="trash" title={translate('table.buttons.removeToken')} onClick={showModal} />
             {isModalVisible && (
                 <DeleteModal open content={deleteModalContent} onCancel={hideModal} onConfirm={removeToken} />
             )}

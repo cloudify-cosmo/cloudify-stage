@@ -8,7 +8,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT(`${translationPath}.createModal.newToken`);
+const translate = getT(`${translationPath}.createModal.newToken`);
 
 export const ButtonsWrapper = styled.span`
     margin-left: 12px;
@@ -31,7 +31,7 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
     return (
         <>
             <Message success>
-                {t('content', {
+                {translate('content', {
                     token: displayedToken
                 })}
                 <ButtonsWrapper>
@@ -44,7 +44,7 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
                     <CopyToClipboardButton text={token.value} />
                 </ButtonsWrapper>
             </Message>
-            <Message warning>{t('warning')}</Message>
+            <Message warning>{translate('warning')}</Message>
         </>
     );
 };

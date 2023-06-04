@@ -10,7 +10,7 @@ const { TextEllipsis } = Stage.Shared;
 
 const { Time, getT } = Stage.Utils;
 
-const t = getT(`${translationPath}.table`);
+const translate = getT(`${translationPath}.table`);
 
 interface TokensTableProps {
     configuration: TokensWidget.Configuration;
@@ -40,21 +40,21 @@ const TokensTable = ({ configuration, data, toolbox }: TokensTableProps) => {
             <TokensTableHeader toolbox={toolbox} />
             <DataTable
                 fetchData={fetchTableData}
-                noDataMessage={t('noTokens')}
+                noDataMessage={translate('noTokens')}
                 totalSize={totalSize}
                 pageSize={pageSize}
                 sortColumn={sortColumn}
                 sortAscending={sortAscending}
             >
-                <DataTable.Column label={t('columns.token')} name={dataSortingKeys.value} />
-                <DataTable.Column label={t('columns.description')} name={dataSortingKeys.description} />
-                {shouldDisplayUsers && <DataTable.Column label={t('columns.username')} />}
+                <DataTable.Column label={translate('columns.token')} name={dataSortingKeys.value} />
+                <DataTable.Column label={translate('columns.description')} name={dataSortingKeys.description} />
+                {shouldDisplayUsers && <DataTable.Column label={translate('columns.username')} />}
                 <DataTable.Column
-                    label={t('columns.expirationDate')}
+                    label={translate('columns.expirationDate')}
                     name={dataSortingKeys.expirationDate}
                     width="156px"
                 />
-                <DataTable.Column label={t('columns.lastUsed')} name={dataSortingKeys.lastUsed} width="156px" />
+                <DataTable.Column label={translate('columns.lastUsed')} name={dataSortingKeys.lastUsed} width="156px" />
                 <DataTable.Column label="" width="48px" />
                 {data?.items?.map(dataItem => (
                     <DataTable.Row key={dataItem.id}>

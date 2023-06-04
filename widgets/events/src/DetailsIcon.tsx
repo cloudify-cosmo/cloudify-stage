@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 
-const t = Stage.Utils.getT('widgets.events');
+const translate = Stage.Utils.getT('widgets.events');
 
 interface DetailsIconProps {
     onClick: () => void;
@@ -24,7 +24,7 @@ const DetailsIcon: FunctionComponent<DetailsIconProps> = ({ onClick }) => {
                     <Icon corner name="zoom" />
                 </Icon.Group>
             </Popup.Trigger>
-            <Popup.Content>{t('detailsIcon')}</Popup.Content>
+            <Popup.Content>{translate('detailsIcon')}</Popup.Content>
         </Popup>
     );
 };

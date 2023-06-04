@@ -8,7 +8,7 @@ import ExternalBlueprintImage from './ExternalBlueprintImage';
 import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataTable, Icon } = Stage.Basic;
-const t = Utils.getWidgetTranslation();
+const translate = Utils.getWidgetTranslation();
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
@@ -37,24 +37,24 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             noDataMessage={noDataMessage}
         >
             <DataTable.Column
-                label={t('configuration.fieldsToShow.items.name')}
+                label={translate('configuration.fieldsToShow.items.name')}
                 width="25%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.name'))}
+                show={fieldsToShow.includes(translate('configuration.fieldsToShow.items.name'))}
             />
             <DataTable.Column
-                label={t('configuration.fieldsToShow.items.description')}
+                label={translate('configuration.fieldsToShow.items.description')}
                 width="40%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.description'))}
+                show={fieldsToShow.includes(translate('configuration.fieldsToShow.items.description'))}
             />
             <DataTable.Column
-                label={t('configuration.fieldsToShow.items.created')}
+                label={translate('configuration.fieldsToShow.items.created')}
                 width="12%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.created'))}
+                show={fieldsToShow.includes(translate('configuration.fieldsToShow.items.created'))}
             />
             <DataTable.Column
-                label={t('configuration.fieldsToShow.items.updated')}
+                label={translate('configuration.fieldsToShow.items.updated')}
                 width="12%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'))}
+                show={fieldsToShow.includes(translate('configuration.fieldsToShow.items.updated'))}
             />
             <DataTable.Column width="11%" />
 
@@ -95,7 +95,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}
-                                title={t('actions.openDocumentation')}
+                                title={translate('actions.openDocumentation')}
                                 loading={isReadmeLoading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
@@ -106,7 +106,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 <Icon
                                     link={!isBlueprintUploaded}
                                     name="arrow right"
-                                    title={t('actions.openBlueprint')}
+                                    title={translate('actions.openBlueprint')}
                                     onClick={() => {
                                         onOpenBlueprintPage(name);
                                     }}
@@ -115,7 +115,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 <Icon
                                     name="upload"
                                     link={!isBlueprintUploaded}
-                                    title={t('actions.uploadBlueprint')}
+                                    title={translate('actions.uploadBlueprint')}
                                     onClick={() => {
                                         onUpload(name, zip_url, image_url, main_blueprint);
                                     }}

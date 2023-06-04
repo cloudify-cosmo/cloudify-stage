@@ -11,7 +11,7 @@ const { useInput, useErrors } = Stage.Hooks;
 const { getT } = Stage.Utils;
 const { Modal, Icon, CancelButton, ApproveButton, DateInput, Input, Form, LoadingOverlay, Message } = Stage.Basic;
 
-const t = getT(`${translationPath}.createModal`);
+const translate = getT(`${translationPath}.createModal`);
 const expirationDateFormat = 'YYYY-MM-DD HH:mm';
 
 function formatRequestExpirationDate(expirationDate: string) {
@@ -50,12 +50,12 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
             const expirationDateInPast = expirationDateMoment.isBefore(moment());
 
             if (expirationDateHasInvalidFormat) {
-                setErrors({ expirationDate: t('errors.expirationDateInvalidFormat') });
+                setErrors({ expirationDate: translate('errors.expirationDateInvalidFormat') });
                 return;
             }
 
             if (expirationDateInPast) {
-                setErrors({ expirationDate: t('errors.expirationDateInPast') });
+                setErrors({ expirationDate: translate('errors.expirationDateInPast') });
                 return;
             }
         }
@@ -81,17 +81,22 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
         <Modal open onClose={onClose}>
             <Modal.Header>
                 <Icon name="add" />
-                {t('header')}
+                {translate('header')}
             </Modal.Header>
             <Modal.Content>
-                {submittingStatus === RequestStatus.ERROR && <Message error content={t('errors.createError')} />}
+                {submittingStatus === RequestStatus.ERROR && (
+                    <Message error content={translate('errors.createError')} />
+                )}
                 {showCreateForm ? (
                     <Form>
-                        <Form.Field label={t('inputs.description')}>
+                        <Form.Field label={translate('inputs.description')}>
                             <Input value={description} onChange={setDescription} name="description" />
                         </Form.Field>
 
-                        <Form.Field label={t('inputs.expirationDate')} error={getContextError('expirationDate')}>
+                        <Form.Field
+                            label={translate('inputs.expirationDate')}
+                            error={getContextError('expirationDate')}
+                        >
                             <DateInput
                                 name="expirationDate"
                                 value={expirationDate}
@@ -109,11 +114,11 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
             <Modal.Actions>
                 {showCreateForm ? (
                     <>
-                        <CancelButton content={t('buttons.cancel')} onClick={onClose} />
-                        <ApproveButton content={t('buttons.create')} icon="plus" onClick={handleSubmit} />
+                        <CancelButton content={translate('buttons.cancel')} onClick={onClose} />
+                        <ApproveButton content={translate('buttons.create')} icon="plus" onClick={handleSubmit} />
                     </>
                 ) : (
-                    <CancelButton content={t('buttons.close')} onClick={onClose} />
+                    <CancelButton content={translate('buttons.close')} onClick={onClose} />
                 )}
             </Modal.Actions>
         </Modal>

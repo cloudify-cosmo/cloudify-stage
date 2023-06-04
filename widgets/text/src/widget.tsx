@@ -1,6 +1,6 @@
 export {};
 
-const t = Stage.Utils.getT('widgets.text');
+const translate = Stage.Utils.getT('widgets.text');
 
 type Configuration = {
     header: string;
@@ -28,29 +28,29 @@ Stage.defineWidget<never, never, Configuration>({
     initialConfiguration: [
         {
             id: 'header',
-            name: t('configuration.header.name'),
-            default: t('configuration.header.default'),
+            name: translate('configuration.header.name'),
+            default: translate('configuration.header.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'content',
-            name: t('configuration.content.name'),
-            description: t('configuration.description.name'),
-            default: t('configuration.content.default'),
+            name: translate('configuration.content.name'),
+            description: translate('configuration.description.name'),
+            default: translate('configuration.content.default'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             // @ts-ignore TODO(RD-6138): Fix once proper typing is added to `StageCustomConfigurationComponentProps` and `GenericField`
             component: Stage.Basic.Form.TextArea
         },
         {
             id: 'headerTextColor',
-            name: t('configuration.headerTextColor.name'),
+            name: translate('configuration.headerTextColor.name'),
             default: '#000000',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.ColorPicker
         },
         {
             id: 'headerTextSize',
-            name: t('configuration.headerTextSize.name'),
+            name: translate('configuration.headerTextSize.name'),
             default: 20,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
@@ -58,7 +58,7 @@ Stage.defineWidget<never, never, Configuration>({
         },
         {
             id: 'headerTextFont',
-            name: t('configuration.headerTextFont.name'),
+            name: translate('configuration.headerTextFont.name'),
             default: textFonts[0].value,
             items: textFonts,
             type: Stage.Basic.GenericField.LIST_TYPE
@@ -66,14 +66,14 @@ Stage.defineWidget<never, never, Configuration>({
 
         {
             id: 'contentTextColor',
-            name: t('configuration.contentTextColor.name'),
+            name: translate('configuration.contentTextColor.name'),
             default: '#000000',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.ColorPicker
         },
         {
             id: 'contentTextSize',
-            name: t('configuration.contentTextSize.name'),
+            name: translate('configuration.contentTextSize.name'),
             default: 14,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
@@ -81,7 +81,7 @@ Stage.defineWidget<never, never, Configuration>({
         },
         {
             id: 'contentTextFont',
-            name: t('configuration.contentTextFont.name'),
+            name: translate('configuration.contentTextFont.name'),
             default: textFonts[0].value,
             items: textFonts,
             type: Stage.Basic.GenericField.LIST_TYPE
