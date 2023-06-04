@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import TokensTable from './TokensTable';
 import type { TokensWidget } from './widget.types';
-import { translationPath } from './widget.consts';
-
-const translate = Stage.Utils.getT(translationPath);
+import { widgetId } from './widget.consts';
+import { translateWidget } from './widget.utils';
 
 const isTokenExpired = (token: TokensWidget.DataItem): boolean => {
     return moment(token.expiration_date).isBefore();
@@ -23,22 +22,22 @@ const mapFetchedData = (data: TokensWidget.Data, showExpiredTokens: boolean): To
 };
 
 Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
-    id: 'tokens',
+    id: widgetId,
     initialWidth: 12,
     initialHeight: 16,
     hasReadme: true,
     fetchUrl: '[manager]/tokens[params]',
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('tokens'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'showExpiredTokens',
-            name: translate('configuration.showExpiredTokens.name'),
+            name: translateWidget('configuration.showExpiredTokens.name'),
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             default: false,
-            description: translate('configuration.showExpiredTokens.description')
+            description: translateWidget('configuration.showExpiredTokens.description')
         }
     ],
 

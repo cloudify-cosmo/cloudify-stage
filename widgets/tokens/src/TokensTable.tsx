@@ -3,14 +3,14 @@ import type { TokensWidget } from './widget.types';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
 import { tableRefreshEvent, dataSortingKeys } from './TokensTable.consts';
-import { translationPath } from './widget.consts';
+import { translateWidget } from './widget.utils';
 
 const { DataTable } = Stage.Basic;
 const { TextEllipsis } = Stage.Shared;
 
-const { Time, getT } = Stage.Utils;
+const { Time, composeT } = Stage.Utils;
 
-const translate = getT(`${translationPath}.table`);
+const translate = composeT(translateWidget, 'table');
 
 interface TokensTableProps {
     configuration: TokensWidget.Configuration;

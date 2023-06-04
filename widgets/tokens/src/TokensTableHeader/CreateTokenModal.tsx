@@ -1,17 +1,17 @@
 import { isEqual } from 'lodash';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
-import { translationPath } from '../widget.consts';
+import { translateWidget } from '../widget.utils';
 import { tableRefreshEvent } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
 import type { ReceivedToken, TokensPostRequestBody } from './CreateTokenModal.types';
 
 const { useInput, useErrors } = Stage.Hooks;
-const { getT } = Stage.Utils;
+const { composeT } = Stage.Utils;
 const { Modal, Icon, CancelButton, ApproveButton, DateInput, Input, Form, LoadingOverlay, Message } = Stage.Basic;
 
-const translate = getT(`${translationPath}.createModal`);
+const translate = composeT(translateWidget, 'createModal');
 const expirationDateFormat = 'YYYY-MM-DD HH:mm';
 
 function formatRequestExpirationDate(expirationDate: string) {

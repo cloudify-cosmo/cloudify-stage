@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import type { ReceivedToken } from './CreateTokenModal.types';
-import { translationPath } from '../widget.consts';
+import { translateWidget } from '../widget.utils';
 
 const {
     Basic: { Message, Button, CopyToClipboardButton },
-    Utils: { getT },
+    Utils: { composeT },
     Hooks: { useBoolean }
 } = Stage;
 
-const translate = getT(`${translationPath}.createModal.newToken`);
+const translate = composeT(translateWidget, 'createModal.newToken');
 
 export const ButtonsWrapper = styled.span`
     margin-left: 12px;
