@@ -2,7 +2,7 @@ import React from 'react';
 import { Checkbox, Message } from '../../../../basic';
 import StageUtils from '../../../../../utils/stageUtils';
 
-const t = StageUtils.getT('gettingStartedModal.secrets');
+const translate = StageUtils.getT('gettingStartedModal.secrets');
 
 type SecretsExistMessageProps = {
     overrideSecrets: boolean;
@@ -13,9 +13,9 @@ const SecretsExistMessage = ({ overrideSecrets, setOverrideSecrets }: SecretsExi
     return (
         <Message warning>
             <Message.Content>
-                <Message.Header>{t('secretsAlreadyExist')}</Message.Header>
+                <Message.Header>{translate('secretsAlreadyExist')}</Message.Header>
                 <Checkbox
-                    label={t('overrideSecrets')}
+                    label={translate('overrideSecrets')}
                     style={{ marginTop: 15 }}
                     checked={overrideSecrets}
                     onChange={() => setOverrideSecrets(!overrideSecrets)}

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Icon, List, Message } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 
-const t = StageUtils.getT('templates');
+const translate = StageUtils.getT('templates');
 
 interface SelectionListProps {
     items: string[];
@@ -31,13 +31,13 @@ const SelectionList: FunctionComponent<SelectionListProps> = ({
                             name="add"
                             className="right floated"
                             onClick={() => onItemSelected(item)}
-                            title={t(addIconTitleI18nKey)}
+                            title={translate(addIconTitleI18nKey)}
                         />
                     </List.Item>
                 );
             })}
 
-            {_.isEmpty(items) && <Message content={t(noDataMessageI18nKey)} />}
+            {_.isEmpty(items) && <Message content={translate(noDataMessageI18nKey)} />}
         </List>
     );
 };

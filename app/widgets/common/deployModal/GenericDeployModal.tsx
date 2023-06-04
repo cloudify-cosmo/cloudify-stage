@@ -38,7 +38,7 @@ import EnvironmentDropdown from './EnvironmentDropdown';
 import BlueprintDropdown from './BlueprintDropdown';
 import type { FullDeploymentData } from '../deployments/DeploymentActions';
 
-const t = StageUtils.getT('widgets.common.deployments.deployModal');
+const translate = StageUtils.getT('widgets.common.deployments.deployModal');
 
 type Blueprint = {
     description?: string;
@@ -345,7 +345,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 this.setState({ errors: {}, deploymentInputs, fileLoading: false });
             })
             .catch((err: string | { message: string }) => {
-                const errorMessage = t('errors.loadingYamlFileFailed', {
+                const errorMessage = translate('errors.loadingYamlFileFailed', {
                     reason: typeof err === 'string' ? err : err.message
                 });
                 this.setState({ errors: { yamlFile: errorMessage }, fileLoading: false });
@@ -587,7 +587,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     selectBlueprint(id: DropdownValue) {
         if (!isEmpty(id) && typeof id === 'string') {
-            this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
+            this.setState({ loading: true, loadingMessage: translate('inputs.deploymentInputs.loading') });
             const { toolbox, environmentToDeployOn } = this.props;
 
             const actions = new BlueprintActions(toolbox);
@@ -639,19 +639,19 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             const errors: Errors = {};
 
             if (showDeploymentNameInput && isEmpty(deploymentName)) {
-                errors.deploymentName = t('errors.noDeploymentName');
+                errors.deploymentName = translate('errors.noDeploymentName');
             }
 
             if (showDeploymentIdInput && isEmpty(deploymentId)) {
-                errors.deploymentId = t('errors.noDeploymentId');
+                errors.deploymentId = translate('errors.noDeploymentId');
             }
 
             if (showDeployOnDropdown && isEmpty(deploymentIdToDeployOn)) {
-                errors.deploymentIdToDeployOn = t('errors.noDeploymentIdToDeployOn');
+                errors.deploymentIdToDeployOn = translate('errors.noDeploymentIdToDeployOn');
             }
 
             if (isEmpty(blueprint.id)) {
-                errors.blueprintName = t('errors.noBlueprintName');
+                errors.blueprintName = translate('errors.noBlueprintName');
             }
 
             const inputsWithoutValue = getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
@@ -734,7 +734,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 errors
                             )
                         }
-                        errorMessageHeader={areSecretsMissing ? t('errors.missingSecretsHeading') : undefined}
+                        errorMessageHeader={areSecretsMissing ? translate('errors.missingSecretsHeading') : undefined}
                         scrollToError
                         onErrorsDismiss={this.onErrorsDismiss}
                     >
@@ -743,9 +743,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         {this.isBlueprintSelectable() && (
                             <Form.Field
                                 error={errors.blueprintName}
-                                label={t('inputs.blueprintName.label')}
+                                label={translate('inputs.blueprintName.label')}
                                 required
-                                help={t('inputs.blueprintName.help')}
+                                help={translate('inputs.blueprintName.help')}
                             >
                                 <BlueprintDropdown
                                     value={blueprint.id}
@@ -761,9 +761,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         {showDeploymentNameInput && (
                             <Form.Field
                                 error={errors.deploymentName}
-                                label={deploymentNameLabel ?? t('inputs.deploymentName.label')}
+                                label={deploymentNameLabel ?? translate('inputs.deploymentName.label')}
                                 required
-                                help={deploymentNameHelp ?? t('inputs.deploymentName.help')}
+                                help={deploymentNameHelp ?? translate('inputs.deploymentName.help')}
                             >
                                 <Form.Input
                                     name="deploymentName"
@@ -778,13 +778,13 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         {showDeployOnDropdown && (
                             <Form.Field
                                 error={errors.deploymentIdToDeployOn}
-                                label={t('inputs.deploymentIdToDeployOn.label')}
+                                label={translate('inputs.deploymentIdToDeployOn.label')}
                                 required
                             >
                                 <EnvironmentDropdown
                                     value={deploymentIdToDeployOn}
                                     name="deploymentIdToDeployOn"
-                                    placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
+                                    placeholder={translate('inputs.deploymentIdToDeployOn.placeholder')}
                                     onChange={value => this.setState({ deploymentIdToDeployOn: value as string })}
                                     toolbox={toolbox}
                                     capabilitiesToMatch={
@@ -797,7 +797,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         <Accordion fluid>
                             <AccordionSection
                                 divider
-                                title={t('sections.deploymentInputs')}
+                                title={translate('sections.deploymentInputs')}
                                 index={DEPLOYMENT_SECTIONS.deploymentInputs}
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
@@ -814,7 +814,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             </AccordionSection>
                             <AccordionSection
                                 divider
-                                title={t('sections.deploymentMetadata')}
+                                title={translate('sections.deploymentMetadata')}
                                 index={DEPLOYMENT_SECTIONS.deploymentMetadata}
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
@@ -822,8 +822,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 {showSitesInput && (
                                     <Form.Field
                                         error={errors.siteName}
-                                        label={t('inputs.siteName.label')}
-                                        help={t('inputs.siteName.help')}
+                                        label={translate('inputs.siteName.label')}
+                                        help={translate('inputs.siteName.help')}
                                     >
                                         <DynamicDropdown
                                             value={siteName}
@@ -851,7 +851,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             </AccordionSection>
                             <AccordionSection
                                 divider
-                                title={t('sections.executionParameters')}
+                                title={translate('sections.executionParameters')}
                                 index={DEPLOYMENT_SECTIONS.executionParameters}
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
@@ -859,7 +859,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 <Form.Field className="skipPluginsValidationCheckbox">
                                     <Form.Checkbox
                                         toggle
-                                        label={t('inputs.skipPluginsValidation.label')}
+                                        label={translate('inputs.skipPluginsValidation.label')}
                                         name="skipPluginsValidation"
                                         checked={skipPluginsValidation}
                                         onChange={(_, { checked }) =>
@@ -871,7 +871,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             </AccordionSection>
                             <AccordionSection
                                 divider
-                                title={t('sections.advanced')}
+                                title={translate('sections.advanced')}
                                 index={DEPLOYMENT_SECTIONS.advanced}
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
@@ -879,9 +879,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 {showDeploymentIdInput && (
                                     <Form.Field
                                         error={errors.deploymentId}
-                                        label={t('inputs.deploymentId.label')}
+                                        label={translate('inputs.deploymentId.label')}
                                         required
-                                        help={t('inputs.deploymentId.help')}
+                                        help={translate('inputs.deploymentId.help')}
                                     >
                                         <Form.Input
                                             name="deploymentId"
@@ -894,13 +894,13 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     </Form.Field>
                                 )}
                                 {skipPluginsValidation && (
-                                    <Message>{t('inputs.skipPluginsValidation.message')}</Message>
+                                    <Message>{translate('inputs.skipPluginsValidation.message')}</Message>
                                 )}
 
-                                <Form.Field help={t('inputs.runtimeOnlyEvaluation.help')}>
+                                <Form.Field help={translate('inputs.runtimeOnlyEvaluation.help')}>
                                     <Form.Checkbox
                                         toggle
-                                        label={t('inputs.runtimeOnlyEvaluation.label')}
+                                        label={translate('inputs.runtimeOnlyEvaluation.label')}
                                         name="runtimeOnlyEvaluation"
                                         checked={runtimeOnlyEvaluation}
                                         onChange={(_, { checked }) =>
@@ -913,7 +913,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             {selectedApproveButton === ApproveButtons.install && (
                                 <AccordionSection
                                     divider
-                                    title={t('sections.install')}
+                                    title={translate('sections.install')}
                                     index={DEPLOYMENT_SECTIONS.install}
                                     activeSection={activeSection}
                                     onClick={this.onAccordionClick}
