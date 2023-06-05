@@ -3,27 +3,15 @@ import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import styled from 'styled-components';
+import type { ScanningItem } from 'backend/handler/SourceHandler.types';
+import type { WidgetData } from 'app/utils/StageAPI';
 import Actions from './actions';
+import type { BlueprintSourcesData } from './widget';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
 
 type FileType = ComponentProps<typeof HighlightText>['language'];
-
-interface NodeTreeItem {
-    children?: NodeTreeItem[];
-    key: string;
-    title: string;
-    isDir: boolean;
-}
-
-interface BlueprintTree {
-    children: NodeTreeItem[];
-    key: string;
-    title: string;
-    isDir: boolean;
-    timestamp: number;
-}
 
 const StyledHighlightText = styled(HighlightText)`
     margin-top: 2rem;
@@ -107,13 +95,7 @@ const RightPane = ({
 };
 
 interface BlueprintSourcesProps {
-    data: {
-        blueprintId: string;
-        blueprintTree: BlueprintTree;
-        importedBlueprintIds: string[];
-        importedBlueprintTrees: BlueprintTree[];
-        yamlFileName: string;
-    };
+    data: NonNullable<WidgetData<BlueprintSourcesData>>;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
@@ -186,10 +168,10 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             .finally(() => toolbox.loading(false));
     };
 
-    const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
+    const loop = (blueprintId: string, timestamp: string, items: ScanningItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
-            if (item.children) {
+            if (item.isDir) {
                 return (
                     <NodesTree.Node
                         key={key}
@@ -204,7 +186,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     </NodesTree.Node>
                 );
             }
-            const blueprintRootDirectory = data.blueprintTree.children[0].key;
+            const blueprintRootDirectory = data.blueprintTree!.children[0].key;
             const mainYamlFilePath = `${blueprintRootDirectory}/${data.yamlFileName}`;
             const label =
                 mainYamlFilePath === item.key ? (
@@ -250,7 +232,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     </Label>
                                 }
                             >
-                                {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
+                                {loop(data.blueprintId, data.blueprintTree!.timestamp, data.blueprintTree!.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
                                 <NodesTree.Node
@@ -275,7 +257,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                                 </Label>
                                             }
                                         >
-                                            {loop(data.importedBlueprintIds[index], tree.timestamp, tree.children)}
+                                            {loop(data.importedBlueprintIds[index], tree!.timestamp, tree!.children)}
                                         </NodesTree.Node>
                                     ))}
                                 </NodesTree.Node>

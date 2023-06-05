@@ -305,46 +305,6 @@ a:hover {
     max-height: none;
 }
 
-.loginContainer {
-    margin: auto;
-    width: 350px;
-    height: 170px;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-
-    input,
-    input:placeholder-shown {
-        margin: 0 50px !important;
-        color: $white !important;
-        background: rgba(255, 255, 255, 0.3) !important;
-    }
-
-    input:focus,
-    input:placeholder-shown:focus {
-        background: rgba(255, 255, 255, 0.6) !important;
-    }
-
-    input::placeholder {
-        color: $white !important;
-        opacity: 1 !important; /* Firefox */
-    }
-
-    button {
-        display: block !important;
-        margin: 30px auto !important;
-        min-width: 50% !important;
-        border-radius: 25px !important;
-        color: $white !important;
-    }
-}
-
-.loginContainerExtended {
-    height: 400px;
-}
-
 .manager {
     .icon.statusIcon {
         line-height: 18px;

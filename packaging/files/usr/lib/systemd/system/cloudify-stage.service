@@ -1,5 +1,5 @@
 [Unit]
-Description=Cloudify Console Service
+Description=Fusion Console Service
 Wants=network-online.target
 After=network-online.target
 

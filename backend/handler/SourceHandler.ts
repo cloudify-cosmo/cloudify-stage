@@ -14,7 +14,7 @@ import { isYamlFile } from '../sharedUtils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
-import type { ScanningItem } from './SourceHandler.types';
+import type { ScanningItem, ScanningFile, ScanningDir } from './SourceHandler.types';
 
 const logger = getLogger('SourceHandler');
 
@@ -45,14 +45,15 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
         return null;
     }
 
-    const item: ScanningItem = {
-        key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
-        title: name,
-        isDir: false
-    };
+    const itemKey = toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath));
 
     if (stats.isFile()) {
-        return item;
+        const scannedFile: ScanningFile = {
+            key: itemKey,
+            title: name,
+            isDir: false
+        };
+        return scannedFile;
     }
     if (stats.isDirectory()) {
         const scannedDir = scannedFileOrDirPath;
@@ -62,10 +63,12 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
                 .map(child => scanRecursive(rootDir, pathlib.join(scannedDir, child)))
                 .filter(e => !!e) as ScanningItem[];
 
-            item.isDir = true;
-            item.children = _.sortBy(children, i => !i.isDir);
-
-            return item;
+            return {
+                key: itemKey,
+                title: name,
+                isDir: true,
+                children: _.sortBy(children, i => !i.isDir)
+            };
         } catch (error: any) {
             if (error.code === 'EACCES') {
                 logger.debug('cannot access directory, ignoring');
@@ -79,7 +82,8 @@ function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
 
 function scanArchive(archivePath: string) {
     logger.debug('scaning archive', archivePath);
-    return scanRecursive(archivePath, archivePath);
+    const rootDir = scanRecursive(archivePath, archivePath) as ScanningDir | null;
+    return rootDir;
 }
 
 export function browseArchiveTree(req: Request, timestamp = Date.now().toString()) {
@@ -94,10 +98,14 @@ export function browseArchiveTree(req: Request, timestamp = Date.now().toString(
             const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
             const extractedDir = pathlib.join(data.archiveFolder, blueprintExtractDir);
 
-            return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => ({
-                ...scanArchive(extractedDir),
-                timestamp
-            }));
+            return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => {
+                const archive: ScanningDir | null = scanArchive(extractedDir);
+                if (archive === null) return null;
+                return {
+                    ...archive,
+                    timestamp
+                };
+            });
         });
 }
 

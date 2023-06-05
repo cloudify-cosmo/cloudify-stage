@@ -14,7 +14,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/getting_started.json"
                             }
                         }
                     ]
@@ -28,7 +28,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/aws_services.json"
                             }
                         }
                     ],
@@ -43,7 +43,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/azure_services.json"
                             }
                         }
                     ]
@@ -57,7 +57,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/gcp_services.json"
                             }
                         }
                     ]
@@ -71,7 +71,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/terraform_services.json"
                             }
                         }
                     ]
@@ -85,7 +85,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/helm_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/helm_services.json"
                             }
                         }
                     ]
@@ -99,7 +99,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/k8s_services.json"
                             }
                         }
                     ]
@@ -113,7 +113,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/K8S_Discovery.json"
                             }
                         }
                     ]
@@ -127,7 +127,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/docker_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/docker_services.json"
                             }
                         }
                     ]
@@ -141,7 +141,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/ansible_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/ansible_services.json"
                             }
                         }
                     ]
@@ -155,7 +155,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vmware_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/vmware_services.json"
                             }
                         }
                     ]
@@ -169,7 +169,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/certified_environments.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/certified_environments.json"
                             }
                         }
                     ]
@@ -183,7 +183,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other_services.json"
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/7.0/other_services.json"
                             }
                         }
                     ]

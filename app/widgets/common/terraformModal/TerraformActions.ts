@@ -8,7 +8,8 @@ import type {
     PostTerraformResourcesFileResponse,
     PostTerraformResourcesQueryParams,
     PostTerraformResourcesResponse
-} from 'backend/routes/Terraform.types';
+} from 'backend/routes/blueprints/Terraform.types';
+import type { Credentials } from 'cloudify-ui-components';
 
 export default class TerraformActions {
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
@@ -30,8 +31,8 @@ export default class TerraformActions {
             });
     }
 
-    doGetTemplateModulesByUrl(templateUrl: string, username?: string, password?: string) {
-        const headers = username ? { Authorization: `Basic ${btoa(`${username}:${password}`)}` } : undefined;
+    doGetTemplateModulesByUrl(templateUrl: string, credentials: Credentials) {
+        const headers = credentials.getAuthorizationHeader();
         return this.toolbox
             .getInternal()
             .doPost<PostTerraformResourcesResponse, never, PostTerraformResourcesQueryParams>('/terraform/resources', {
@@ -50,8 +51,8 @@ export default class TerraformActions {
         });
     }
 
-    doGetOutputsAndVariablesByURL(templateUrl: string, resourceLocation: string, username?: string, password?: string) {
-        const headers = username ? { Authorization: `Basic ${btoa(`${username}:${password}`)}` } : undefined;
+    doGetOutputsAndVariablesByURL(templateUrl: string, resourceLocation: string, credentials: Credentials) {
+        const headers = credentials.getAuthorizationHeader();
 
         return this.toolbox
             .getInternal()

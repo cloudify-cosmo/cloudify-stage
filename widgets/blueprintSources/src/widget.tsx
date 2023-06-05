@@ -1,10 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { GetSourceBrowseBlueprintArchiveResponse } from 'backend/routes/SourceBrowser.types';
 import Actions from './actions';
 import BlueprintSources from './BlueprintSources';
 import './widget.css';
 
-Stage.defineWidget({
+type BlueprintSourcesParams = {
+    blueprintId: string;
+    deploymentId: string;
+};
+
+type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
+
+export type BlueprintSourcesData = {
+    blueprintId: string;
+    blueprintTree: BlueprintTree;
+    importedBlueprintIds: string[];
+    importedBlueprintTrees?: BlueprintTree[];
+    yamlFileName: string;
+};
+
+type BlueprintSourcesConfiguration = {
+    contentPaneWidth: number;
+};
+
+Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSourcesConfiguration>({
     id: 'blueprintSources',
     name: 'Blueprint Sources',
     description: 'Shows blueprint files',
@@ -23,21 +41,21 @@ Stage.defineWidget({
         }
     ],
 
-    fetchParams(widget, toolbox) {
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+    fetchParams(_widget, toolbox) {
+        const blueprintId = toolbox.getContext().getValue('blueprintId') ?? '';
 
-        return {
-            blueprint_id: blueprintId,
-            deployment_id: deploymentId
-        };
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentIds = toolbox.getContext().getValue('deploymentId');
+        const deploymentId: string = Array.isArray(deploymentIds) ? deploymentIds[0] : deploymentIds ?? '';
+
+        return { blueprintId, deploymentId };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
-        const paramBlueprintId = params.blueprint_id;
-        const paramDeploymentId = params.deployment_id;
+        const paramBlueprintId = params.blueprintId;
+        const paramDeploymentId = params.deploymentId;
 
         let promise = Promise.resolve({ blueprint_id: paramBlueprintId });
         if (!paramBlueprintId && paramDeploymentId) {
@@ -70,8 +88,8 @@ Stage.defineWidget({
                     );
             }
             return {
-                blueprintTree: {},
-                importedBlueprintsTrees: [],
+                blueprintTree: null,
+                importedBlueprintTrees: [],
                 blueprintId: '',
                 importedBlueprintIds: [],
                 yamlFileName: ''
@@ -79,10 +97,10 @@ Stage.defineWidget({
         });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
