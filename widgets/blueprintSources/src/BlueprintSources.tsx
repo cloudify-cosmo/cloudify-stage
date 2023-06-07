@@ -51,7 +51,7 @@ const RightPane = ({
     isMaximized,
     minimize
 }: RightPaneProps) => {
-    const t = Stage.Utils.getT('widgets.blueprintSources');
+    const translate = Stage.Utils.getT('widgets.blueprintSources');
 
     if (imageUrl) {
         return (
@@ -62,7 +62,7 @@ const RightPane = ({
     }
 
     if (isBinary) {
-        return <Center>{t('binaryFile')}</Center>;
+        return <Center>{translate('binaryFile')}</Center>;
     }
 
     if (content) {
@@ -88,8 +88,8 @@ const RightPane = ({
 
     return (
         <Center>
-            <Bold>{t('thisIsAFolder')}</Bold>
-            {t('nothingToShow')}
+            <Bold>{translate('thisIsAFolder')}</Bold>
+            {translate('nothingToShow')}
         </Center>
     );
 };

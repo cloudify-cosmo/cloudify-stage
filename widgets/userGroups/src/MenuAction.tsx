@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import type { UserGroup } from './widget.types';
 
 const { PopupMenu, Menu } = Stage.Basic;
-const t = Stage.Utils.getT('widgets.userGroups.menu');
+const translate = Stage.Utils.getT('widgets.userGroups.menu');
 
 interface MenuActionProps {
     item: UserGroup;
@@ -27,9 +27,9 @@ const MenuAction: FunctionComponent<MenuActionProps> = ({ item, onEditUsers, onE
     return (
         <PopupMenu>
             <Menu pointing vertical>
-                <Menu.Item icon="users" content={t('editGroupUsers')} onClick={handleEditUsers} />
-                <Menu.Item icon="user" content={t('editGroupTenants')} onClick={handleEditTenants} />
-                <Menu.Item icon="trash" content={t('delete')} onClick={handleDelete} />
+                <Menu.Item icon="users" content={translate('editGroupUsers')} onClick={handleEditUsers} />
+                <Menu.Item icon="user" content={translate('editGroupTenants')} onClick={handleEditTenants} />
+                <Menu.Item icon="trash" content={translate('delete')} onClick={handleDelete} />
             </Menu>
         </PopupMenu>
     );

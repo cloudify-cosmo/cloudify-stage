@@ -3,7 +3,7 @@ import type { Field } from '../../../app/widgets/common/types';
 import Consts from './consts';
 import Utils from './utils';
 
-const t = Utils.getWidgetTranslation('buttons');
+const translate = Utils.getWidgetTranslation('buttons');
 
 type ModalType = 'deploy' | 'delete';
 type ForceCheckboxState = Pick<BlueprintActionButtonsState, 'force'>;
@@ -144,7 +144,7 @@ export default class BlueprintActionButtons extends React.Component<
                             icon="rocket"
                             disabled={disableButtons}
                             onClick={this.showDeployModal}
-                            content={t('createDeployment')}
+                            content={translate('createDeployment')}
                             id="createDeploymentButton"
                         />
 
@@ -154,7 +154,7 @@ export default class BlueprintActionButtons extends React.Component<
                             icon="trash"
                             disabled={disableButtons}
                             onClick={this.showDeleteModal}
-                            content={t('deleteBlueprint')}
+                            content={translate('deleteBlueprint')}
                             id="deleteBlueprintButton"
                         />
 
@@ -164,7 +164,7 @@ export default class BlueprintActionButtons extends React.Component<
                             icon="download"
                             disabled={disableButtons}
                             onClick={this.downloadBlueprint}
-                            content={t('downloadBlueprint')}
+                            content={translate('downloadBlueprint')}
                             id="downloadBlueprintButton"
                         />
 
@@ -193,7 +193,7 @@ export default class BlueprintActionButtons extends React.Component<
                                                 this.setState({ loading: false });
                                             });
                                     }}
-                                    content={t('editCopy')}
+                                    content={translate('editCopy')}
                                 />
                             )}
 

@@ -7,7 +7,7 @@ import { inputMaxLength } from './TerraformModal';
 import StageUtils from '../../../utils/stageUtils';
 import { Form } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.blueprints.terraformModal.variablesTable');
+const translate = StageUtils.getT('widgets.blueprints.terraformModal.variablesTable');
 
 interface TerraformVariableNameInputProps extends CustomConfigurationComponentProps<VariableRow['name']> {
     rowValues?: Variable;
@@ -34,7 +34,7 @@ export default function TerraformVariableNameInput({
                 toolbox={widgetlessToolbox}
                 valueProp="key"
                 allowAdditions
-                additionLabel={`${t('newSecretPrefix')} `}
+                additionLabel={`${translate('newSecretPrefix')} `}
             />
         );
     }

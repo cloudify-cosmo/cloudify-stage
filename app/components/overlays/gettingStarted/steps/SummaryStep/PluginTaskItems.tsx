@@ -10,10 +10,12 @@ import { ErrorDescription, SuccessDescription } from './descriptions';
 import type { PluginInstallationTask } from '../../installation/tasks';
 import type { TaskStatus } from '../../installation/process';
 
-const t = StageUtils.getT('gettingStartedModal.summary.plugin');
+const translate = StageUtils.getT('gettingStartedModal.summary.plugin');
 
-export const PluginExistsDescription = () => <SuccessDescription message={t('alreadyInstalledMessageSuffix')} />;
-export const RejectedPluginDescription = () => <ErrorDescription message={t('notFoundMessageSuffix')} />;
+export const PluginExistsDescription = () => (
+    <SuccessDescription message={translate('alreadyInstalledMessageSuffix')} />
+);
+export const RejectedPluginDescription = () => <ErrorDescription message={translate('notFoundMessageSuffix')} />;
 
 type Props = {
     tasks?: PluginInstallationTask[];
@@ -23,9 +25,9 @@ type Props = {
 
 const PluginTaskItems = ({ tasks, statuses, description }: Props) => {
     const getPluginTaskDescription = createTaskDescriptionGetter(
-        t('installationProgressMessageSuffix'),
-        t('installationDoneMessageSuffix'),
-        t('installationErrorMessageSuffix')
+        translate('installationProgressMessageSuffix'),
+        translate('installationDoneMessageSuffix'),
+        translate('installationErrorMessageSuffix')
     );
     return (
         <>

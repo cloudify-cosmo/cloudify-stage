@@ -18,22 +18,22 @@ export interface ErrorCausesModalProps {
     onClose: () => void;
 }
 
-const t = StageUtils.getT('widgets.events.detailsModal');
+const translate = StageUtils.getT('widgets.events.detailsModal');
 
 const ErrorCausesModal: FunctionComponent<ErrorCausesModalProps> = ({ event, onClose }) => {
     const numberOfErrorCauses = _.size(event.error_causes);
 
     return (
         <Modal open onClose={onClose}>
-            <Modal.Header>{t('header')}</Modal.Header>
+            <Modal.Header>{translate('header')}</Modal.Header>
             <Modal.Content scrolling>
                 {event.message && (
                     <Segment basic>
-                        <Header size="medium">{t('message')}</Header>
+                        <Header size="medium">{translate('message')}</Header>
                         <Divider />
                         <pre style={{ whiteSpace: 'pre-wrap' }}>{Json.stringify(event.message, true)}</pre>
                         <CopyToClipboardButton
-                            content={t('copyMessage')}
+                            content={translate('copyMessage')}
                             text={event.message}
                             className="rightFloated"
                         />
@@ -42,16 +42,18 @@ const ErrorCausesModal: FunctionComponent<ErrorCausesModalProps> = ({ event, onC
                 {_.map(event.error_causes, ({ message, traceback, type }, index) => (
                     <Segment key={`errorCause_${index}`} basic>
                         <Header size="medium">
-                            {t(numberOfErrorCauses > 1 ? 'errorCause' : 'singleErrorCause', { causeNo: index + 1 })}
+                            {translate(numberOfErrorCauses > 1 ? 'errorCause' : 'singleErrorCause', {
+                                causeNo: index + 1
+                            })}
                         </Header>
                         <Divider />
-                        <Header size="small">{t('type')}</Header>
+                        <Header size="small">{translate('type')}</Header>
                         <Message info>{type}</Message>
-                        <Header size="small">{t('message')}</Header>
+                        <Header size="small">{translate('message')}</Header>
                         <Message error>{message}</Message>
                         {traceback && (
                             <>
-                                <Header size="small">{t('traceback')}</Header>
+                                <Header size="small">{translate('traceback')}</Header>
                                 <pre style={{ whiteSpace: 'pre-wrap' }}>{traceback}</pre>
                             </>
                         )}
@@ -60,14 +62,17 @@ const ErrorCausesModal: FunctionComponent<ErrorCausesModalProps> = ({ event, onC
             </Modal.Content>
             <Modal.Actions>
                 {!!numberOfErrorCauses && (
-                    <CopyToClipboardButton content={t('copyCauses')} text={Json.stringify(event.error_causes, true)} />
+                    <CopyToClipboardButton
+                        content={translate('copyCauses')}
+                        text={Json.stringify(event.error_causes, true)}
+                    />
                 )}
                 <CancelButton
                     onClick={e => {
                         e.stopPropagation();
                         onClose();
                     }}
-                    content={t('close')}
+                    content={translate('close')}
                 />
             </Modal.Actions>
         </Modal>

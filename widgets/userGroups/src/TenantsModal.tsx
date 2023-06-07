@@ -8,7 +8,7 @@ import Actions from './actions';
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-const t = Stage.Utils.getT('widgets.userGroups.modals.tenants');
+const translate = Stage.Utils.getT('widgets.userGroups.modals.tenants');
 
 interface TenantsModalProps {
     group: UserGroup;
@@ -86,14 +86,14 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }: 
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="user" />
-                {t('header', {
+                {translate('header', {
                     groupName: group.name
                 })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label={t('fields.tenants')}>
+                    <Form.Field label={translate('fields.tenants')}>
                         <Form.Dropdown
                             multiple
                             selection

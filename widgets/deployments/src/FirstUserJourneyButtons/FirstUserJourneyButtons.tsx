@@ -34,7 +34,7 @@ const IconWrapper = styled.div`
 `;
 
 const { drilldownPage } = Stage.Common.Consts;
-const t = getT('widgets.deployments.firstJourney');
+const translate = getT('widgets.deployments.firstJourney');
 const defaultMarketplaceTab = 'Getting Started';
 
 interface FirstUserJourneyButtonsProps {
@@ -64,20 +64,20 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
                     <IconWrapper>
                         <StyledIcon name="home" />
                     </IconWrapper>
-                    <StyledLabel>{t('header')}</StyledLabel>
+                    <StyledLabel>{translate('header')}</StyledLabel>
                 </StyledColumn>
             </RowWrapper>
             <RowWrapper>
                 <FirstUserJourneyButton
                     onClick={handleDeploymentsClick}
                     icon="rocket"
-                    label={t('buttons.createDeployment')}
+                    label={translate('buttons.createDeployment')}
                 />
                 {/* TODO: RND-292 - remove as part of dedicated ticket once confirmed */}
                 {/* <FirstUserJourneyButton */}
                 {/*    onClick={handleTerraformClick} */}
                 {/*    image={terraformLogo} */}
-                {/*    label={t('buttons.uploadFromTerraform')} */}
+                {/*    label={translate('buttons.uploadFromTerraform')} */}
                 {/* /> */}
             </RowWrapper>
 

@@ -14,7 +14,7 @@ import type { PageMenuItem } from './types';
 import SelectionList from '../common/SelectionList';
 import SortableList from '../common/SortableList';
 
-const t = StageUtils.getT('templates.createTemplateModal');
+const translate = StageUtils.getT('templates.createTemplateModal');
 
 function toId(item: PageMenuItem) {
     return `${item.type}\n${item.id}`;
@@ -75,19 +75,19 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
         } = {};
 
         if (_.isEmpty(_.trim(templateName))) {
-            submitErrors.templateName = t('errors.templateName');
+            submitErrors.templateName = translate('errors.templateName');
         }
 
         if (_.isEmpty(roles)) {
-            submitErrors.roles = t('errors.role');
+            submitErrors.roles = translate('errors.role');
         }
 
         if (_.isEmpty(tenants)) {
-            submitErrors.tenants = t('errors.tenant');
+            submitErrors.tenants = translate('errors.tenant');
         }
 
         if (_.isEmpty(selectedPageMenuItems)) {
-            submitErrors.selectedPageMenuItems = t('errors.pageMenuItem');
+            submitErrors.selectedPageMenuItems = translate('errors.pageMenuItem');
         }
 
         if (!_.isEmpty(submitErrors)) {
@@ -140,7 +140,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
     const tenantOptions = _.map(allAvailableTenants, item => {
         return { text: item, value: item };
     });
-    tenantOptions.push({ text: t('allTenants'), value: Consts.DEFAULT_ALL });
+    tenantOptions.push({ text: translate('allTenants'), value: Consts.DEFAULT_ALL });
 
     const editMode = !_.isEmpty(initialTemplateName);
 
@@ -157,22 +157,22 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                 <Icon name="list layout" />{' '}
                 {editMode ? (
                     <span>
-                        {t('updateHeader', {
+                        {translate('updateHeader', {
                             templateName: initialTemplateName
                         })}
                     </span>
                 ) : (
-                    <span>{t('createHeader')}</span>
+                    <span>{translate('createHeader')}</span>
                 )}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.templateName} label={t('templateName')}>
+                    <Form.Field error={errors.templateName} label={translate('templateName')}>
                         <Form.Input name="templateName" value={templateName} onChange={setTemplateName} />
                     </Form.Field>
 
-                    <Form.Field error={errors.roles} label={t('roles')}>
+                    <Form.Field error={errors.roles} label={translate('roles')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -186,7 +186,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                         />
                     </Form.Field>
 
-                    <Form.Field error={errors.tenants} label={t('tenants')}>
+                    <Form.Field error={errors.tenants} label={translate('tenants')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -205,7 +205,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                                     index="pages"
                                     active={expandedAccordions.pages}
                                 >
-                                    <Icon name="file outline" /> {t('availablePages')}
+                                    <Icon name="file outline" /> {translate('availablePages')}
                                     <Icon name="dropdown" style={{ float: 'right' }} />
                                     <Divider />
                                 </Accordion.Title>
@@ -222,7 +222,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                                     index="pageGroups"
                                     active={expandedAccordions.pageGroups}
                                 >
-                                    <Icon name="folder open outline" /> {t('availablePageGroups')}
+                                    <Icon name="folder open outline" /> {translate('availablePageGroups')}
                                     <Icon name="dropdown" style={{ float: 'right' }} />
                                     <Divider />
                                 </Accordion.Title>
@@ -253,7 +253,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                 <ApproveButton
                     onClick={submitCreate}
                     disabled={loading}
-                    content={editMode ? t('update') : t('create')}
+                    content={editMode ? translate('update') : translate('create')}
                     icon={editMode ? 'edit' : 'checkmark'}
                 />
             </Modal.Actions>

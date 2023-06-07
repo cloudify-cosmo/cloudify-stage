@@ -4,7 +4,7 @@ import ServiceButton from './ServiceButton';
 type ServiceButtonWidgetConfiguration = ServiceButtonProps;
 
 const widgetId = 'serviceButton';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
     id: widgetId,
@@ -18,12 +18,12 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
     initialConfiguration: [
         ...Stage.Common.Configuration.Button.getInitialConfiguration({
             icon: 'add',
-            label: t('configuration.label.default')
+            label: translate('configuration.label.default')
         }),
         {
             id: 'defaultMarketplaceTab',
-            name: t('configuration.defaultMarketplaceTab.name'),
-            description: t('configuration.defaultMarketplaceTab.description'),
+            name: translate('configuration.defaultMarketplaceTab.name'),
+            description: translate('configuration.defaultMarketplaceTab.description'),
             type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],

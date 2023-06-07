@@ -28,14 +28,14 @@ export interface FormValues {
 
 const { getT, composeT } = StageUtils;
 
-const t = getT('contactDetailsModal.form.fields');
+const translateFormFields = getT('contactDetailsModal.form.fields');
 
 const getFormFieldValidationMessage = (fieldName: string) => {
-    return composeT(t, fieldName)('validationMessage');
+    return composeT(translateFormFields, fieldName)('validationMessage');
 };
 
 const getFormFieldLabel = (fieldName: string, params?: Record<string, any>) => {
-    return composeT(t, fieldName)('label', params);
+    return composeT(translateFormFields, fieldName)('label', params);
 };
 
 export const getFormFields = (): Record<string, FormField> => ({

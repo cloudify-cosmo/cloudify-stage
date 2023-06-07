@@ -4,7 +4,7 @@ import DeploymentInfo from './DeploymentInfo';
 import Consts from './consts';
 import Utils from './utils';
 
-const t = Utils.getWidgetTranslation();
+const translate = Utils.getWidgetTranslation();
 
 Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, DeploymentInfoWidget.Configuration>({
     id: Consts.WIDGET_ID,
@@ -20,37 +20,37 @@ Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, Deplo
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'showBlueprint',
-            name: t('configuration.showBlueprint'),
+            name: translate('configuration.showBlueprint'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showSite',
-            name: t('configuration.showSite'),
+            name: translate('configuration.showSite'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showCreated',
-            name: t('configuration.showCreated'),
+            name: translate('configuration.showCreated'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showUpdated',
-            name: t('configuration.showUpdated'),
+            name: translate('configuration.showUpdated'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showCreator',
-            name: t('configuration.showCreator'),
+            name: translate('configuration.showCreator'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showNodeInstances',
-            name: t('configuration.showNodeInstances'),
+            name: translate('configuration.showNodeInstances'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
@@ -137,7 +137,7 @@ Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, Deplo
         }
 
         if (_.isEmpty(data?.deployment)) {
-            return <Message info>{t('noDeploymentSelected')}</Message>;
+            return <Message info>{translate('noDeploymentSelected')}</Message>;
         }
 
         return <DeploymentInfo data={data as DeploymentInfoWidget.Data} toolbox={toolbox} />;

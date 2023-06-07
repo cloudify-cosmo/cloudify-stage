@@ -5,7 +5,7 @@ import StageUtils from '../../../utils/stageUtils';
 
 import { Form } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.common.rolesPicker');
+const translate = StageUtils.getT('widgets.common.rolesPicker');
 
 export type Role = string;
 
@@ -36,13 +36,13 @@ const RolesPicker = ({ onUpdate, resources, resourceName, toolbox }: RolesPicker
                 return (
                     <Form.Field
                         key={resource}
-                        label={t('label', {
+                        label={translate('label', {
                             resourceName,
                             resource
                         })}
                     >
                         <Form.Dropdown
-                            placeholder={t('placeholder')}
+                            placeholder={translate('placeholder')}
                             selection
                             options={roleOptions}
                             name={resource}

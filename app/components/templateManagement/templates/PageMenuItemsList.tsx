@@ -5,7 +5,7 @@ import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../../basic
 import StageUtils from '../../../utils/stageUtils';
 import type { PageMenuItem } from './types';
 
-const t = StageUtils.getT('templates.templateManagement.pageMenuItemsList');
+const translate = StageUtils.getT('templates.templateManagement.pageMenuItemsList');
 
 interface PageMenuItemsListProps {
     custom: boolean;
@@ -17,7 +17,7 @@ interface PageMenuItemsListProps {
 const PageMenuItemsList: FunctionComponent<PageMenuItemsListProps> = ({ custom, onDelete, pages, style }) => {
     return (
         <Segment style={style}>
-            <Icon name="bars" /> {t('header')}
+            <Icon name="bars" /> {translate('header')}
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
                 {pages.map(item => {
@@ -36,7 +36,7 @@ const PageMenuItemsList: FunctionComponent<PageMenuItemsListProps> = ({ custom, 
                                             onClick={(e: Event) => e.stopPropagation()}
                                         />
                                     }
-                                    content={t('removeConfirm')}
+                                    content={translate('removeConfirm')}
                                     onConfirm={() => onDelete(item)}
                                     onCancel={undefined}
                                     onCanConfirm={undefined}
@@ -47,7 +47,7 @@ const PageMenuItemsList: FunctionComponent<PageMenuItemsListProps> = ({ custom, 
                     );
                 })}
 
-                {_.isEmpty(pages) && <Message content={t('noItems')} />}
+                {_.isEmpty(pages) && <Message content={translate('noItems')} />}
             </List>
         </Segment>
     );
