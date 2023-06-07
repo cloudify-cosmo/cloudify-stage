@@ -2,7 +2,7 @@ import { MessageHeader, MessageDescription } from './UploadingMessage.styles';
 import Utils from '../utils';
 
 const { LoadingOverlay } = Stage.Basic;
-const t = Utils.getWidgetTranslation('uploadingMessage');
+const translate = Utils.getWidgetTranslation('uploadingMessage');
 
 interface UploadingMessageProps {
     blueprintName: string;
@@ -14,11 +14,11 @@ const UploadingMessage = ({ blueprintName }: UploadingMessageProps) => {
             message={
                 <>
                     <MessageHeader>
-                        {t('uploading', {
+                        {translate('uploading', {
                             blueprintName
                         })}
                     </MessageHeader>
-                    <MessageDescription>{t('redirection')}</MessageDescription>
+                    <MessageDescription>{translate('redirection')}</MessageDescription>
                 </>
             }
         />

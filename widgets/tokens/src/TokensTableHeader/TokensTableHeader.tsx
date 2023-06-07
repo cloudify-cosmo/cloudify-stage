@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { translationPath } from '../widget.consts';
+import { translateWidget } from '../widget.utils';
 import CreateTokenModal from './CreateTokenModal';
 
 const { useBoolean } = Stage.Hooks;
-const { getT } = Stage.Utils;
+const { composeT } = Stage.Utils;
 const { Button } = Stage.Basic;
 
 export const Wrapper = styled.div`
@@ -16,7 +16,7 @@ interface TokensTableHeaderProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-const t = getT(`${translationPath}.table`);
+const translate = composeT(translateWidget, 'table');
 
 const TokensTableHeader = ({ toolbox }: TokensTableHeaderProps) => {
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
@@ -24,7 +24,12 @@ const TokensTableHeader = ({ toolbox }: TokensTableHeaderProps) => {
     return (
         <>
             <Wrapper>
-                <Button labelPosition="left" icon="add" content={t('buttons.create')} onClick={showCreateModal} />
+                <Button
+                    labelPosition="left"
+                    icon="add"
+                    content={translate('buttons.create')}
+                    onClick={showCreateModal}
+                />
             </Wrapper>
             {isCreateModalVisible && <CreateTokenModal onClose={hideCreateModal} toolbox={toolbox} />}
         </>

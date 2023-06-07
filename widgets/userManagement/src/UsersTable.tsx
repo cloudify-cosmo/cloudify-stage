@@ -14,8 +14,8 @@ import getWidgetT from './getWidgetT';
 import InviteModal from './InviteModal';
 import AuthServiceActions from './authServiceActions';
 
-const t = getWidgetT();
-const tColumn = (key: string) => t(`columns.${key}`);
+const translate = getWidgetT();
+const tColumn = (key: string) => translate(`columns.${key}`);
 
 interface UsersTableProps {
     data: { items: UserViewItem[]; total: number };
@@ -310,7 +310,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className={tableName}
-                    noDataMessage={t('noUsers')}
+                    noDataMessage={translate('noUsers')}
                 >
                     <DataTable.Column label={tColumn('username')} name="username" width="37%" />
                     <DataTable.Column label={tColumn('lastLoginAt')} name="last_login_at" width="18%" />
@@ -435,21 +435,21 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                         />
 
                         <Confirm
-                            content={t('deleteConfirm', { username: user.username })}
+                            content={translate('deleteConfirm', { username: user.username })}
                             open={modalType === MenuAction.DELETE_ACTION && showModal}
                             onConfirm={this.deleteUser}
                             onCancel={this.hideModal}
                         />
 
                         <Confirm
-                            content={t('removeAdminPrivilagesConfirm')}
+                            content={translate('removeAdminPrivilagesConfirm')}
                             open={modalType === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && showModal}
                             onConfirm={() => this.setRole(user, false)}
                             onCancel={this.hideModal}
                         />
 
                         <Confirm
-                            content={t('deactivateConfirm')}
+                            content={translate('deactivateConfirm')}
                             open={modalType === MenuAction.DEACTIVATE_ACTION && showModal}
                             onConfirm={() => this.deactivateUser(user)}
                             onCancel={this.hideModal}

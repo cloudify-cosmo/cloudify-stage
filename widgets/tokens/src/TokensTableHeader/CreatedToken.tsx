@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import type { ReceivedToken } from './CreateTokenModal.types';
-import { translationPath } from '../widget.consts';
+import { translateWidget } from '../widget.utils';
 
 const {
     Basic: { Message, Button, CopyToClipboardButton },
-    Utils: { getT },
+    Utils: { composeT },
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT(`${translationPath}.createModal.newToken`);
+const translate = composeT(translateWidget, 'createModal.newToken');
 
 export const ButtonsWrapper = styled.span`
     margin-left: 12px;
@@ -31,7 +31,7 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
     return (
         <>
             <Message success>
-                {t('content', {
+                {translate('content', {
                     token: displayedToken
                 })}
                 <ButtonsWrapper>
@@ -44,7 +44,7 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
                     <CopyToClipboardButton text={token.value} />
                 </ButtonsWrapper>
             </Message>
-            <Message warning>{t('warning')}</Message>
+            <Message warning>{translate('warning')}</Message>
         </>
     );
 };

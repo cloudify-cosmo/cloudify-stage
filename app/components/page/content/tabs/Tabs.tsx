@@ -20,7 +20,7 @@ import StageUtils from '../../../../utils/stageUtils';
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
 
-const t = StageUtils.getT('editMode');
+const translate = StageUtils.getT('editMode');
 
 export interface TabsProps {
     tabs: TabContent[];
@@ -118,12 +118,12 @@ export default function Tabs({
                 ))}
                 {isEditMode && (
                     <Menu.Item key="actions" style={{ right: 0, position: 'absolute', padding: '6px 0 0 0' }}>
-                        <EditModeButton icon="add" onClick={onTabAdded} title={t('tabs.add')} />
+                        <EditModeButton icon="add" onClick={onTabAdded} title={translate('tabs.add')} />
                         &nbsp;
                         <EditModeButton
                             icon="remove"
                             onClick={showTabsRemovalDialog}
-                            title={t('removeTabsContainer')}
+                            title={translate('removeTabsContainer')}
                         />
                     </Menu.Item>
                 )}
@@ -132,7 +132,7 @@ export default function Tabs({
                 {isEditMode && (
                     <div style={{ paddingTop: 15 }}>
                         <AddWidgetModal
-                            addButtonTitle={t('addWidget.addToTabButtonTitle')}
+                            addButtonTitle={translate('addWidget.addToTabButtonTitle')}
                             onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
                     </div>
@@ -155,10 +155,10 @@ export default function Tabs({
                     removeTab(tabIndexToRemove);
                     resetTabIndexToRemove();
                 }}
-                header={t('tabs.removeModal.header', {
+                header={translate('tabs.removeModal.header', {
                     tabName: get(tabs, [tabIndexToRemove, 'name'])
                 })}
-                content={t('tabs.removeModal.message')}
+                content={translate('tabs.removeModal.message')}
             />
             <Confirm
                 open={isTabsRemovalDialogShown}
@@ -167,8 +167,8 @@ export default function Tabs({
                     onLayoutSectionRemoved();
                     hideTabsRemovalDialog();
                 }}
-                header={t('tabRemovalModal.header')}
-                content={t('tabRemovalModal.message')}
+                header={translate('tabRemovalModal.header')}
+                content={translate('tabRemovalModal.message')}
             />
         </>
     );

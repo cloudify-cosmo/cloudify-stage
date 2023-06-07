@@ -11,7 +11,7 @@ const defaultDeployment: DeploymentUpdatedIconProps['deployment'] = {
     updated_at: null
 };
 
-const t = Stage.Utils.getT('widgets.deployments.updatedIcon');
+const translate = Stage.Utils.getT('widgets.deployments.updatedIcon');
 
 export default function DeploymentUpdatedIcon({ deployment = defaultDeployment }: DeploymentUpdatedIconProps) {
     const { Icon, Popup } = Stage.Basic;
@@ -24,11 +24,11 @@ export default function DeploymentUpdatedIcon({ deployment = defaultDeployment }
                     <Icon corner name="refresh" color="blue" />
                 </Icon.Group>
             </Popup.Trigger>
-            <Popup.Header>{t('header')}</Popup.Header>
+            <Popup.Header>{translate('header')}</Popup.Header>
             <Popup.Content>
-                <p>{t('content.description')}</p>
+                <p>{translate('content.description')}</p>
                 <p>
-                    {t('content.lastUpdate')}
+                    {translate('content.lastUpdate')}
                     <strong>{deployment.updated_at}</strong>.
                 </p>
             </Popup.Content>

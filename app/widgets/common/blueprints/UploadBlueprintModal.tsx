@@ -8,7 +8,7 @@ import UploadBlueprintForm from './UploadBlueprintForm';
 import StageUtils from '../../../utils/stageUtils';
 import { ApproveButton, CancelButton, Icon, Modal, VisibilityField } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.common.blueprintUpload');
+const translate = StageUtils.getT('widgets.common.blueprintUpload');
 
 export interface UploadBlueprintModalProps {
     toolbox: Stage.Types.Toolbox;
@@ -69,22 +69,22 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
 
         if (!blueprintFile) {
             if (_.isEmpty(blueprintUrl)) {
-                validationErrors.blueprintUrl = t('validationErrors.noBlueprintPackage');
+                validationErrors.blueprintUrl = translate('validationErrors.noBlueprintPackage');
             } else if (!StageUtils.Url.isUrl(blueprintUrl)) {
-                validationErrors.blueprintUrl = t('validationErrors.invalidBlueprintUrl');
+                validationErrors.blueprintUrl = translate('validationErrors.invalidBlueprintUrl');
             }
         }
 
         if (_.isEmpty(blueprintName)) {
-            validationErrors.blueprintName = t('validationErrors.noBlueprintName');
+            validationErrors.blueprintName = translate('validationErrors.noBlueprintName');
         }
 
         if (_.isEmpty(blueprintYamlFile)) {
-            validationErrors.blueprintYamlFile = t('validationErrors.noBlueprintYamlFile');
+            validationErrors.blueprintYamlFile = translate('validationErrors.noBlueprintYamlFile');
         }
 
         if (!_.isEmpty(imageUrl) && !StageUtils.Url.isUrl(imageUrl)) {
-            validationErrors.imageUrl = t('validationErrors.invalidImageUrl');
+            validationErrors.imageUrl = translate('validationErrors.invalidImageUrl');
         }
 
         if (!_.isEmpty(validationErrors)) {
@@ -133,7 +133,7 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
         <div>
             <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
                 <Modal.Header>
-                    <Icon name="upload" /> {t('modal.header')}
+                    <Icon name="upload" /> {translate('modal.header')}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
@@ -163,7 +163,7 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
                     <ApproveButton
                         onClick={uploadBlueprint}
                         disabled={isLoading}
-                        content={t('modal.uploadButton')}
+                        content={translate('modal.uploadButton')}
                         icon="upload"
                     />
                 </Modal.Actions>

@@ -4,7 +4,7 @@ import type { DropdownProps } from 'semantic-ui-react';
 import StageUtils from '../../../utils/stageUtils';
 import { ApproveButton, Button, CancelButton, Dropdown, Modal } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.common.deployments.deployModal');
+const translate = StageUtils.getT('widgets.common.deployments.deployModal');
 
 export enum Buttons {
     install,
@@ -29,15 +29,30 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
 }) => {
     if (!showDeployButton) {
         return (
-            <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.deployAndInstall')} icon="cogs" />
+            <ApproveButton
+                onClick={onInstall}
+                disabled={loading}
+                content={translate('buttons.deployAndInstall')}
+                icon="cogs"
+            />
         );
     }
     return (
         <Button.Group color="blue">
             {selectedApproveButton === Buttons.install ? (
-                <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.install')} icon="cogs" />
+                <ApproveButton
+                    onClick={onInstall}
+                    disabled={loading}
+                    content={translate('buttons.install')}
+                    icon="cogs"
+                />
             ) : (
-                <ApproveButton onClick={onDeploy} disabled={loading} content={t('buttons.deploy')} icon="rocket" />
+                <ApproveButton
+                    onClick={onDeploy}
+                    disabled={loading}
+                    content={translate('buttons.deploy')}
+                    icon="rocket"
+                />
             )}
 
             <Dropdown
@@ -53,13 +68,13 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
                     {
                         key: 'deploy',
                         icon: 'rocket',
-                        text: t('buttons.deploy'),
+                        text: translate('buttons.deploy'),
                         value: Buttons.deploy
                     },
                     {
                         key: 'install',
                         icon: 'cogs',
-                        text: t('buttons.install'),
+                        text: translate('buttons.install'),
                         value: Buttons.install
                     }
                 ]}

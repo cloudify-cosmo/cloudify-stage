@@ -9,7 +9,7 @@ import ExternalBlueprintImage from './ExternalBlueprintImage';
 import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
-const t = Utils.getWidgetTranslation('blueprintCatalog');
+const translate = Utils.getWidgetTranslation('blueprintCatalog');
 
 const StyledDataSegment = styled(DataSegment.Item)`
     && {
@@ -82,10 +82,10 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
 }) => {
     const { GridWrapper } = Stage.Common.Components;
     const { fieldsToShow, displayStyle } = widget.configuration;
-    const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
-    const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
-    const showCreated = fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
-    const showUpdated = fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'));
+    const showName = fieldsToShow.includes(translate('configuration.fieldsToShow.items.name'));
+    const showDescription = fieldsToShow.includes(translate('configuration.fieldsToShow.items.description'));
+    const showCreated = fieldsToShow.includes(translate('configuration.fieldsToShow.items.created'));
+    const showUpdated = fieldsToShow.includes(translate('configuration.fieldsToShow.items.updated'));
 
     const catalogItems = data.items.map(item => {
         /* eslint-disable camelcase */
@@ -135,7 +135,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     }}
                                 >
                                     <StyledText>
-                                        <strong>{t('catalog.properties.created')}</strong> {created_at}
+                                        <strong>{translate('catalog.properties.created')}</strong> {created_at}
                                     </StyledText>
                                 </StyledColumn>
                             </Grid.Row>
@@ -149,7 +149,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     }}
                                 >
                                     <StyledText>
-                                        <strong>{t('catalog.properties.updated')}</strong> {updated_at}
+                                        <strong>{translate('catalog.properties.updated')}</strong> {updated_at}
                                     </StyledText>
                                 </StyledColumn>
                             </Grid.Row>
@@ -169,25 +169,25 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                         event.stopPropagation();
                                         onReadme(name, readme_url);
                                     }}
-                                    title={t('actions.openDocumentation')}
+                                    title={translate('actions.openDocumentation')}
                                 />
                             </StyledGridColumnButtons>
                             <Grid.Column width="8" textAlign="right" className="noPadded">
                                 {isBlueprintUploaded ? (
                                     <Button
-                                        content={t('buttons.open')}
+                                        content={translate('buttons.open')}
                                         onClick={() => {
                                             onOpenBlueprintPage(name);
                                         }}
-                                        title={t('actions.openBlueprint')}
+                                        title={translate('actions.openBlueprint')}
                                     />
                                 ) : (
                                     <Button
-                                        content={t('buttons.upload')}
+                                        content={translate('buttons.upload')}
                                         onClick={() => {
                                             onUpload(name, zip_url, image_url, main_blueprint);
                                         }}
-                                        title={t('actions.uploadBlueprint')}
+                                        title={translate('actions.uploadBlueprint')}
                                     />
                                 )}
                             </Grid.Column>
