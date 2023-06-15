@@ -15,7 +15,7 @@ interface props {
     onAdd: () => void;
 }
 
-const t = StageUtils.getT('widgets.common.deployments.deployModal');
+const translate = StageUtils.getT('widgets.common.deployments.deployModal');
 
 function parseCommaSeparatedValuesInBrackets(error?: string) {
     const matches = error?.match(/\[(.*?)\]/);
@@ -32,9 +32,9 @@ const MissingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
     return (
         <>
             <Button floated="right" color="green" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
-                {t('buttons.addMissingSecrets')}
+                {translate('buttons.addMissingSecrets')}
             </Button>
-            <p style={{ display: 'inline' }}>{t('errors.missingSecrets')}</p>
+            <p style={{ display: 'inline' }}>{translate('errors.missingSecrets')}</p>
             <List bulleted>
                 {secretKeys.map((secretKey: string) => (
                     <List.Item key={secretKey}>{secretKey}</List.Item>

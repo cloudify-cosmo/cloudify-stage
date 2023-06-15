@@ -4,7 +4,7 @@ import { LargeProductLogo, LogoLabel } from 'cloudify-ui-components';
 import StageUtils from '../../../../utils/stageUtils';
 import renderMultilineText from '../../../../utils/shared/renderMultilineText';
 
-const t = StageUtils.getT('gettingStartedModal');
+const translate = StageUtils.getT('gettingStartedModal');
 
 type WelcomeStepProps = {
     welcomeText: string;
@@ -16,7 +16,7 @@ const WelcomeStep = ({ welcomeText }: WelcomeStepProps) => {
     return (
         <div style={{ backgroundColor: theme.mainColor, textAlign: 'center', margin: -19, padding: '9em' }}>
             <LargeProductLogo />
-            <LogoLabel color={theme.headerTextColor} content={t('welcomeLogoLabel')} />
+            <LogoLabel color={theme.headerTextColor} content={translate('welcomeLogoLabel')} />
             <div
                 style={{
                     color: theme.headerTextColor,

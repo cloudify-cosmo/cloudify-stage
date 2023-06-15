@@ -4,7 +4,7 @@ import StageUtils from '../../../utils/stageUtils';
 import { Button, Modal } from '../../basic';
 import { StepName } from './model';
 
-const t = StageUtils.getT('gettingStartedModal.buttons');
+const translate = StageUtils.getT('gettingStartedModal.buttons');
 
 type Props = {
     stepName: StepName;
@@ -30,7 +30,7 @@ const ModalActions = ({
             {stepName !== StepName.Welcome && (
                 <Button
                     icon="cancel"
-                    content={t('closeModal')}
+                    content={translate('closeModal')}
                     floated="left"
                     disabled={installationProcessing}
                     labelPosition="left"
@@ -40,11 +40,16 @@ const ModalActions = ({
             {!statusStepActive && (
                 <Button.Group floated="right">
                     {stepName && (
-                        <Button icon="left arrow" content={t('stepBack')} labelPosition="left" onClick={onBackClick} />
+                        <Button
+                            icon="left arrow"
+                            content={translate('stepBack')}
+                            labelPosition="left"
+                            onClick={onBackClick}
+                        />
                     )}
                     <Button
                         icon="right arrow"
-                        content={stepName === StepName.Summary ? t('stepFinish') : t('stepNext')}
+                        content={stepName === StepName.Summary ? translate('stepFinish') : translate('stepNext')}
                         labelPosition="right"
                         onClick={onNextClick}
                         disabled={nextButtonDisabled}

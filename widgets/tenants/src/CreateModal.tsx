@@ -7,7 +7,7 @@ interface CreateModalProps {
 const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
 
-const t = Stage.Utils.getT(`widgets.tenants.createModal`);
+const translate = Stage.Utils.getT(`widgets.tenants.createModal`);
 
 export default function CreateModal({ toolbox }: CreateModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -22,7 +22,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     function createTenant() {
         if (_.isEmpty(tenantName)) {
-            setErrors({ tenantName: t('form.errors.emptyTenantName') });
+            setErrors({ tenantName: translate('form.errors.emptyTenantName') });
             return;
         }
 
@@ -41,17 +41,17 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             .finally(unsetLoading);
     }
 
-    const addButton = <Button content={t('form.buttons.addTenant')} icon="add user" labelPosition="left" />;
+    const addButton = <Button content={translate('form.buttons.addTenant')} icon="add user" labelPosition="left" />;
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="add user" /> {t('header')}
+                <Icon name="add user" /> {translate('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.tenantName} label={t('form.fields.tenantName')}>
+                    <Form.Field error={errors.tenantName} label={translate('form.fields.tenantName')}>
                         <Form.Input name="tenantName" value={tenantName} onChange={setTenantName} />
                     </Form.Field>
                 </Form>
@@ -62,7 +62,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                 <ApproveButton
                     onClick={createTenant}
                     disabled={isLoading}
-                    content={t('form.buttons.addTenant')}
+                    content={translate('form.buttons.addTenant')}
                     icon="add user"
                 />
             </Modal.Actions>

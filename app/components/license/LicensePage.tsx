@@ -28,12 +28,12 @@ interface LicenseSwitchButtonProps {
     isEditLicenseActive: boolean;
     onClick: ButtonProps['onClick'];
 }
-const t = StageUtils.getT('licenseManagement');
+const translate = StageUtils.getT('licenseManagement');
 
 function LicenseSwitchButton({ color, isEditLicenseActive, onClick }: LicenseSwitchButtonProps) {
     return (
         <Button
-            content={isEditLicenseActive ? t('showLicense') : t('editLicense')}
+            content={isEditLicenseActive ? translate('showLicense') : translate('editLicense')}
             floated="right"
             icon={isEditLicenseActive ? 'text file' : 'edit'}
             color={color}
@@ -85,25 +85,25 @@ function DescriptionMessage({
                     <Icon name="ban" />
                     <StyledMessageContent>
                         <div>
-                            <Message.Header>{t('subheader.noLicense')}</Message.Header>
+                            <Message.Header>{translate('subheader.noLicense')}</Message.Header>
                             {canUploadLicense ? (
                                 <span
                                     // eslint-disable-next-line react/no-danger
                                     dangerouslySetInnerHTML={{
-                                        __html: t('action.canUpload.noLicense')
+                                        __html: translate('action.canUpload.noLicense')
                                     }}
                                 />
                             ) : (
-                                <span>{t('action.cannotUpload.noLicense')}</span>
+                                <span>{translate('action.cannotUpload.noLicense')}</span>
                             )}
                         </div>
                         <Button
-                            content={t('getLicense')}
+                            content={translate('getLicense')}
                             icon="external"
                             color="red"
                             labelPosition="right"
                             fluid={false}
-                            onClick={() => redirectToPage(t('getLicenseLink'))}
+                            onClick={() => redirectToPage(translate('getLicenseLink'))}
                             style={{ minWidth: '160px' }}
                         />
                     </StyledMessageContent>
@@ -121,16 +121,16 @@ function DescriptionMessage({
                                 color="red"
                             />
                         )}
-                        <Message.Header>{t('subheader.trialLicenseExpired')}</Message.Header>
+                        <Message.Header>{translate('subheader.trialLicenseExpired')}</Message.Header>
                         {canUploadLicense ? (
                             <span
                                 // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
-                                    __html: t('action.canUpload.trialLicenseExpired')
+                                    __html: translate('action.canUpload.trialLicenseExpired')
                                 }}
                             />
                         ) : (
-                            <span>{t('action.cannotUpload.common')}</span>
+                            <span>{translate('action.cannotUpload.common')}</span>
                         )}
                     </Message.Content>
                 </Message>
@@ -146,16 +146,16 @@ function DescriptionMessage({
                             />
                         )}
 
-                        <Message.Header>{t('subheader.regularLicenseExpired')}</Message.Header>
+                        <Message.Header>{translate('subheader.regularLicenseExpired')}</Message.Header>
                         {canUploadLicense ? (
                             <span
                                 // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
-                                    __html: t('action.canUpload.regularLicenseExpired')
+                                    __html: translate('action.canUpload.regularLicenseExpired')
                                 }}
                             />
                         ) : (
-                            <span>{t('action.cannotUpload.common')}</span>
+                            <span>{translate('action.cannotUpload.common')}</span>
                         )}
                     </Message.Content>
                 </Message>
@@ -166,8 +166,8 @@ function DescriptionMessage({
                     <Icon name="checkmark" />
                     <StyledMessageContent spaceBetweenItems>
                         <span>
-                            <Message.Header>{t('subheader.activeLicense')}</Message.Header>
-                            <span>{t('action.activeLicense')}</span>
+                            <Message.Header>{translate('subheader.activeLicense')}</Message.Header>
+                            <span>{translate('action.activeLicense')}</span>
                         </span>
                         {canUploadLicense && (
                             <LicenseSwitchButton
@@ -282,7 +282,7 @@ export class LicensePage extends Component<LicensePageProps, LicensePageState> {
                     onRender={SplashLoadingScreen.turnOff}
                 >
                     <Header as="h2">
-                        <Icon name="key" /> {t('header')}
+                        <Icon name="key" /> {translate('header')}
                     </Header>
 
                     <DescriptionMessage
@@ -313,7 +313,7 @@ export class LicensePage extends Component<LicensePageProps, LicensePageState> {
 
                         <Grid.Column textAlign="right" verticalAlign="middle">
                             <Button
-                                content={t('goToApp')}
+                                content={translate('goToApp')}
                                 icon="arrow right"
                                 color="green"
                                 labelPosition="right"

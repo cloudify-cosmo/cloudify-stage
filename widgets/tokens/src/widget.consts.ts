@@ -1,1 +1,1 @@
-export const translationPath = 'widgets.tokens';
+export const widgetId = 'tokens';

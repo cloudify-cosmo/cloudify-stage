@@ -35,7 +35,7 @@ export type Errors = {
     [x: string]: Error;
 };
 
-const t = StageUtils.getT('gettingStartedModal.secrets');
+const translate = StageUtils.getT('gettingStartedModal.secrets');
 
 const isEmailValid = (email: string) => Consts.EMAIL_REGEX.test(email);
 const isPortValid = (port: string) => {
@@ -171,7 +171,7 @@ const GettingStartedModal = () => {
                     setErrors({
                         ...errors,
                         [name]: {
-                            content: t(tKey)
+                            content: translate(tKey)
                         }
                     });
                 };

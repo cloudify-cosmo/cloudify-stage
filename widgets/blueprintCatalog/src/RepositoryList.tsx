@@ -14,7 +14,7 @@ import type {
 import Utils from './utils';
 import type Actions from './actions';
 
-const t = Utils.getWidgetTranslation();
+const translate = Utils.getWidgetTranslation();
 
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;
@@ -187,7 +187,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     onReadme={this.showReadmeModal}
                     onOpenBlueprintPage={this.openBlueprintPage}
                     readmeLoading={readmeLoading}
-                    noDataMessage={t('noDataMessage')}
+                    noDataMessage={translate('noDataMessage')}
                 />
 
                 <ReadmeModal open={showReadmeModal} content={readmeContent} onHide={this.hideReadmeModal} />

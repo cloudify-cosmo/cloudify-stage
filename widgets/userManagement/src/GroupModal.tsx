@@ -3,7 +3,7 @@ import Actions from './actions';
 import type { User } from './widget.types';
 import getWidgetT from './getWidgetT';
 
-const t = getWidgetT();
+const translate = getWidgetT();
 
 interface GroupModalProps {
     groups: string[];
@@ -61,12 +61,12 @@ const GroupModal: FunctionComponent<GroupModalProps> = ({ onHide, open, user, to
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="user" /> {t('editGroupsModalHeader', { username: user.username })}
+                <Icon name="user" /> {translate('editGroupsModalHeader', { username: user.username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label={t('details.groups')}>
+                    <Form.Field label={translate('details.groups')}>
                         <Form.Dropdown
                             multiple
                             selection
