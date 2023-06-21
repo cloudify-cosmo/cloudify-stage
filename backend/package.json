@@ -40,7 +40,7 @@
         "cloudify-ui-common-configs": "^1.2.0",
         "cookie": "^0.4.2",
         "cookie-parser": "^1.4.3",
-        "cross-env": "^5.2.0",
+        "cross-env": "^6.0.0",
         "decompress": "^4.2.1",
         "directory-tree": "^3.2.2",
         "ejs": "^3.1.7",
