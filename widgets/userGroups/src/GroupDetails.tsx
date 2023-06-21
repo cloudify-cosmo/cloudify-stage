@@ -3,7 +3,7 @@ import { isEmpty, map } from 'lodash';
 import Actions from './actions';
 import type { UserGroup } from './widget.types';
 
-const t = Stage.Utils.getT('widgets.userGroups.details.group.segments');
+const translate = Stage.Utils.getT('widgets.userGroups.details.group.segments');
 
 interface UserDetailsProps {
     toolbox: Stage.Types.Toolbox;
@@ -97,7 +97,7 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
             <Segment.Group horizontal>
                 <Segment>
                     <Icon name="users" />
-                    {t('users.header')}
+                    {translate('users.header')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.users.map(item => {
@@ -118,12 +118,12 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
                             );
                         })}
 
-                        {isEmpty(data.users) && <Message content={t('users.empty')} />}
+                        {isEmpty(data.users) && <Message content={translate('users.empty')} />}
                     </List>
                 </Segment>
                 <Segment>
                     <Icon name="users" />
-                    {t('tenants.header')}
+                    {translate('tenants.header')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {map(data.tenants, (role, item) => {
@@ -144,12 +144,12 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
                             );
                         })}
 
-                        {isEmpty(data.tenants) && <Message content={t('tenants.empty')} />}
+                        {isEmpty(data.tenants) && <Message content={translate('tenants.empty')} />}
                     </List>
                 </Segment>
 
                 <Confirm
-                    content={t('confirm.removeFromGroup', {
+                    content={translate('confirm.removeFromGroup', {
                         groupName: data.name
                     })}
                     open={showModal}

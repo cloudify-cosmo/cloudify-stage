@@ -36,7 +36,7 @@ import { ErrorMessage, Loading } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
 import { deploymentFields } from './types';
 
-const t = StageUtils.getT(i18nMessagesPrefix);
+const translate = StageUtils.getT(i18nMessagesPrefix);
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -104,12 +104,12 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     const widgetDimensions = useWidgetDimensions(widget);
 
     if (defaultFilterRulesResult.isLoading) {
-        return <Loading message={t('loadingFilterRules')} />;
+        return <Loading message={translate('loadingFilterRules')} />;
     }
     if (defaultFilterRulesResult.isError) {
         return (
             <ErrorMessage
-                header={t('errorLoadingFilterRules')}
+                header={translate('errorLoadingFilterRules')}
                 error={defaultFilterRulesResult.error as { message: string }}
             />
         );
@@ -118,19 +118,19 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     if (filteringByParentDeploymentResult.missingParentDeploymentId) {
         return (
             <ErrorMessage
-                header={t('missingParentDeploymentId.header')}
-                error={t('missingParentDeploymentId.message')}
+                header={translate('missingParentDeploymentId.header')}
+                error={translate('missingParentDeploymentId.message')}
             />
         );
     }
 
     if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
-        return <Loading message={t('loadingDeployments')} />;
+        return <Loading message={translate('loadingDeployments')} />;
     }
     if (deploymentsResult.isError) {
         return (
             <ErrorMessage
-                header={t('errorLoadingDeployments')}
+                header={translate('errorLoadingDeployments')}
                 error={deploymentsResult.error as { message: string }}
             />
         );

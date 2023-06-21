@@ -12,17 +12,17 @@ import type {
 } from './types';
 import './widget.css';
 
-const t = Utils.getWidgetTranslation('');
+const translate = Utils.getWidgetTranslation('');
 
 const defaultFieldsToShowItems = [
-    t('configuration.fieldsToShow.items.name'),
-    t('configuration.fieldsToShow.items.description')
+    translate('configuration.fieldsToShow.items.name'),
+    translate('configuration.fieldsToShow.items.description')
 ];
 
 const fieldsToShowItems = [
     ...defaultFieldsToShowItems,
-    t('configuration.fieldsToShow.items.created'),
-    t('configuration.fieldsToShow.items.updated')
+    translate('configuration.fieldsToShow.items.created'),
+    translate('configuration.fieldsToShow.items.updated')
 ];
 
 Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintCatalogWidgetConfiguration>({
@@ -40,50 +40,50 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'jsonPath',
-            name: t('configuration.jsonPath.label'),
-            placeholder: t('configuration.jsonPath.placeholder'),
-            description: t('configuration.jsonPath.description'),
+            name: translate('configuration.jsonPath.label'),
+            placeholder: translate('configuration.jsonPath.placeholder'),
+            description: translate('configuration.jsonPath.description'),
             default: Stage.i18n.t('widgets.common.urls.blueprintsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'username',
-            name: t('configuration.username.label'),
-            placeholder: t('configuration.username.placeholder'),
-            description: t('configuration.username.description'),
+            name: translate('configuration.username.label'),
+            placeholder: translate('configuration.username.placeholder'),
+            description: translate('configuration.username.description'),
             default: 'cloudify-examples',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'filter',
-            name: t('configuration.filter.label'),
-            placeholder: t('configuration.filter.placeholder'),
-            description: t('configuration.filter.description'),
+            name: translate('configuration.filter.label'),
+            placeholder: translate('configuration.filter.placeholder'),
+            description: translate('configuration.filter.description'),
             default: 'blueprint in:name NOT local',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
-            name: t('configuration.displayStyle.label'),
+            name: translate('configuration.displayStyle.label'),
             items: [
-                { name: t('configuration.displayStyle.option.catalog'), value: 'catalog' },
-                { name: t('configuration.displayStyle.option.table'), value: 'table' }
+                { name: translate('configuration.displayStyle.option.catalog'), value: 'catalog' },
+                { name: translate('configuration.displayStyle.option.table'), value: 'table' }
             ],
             default: 'catalog',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
         {
             id: 'fieldsToShow',
-            name: t('configuration.fieldsToShow.label'),
-            placeholder: t('configuration.fieldsToShow.placeholder'),
+            name: translate('configuration.fieldsToShow.label'),
+            placeholder: translate('configuration.fieldsToShow.placeholder'),
             items: fieldsToShowItems,
             default: defaultFieldsToShowItems,
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'sortByName',
-            name: t('configuration.sortByName.label'),
-            description: t('configuration.sortByName.description'),
+            name: translate('configuration.sortByName.label'),
+            description: translate('configuration.sortByName.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }

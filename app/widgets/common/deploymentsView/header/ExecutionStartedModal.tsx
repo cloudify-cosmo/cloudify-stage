@@ -10,17 +10,17 @@ interface ExecutionStartedModalProps {
     onClose: () => void;
 }
 
-const t = StageUtils.getT(`${i18nPrefix}.header.bulkActions.common.executionStartedModal`);
+const translate = StageUtils.getT(`${i18nPrefix}.header.bulkActions.common.executionStartedModal`);
 
 const ExecutionStartedModal: FunctionComponent<ExecutionStartedModalProps> = ({ toolbox, onClose }) => {
     return (
         <Modal open>
             <Modal.Header>
-                <Icon name="cogs" /> {t('header')}
+                <Icon name="cogs" /> {translate('header')}
             </Modal.Header>
-            <Modal.Content>{t('message')}</Modal.Content>
+            <Modal.Content>{translate('message')}</Modal.Content>
             <Modal.Actions>
-                <CancelButton onClick={onClose} content={t('buttons.close')} />
+                <CancelButton onClick={onClose} content={translate('buttons.close')} />
                 <GoToExecutionsPageButton toolbox={toolbox} />
             </Modal.Actions>
         </Modal>

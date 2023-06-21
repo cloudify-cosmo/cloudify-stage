@@ -10,7 +10,7 @@ import { ClusterServiceStatus } from '../common/status/cluster/types';
 import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
-const t = StageUtils.getT('users');
+const translate = StageUtils.getT('users');
 
 const statusToDotColor = (systemStatus?: ClusterServiceStatus) => {
     const dotColors = {
@@ -47,7 +47,7 @@ const HealthIndicator: FunctionComponent = () => {
                     {dotColor && <Icon corner="top right" name="circle" color={dotColor} style={{ marginRight: 8 }} />}
                 </Icon.Group>
             }
-            label={t('health')}
+            label={translate('health')}
             onOpen={() => dispatch(getClusterStatus())}
             style={dropdownMenuStyle}
         >

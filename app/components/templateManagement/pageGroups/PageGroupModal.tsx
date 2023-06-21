@@ -10,7 +10,7 @@ import SelectionList from '../common/SelectionList';
 import SortableList from '../common/SortableList';
 import { SemanticIconDropdown } from '../../shared';
 
-const t = StageUtils.getT('templates.pageGroupManagement.modal');
+const translate = StageUtils.getT('templates.pageGroupManagement.modal');
 
 interface PageGroupModalProps {
     initialGroupName?: string;
@@ -50,11 +50,11 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
         } = {};
 
         if (_.isEmpty(_.trim(groupName))) {
-            submitErrors.groupName = t('errors.groupName');
+            submitErrors.groupName = translate('errors.groupName');
         }
 
         if (_.isEmpty(selectedPages)) {
-            submitErrors.selectedPages = t('errors.selectedPages');
+            submitErrors.selectedPages = translate('errors.selectedPages');
         }
 
         if (!_.isEmpty(submitErrors)) {
@@ -79,18 +79,18 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
                 <Icon name="folder open outline" />
                 {editMode ? (
                     <span>
-                        {t('updateHeader', {
+                        {translate('updateHeader', {
                             pageGroupName: initialGroupName
                         })}
                     </span>
                 ) : (
-                    <span>{t('createHeader')}</span>
+                    <span>{translate('createHeader')}</span>
                 )}
             </Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors}>
-                    <Form.Field error={errors.groupName} label={t('groupName')}>
+                    <Form.Field error={errors.groupName} label={translate('groupName')}>
                         <Form.Input
                             value={groupName}
                             onChange={(...args) => {
@@ -99,12 +99,12 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
                             }}
                         />
                     </Form.Field>
-                    <Form.Field label={t('icon')}>
+                    <Form.Field label={translate('icon')}>
                         <SemanticIconDropdown value={icon} onChange={setIcon} />
                     </Form.Field>
                     <Segment.Group horizontal>
                         <Segment style={{ width: '50%' }}>
-                            <Icon name="file outline" /> {t('availablePages')}
+                            <Icon name="file outline" /> {translate('availablePages')}
                             <Divider />
                             <SelectionList
                                 items={allAvailablePages.filter(pageId => !includes(selectedPages, pageId))}
@@ -127,7 +127,7 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
             <Modal.Actions>
                 <CancelButton onClick={doClose} />
                 <ApproveButton
-                    content={editMode ? t('submitUpdate') : t('submitCreate')}
+                    content={editMode ? translate('submitUpdate') : translate('submitCreate')}
                     icon={editMode ? 'edit' : 'checkmark'}
                     onClick={handleSubmit}
                 />

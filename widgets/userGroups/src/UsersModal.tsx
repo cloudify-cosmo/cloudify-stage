@@ -3,7 +3,7 @@ import type { DropdownProps } from 'semantic-ui-react';
 import type { UserGroup } from './widget.types';
 import Actions from './actions';
 
-const t = Stage.Utils.getT('widgets.userGroups.modals.user');
+const translate = Stage.Utils.getT('widgets.userGroups.modals.user');
 
 export interface Users {
     items?: {
@@ -85,7 +85,7 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="user" />
-                {t('header', {
+                {translate('header', {
                     groupName: group.name
                 })}
             </Modal.Header>
@@ -93,12 +93,12 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
             <Modal.Content>
                 {waitingForConfirmation && (
                     <Message warning onDismiss={() => setWaitingForConfirmation(false)}>
-                        <Message.Header>{t('message.header')}</Message.Header>
-                        {t('message.content')}
+                        <Message.Header>{translate('message.header')}</Message.Header>
+                        {translate('message.content')}
                     </Message>
                 )}
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label={t('fields.users')}>
+                    <Form.Field label={translate('fields.users')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -115,13 +115,13 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                 <CancelButton
                     onClick={onCancel}
                     disabled={isLoading}
-                    content={waitingForConfirmation ? t('buttons.cancel') : undefined}
+                    content={waitingForConfirmation ? translate('buttons.cancel') : undefined}
                 />
                 <ApproveButton
                     onClick={submitUsers}
                     disabled={isLoading}
                     icon="user"
-                    content={waitingForConfirmation ? t('buttons.approve') : undefined}
+                    content={waitingForConfirmation ? translate('buttons.approve') : undefined}
                 />
             </Modal.Actions>
         </Modal>

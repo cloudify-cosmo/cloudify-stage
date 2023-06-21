@@ -6,7 +6,7 @@ import type { Role } from '../../../app/widgets/common/roles/RolesPicker';
 import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 import getWidgetT from './getWidgetT';
 
-const t = getWidgetT();
+const translate = getWidgetT();
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 
@@ -90,12 +90,12 @@ const TenantModal: FunctionComponent<TenantModalProps> = ({ onHide, open, user, 
     return (
         <Modal open={open} onClose={() => onHide()} className="editTenantsModal">
             <Modal.Header>
-                <Icon name="user" /> {t('editTenantsModalHeader', { username: user.username })}
+                <Icon name="user" /> {translate('editTenantsModalHeader', { username: user.username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label={t('details.tenants')}>
+                    <Form.Field label={translate('details.tenants')}>
                         <Form.Dropdown
                             multiple
                             selection

@@ -22,7 +22,7 @@ export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagon_urls'
     wagonUrl: string;
 }
 
-const t = Stage.Utils.getT('widgets.pluginsCatalog');
+const translate = Stage.Utils.getT('widgets.pluginsCatalog');
 
 function toUploadData(item: PluginsCatalogItem) {
     return {
@@ -76,7 +76,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
             .doUpload(plugin)
             .then(() => {
                 eventBus.trigger(refreshEvent);
-                eventBus.trigger(uploadSucceededEvent, t('successMessage', { pluginTitle: plugin.title }));
+                eventBus.trigger(uploadSucceededEvent, translate('successMessage', { pluginTitle: plugin.title }));
                 setUploadedPlugins(prevState => ({ ...prevState, [plugin.yamlUrl]: true }));
             })
             .catch(err => {
@@ -126,13 +126,13 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
                     dispatch(PluginActions.setPluginUploading(Stage.Utils.Plugin.getYamlUrl(item)));
                     doUpload(pluginUploadData);
                 }}
-                title={t(`uploadButton.${titleKey}`)}
+                title={translate(`uploadButton.${titleKey}`)}
                 disabled={recentVersionUploaded || pluginUploading}
             />
         );
     }
 
-    const NO_DATA_MESSAGE = t('noData');
+    const NO_DATA_MESSAGE = translate('noData');
     const { Button, DataTable } = Stage.Basic;
     const { FeedbackMessages } = Stage.Common.Components;
     const PluginIcon = Stage.Common.Plugins.Icon;
@@ -158,10 +158,10 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
 
             <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                 <DataTable.Column width="2%" />
-                <DataTable.Column label={t('columns.name')} width="20%" />
-                <DataTable.Column label={t('columns.description')} width="60%" />
-                <DataTable.Column label={t('columns.version')} width="10%" />
-                <DataTable.Column label={t('columns.uploadedVersion')} width="10%" />
+                <DataTable.Column label={translate('columns.name')} width="20%" />
+                <DataTable.Column label={translate('columns.description')} width="60%" />
+                <DataTable.Column label={translate('columns.version')} width="10%" />
+                <DataTable.Column label={translate('columns.uploadedVersion')} width="10%" />
                 <DataTable.Column width="5%" />
 
                 {plugins.map(item => {
@@ -182,7 +182,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
                 <DataTable.Action>
                     <Button
                         disabled={!find(plugins, isAvailableForUpload)}
-                        content={t('uploadAllButton')}
+                        content={translate('uploadAllButton')}
                         onClick={() => onUploadAll(plugins)}
                     />
                 </DataTable.Action>

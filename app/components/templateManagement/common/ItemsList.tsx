@@ -5,7 +5,7 @@ import type { IconProps } from 'semantic-ui-react';
 import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 
-const t = StageUtils.getT('templates');
+const translate = StageUtils.getT('templates');
 
 export interface ItemsListProps {
     removable?: boolean;
@@ -31,7 +31,7 @@ const ItemsList: FunctionComponent<ItemsListProps> = ({
 }) => {
     return (
         <Segment style={{ width }}>
-            <Icon name={icon} /> {t(titleI18nKey)}
+            <Icon name={icon} /> {translate(titleI18nKey)}
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
                 {items.map(item => {
@@ -49,7 +49,7 @@ const ItemsList: FunctionComponent<ItemsListProps> = ({
                                             onClick={(e: Event) => e.stopPropagation()}
                                         />
                                     }
-                                    content={t(deleteConfirmI18nKey)}
+                                    content={translate(deleteConfirmI18nKey)}
                                     onConfirm={() => onDelete(item)}
                                     onCancel={undefined}
                                     onCanConfirm={undefined}
@@ -60,7 +60,7 @@ const ItemsList: FunctionComponent<ItemsListProps> = ({
                     );
                 })}
 
-                {noDataMessageI18nKey && _.isEmpty(items) && <Message content={t(noDataMessageI18nKey)} />}
+                {noDataMessageI18nKey && _.isEmpty(items) && <Message content={translate(noDataMessageI18nKey)} />}
             </List>
         </Segment>
     );

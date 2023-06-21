@@ -10,8 +10,8 @@ import AboutModal from './AboutModal';
 import { useBoolean } from '../../utils/hooks';
 import type { SystemMenuGroupItemProps } from './SystemMenu';
 
-const t = StageUtils.getT('users');
-const tHelp = StageUtils.getT('help');
+const translateUsers = StageUtils.getT('users');
+const translateHelp = StageUtils.getT('help');
 
 const HelpMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onModalOpen, onGroupClick }) => {
     const [aboutModalVisible, showAboutModal, closeAboutModal] = useBoolean();
@@ -28,23 +28,29 @@ const HelpMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
 
     return (
         <>
-            <SideBarItem icon="help circle" label={t('help')} onClick={onGroupClick} expandable expanded={expanded} />
+            <SideBarItem
+                icon="help circle"
+                label={translateUsers('help')}
+                onClick={onGroupClick}
+                expandable
+                expanded={expanded}
+            />
 
             {expanded && (
                 <>
                     <SideBarItem
                         icon="book"
-                        label={tHelp('documentation')}
+                        label={translateHelp('documentation')}
                         subItem
-                        onClick={() => redirectToPage(tHelp('documentationLink', { version }))}
+                        onClick={() => redirectToPage(translateHelp('documentationLink', { version }))}
                     />
                     <SideBarItem
                         icon="comments"
-                        label={tHelp('contact')}
+                        label={translateHelp('contact')}
                         subItem
-                        onClick={() => redirectToPage(tHelp('contactLink'))}
+                        onClick={() => redirectToPage(translateHelp('contactLink'))}
                     />
-                    <SideBarItem icon="info circle" label={tHelp('about')} subItem onClick={handleModalOpen} />
+                    <SideBarItem icon="info circle" label={translateHelp('about')} subItem onClick={handleModalOpen} />
                 </>
             )}
 

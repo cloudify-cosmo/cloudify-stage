@@ -18,7 +18,7 @@ interface DeploymentNumWidgetConfiguration {
     filterId: string;
 }
 
-const t = Stage.Utils.getT('widgets.deploymentNum');
+const translate = Stage.Utils.getT('widgets.deploymentNum');
 
 Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     id: 'deploymentNum',
@@ -33,38 +33,38 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'label',
-            name: t('configuration.label.name'),
-            description: t('configuration.label.description'),
+            name: translate('configuration.label.name'),
+            description: translate('configuration.label.description'),
             default: 'Deployments',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'icon',
-            name: t('configuration.icon.name'),
-            description: t('configuration.icon.description'),
+            name: translate('configuration.icon.name'),
+            description: translate('configuration.icon.description'),
             default: 'cube',
             component: Stage.Shared.SemanticIconDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
             id: 'imageSrc',
-            name: t('configuration.imageSrc.name'),
-            description: t('configuration.imageSrc.description'),
+            name: translate('configuration.imageSrc.name'),
+            description: translate('configuration.imageSrc.description'),
             default: '',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'filterId',
-            name: t('configuration.filterId.name'),
-            description: t('configuration.filterId.description'),
+            name: translate('configuration.filterId.name'),
+            description: translate('configuration.filterId.description'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: '',
             component: Stage.Common.Filters.FilterIdDropdown
         },
         {
             id: 'page',
-            name: t('configuration.page.name'),
-            description: t('configuration.page.description'),
+            name: translate('configuration.page.name'),
+            description: translate('configuration.page.description'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: 'services',
             component: Stage.Shared.PageFilter

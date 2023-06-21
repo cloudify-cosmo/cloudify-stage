@@ -11,7 +11,7 @@ import StageUtils from '../../../utils/stageUtils';
 import { Divider, Icon, List, Message, Ref, Segment } from '../../basic';
 import type { PageMenuItem } from '../templates/types';
 
-const t = StageUtils.getT('templates');
+const translate = StageUtils.getT('templates');
 
 interface SortablePageItemProps {
     item: PageMenuItem;
@@ -36,8 +36,8 @@ const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ item, id, 
             <List.Item style={style} {...attributes}>
                 {name}
                 <span className="right floated actionIcons">
-                    <Icon link name="minus" onClick={onRemove} title={t('removePage')} />
-                    <Icon {...listeners} link name="move" className="handle" title={t('reorderPage')} />
+                    <Icon link name="minus" onClick={onRemove} title={translate('removePage')} />
+                    <Icon {...listeners} link name="move" className="handle" title={translate('reorderPage')} />
                 </span>
             </List.Item>
         </Ref>
@@ -88,7 +88,7 @@ const SortableList: FunctionComponent<SortableListProps> = ({
     return (
         <Segment style={{ width: '50%' }}>
             <Icon name={icon} />
-            {t(titleI18nKey)}
+            {translate(titleI18nKey)}
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
                 <DndContext
@@ -112,7 +112,7 @@ const SortableList: FunctionComponent<SortableListProps> = ({
                     </SortableContext>
                 </DndContext>
 
-                {_.isEmpty(items) && <Message content={t(noDataMessageI18nKey)} />}
+                {_.isEmpty(items) && <Message content={translate(noDataMessageI18nKey)} />}
             </List>
         </Segment>
     );

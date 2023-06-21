@@ -21,7 +21,7 @@ const StyledLinkButton = styled(Button)`
     }
 `;
 
-const t = Utils.getWidgetTranslation('blueprintCatalog');
+const translate = Utils.getWidgetTranslation('blueprintCatalog');
 
 const getIcon = (url: string): SemanticICONS => {
     const isGithub = url.startsWith('https://github.com');
@@ -42,13 +42,13 @@ const RepositoryLinkButton = ({ url, displayStyle }: RepositoryLinkButtonProps) 
             circular
             icon={icon}
             onClick={() => Stage.Utils.Url.redirectToPage(url)}
-            title={t('actions.openBlueprintRepository')}
+            title={translate('actions.openBlueprintRepository')}
         />
     ) : (
         <Icon
             name={icon as SemanticICONS}
             onClick={() => Stage.Utils.Url.redirectToPage(url)}
-            title={t('actions.openBlueprintRepository')}
+            title={translate('actions.openBlueprintRepository')}
         />
     );
 };

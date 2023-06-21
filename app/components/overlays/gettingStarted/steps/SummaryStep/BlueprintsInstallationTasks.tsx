@@ -8,7 +8,7 @@ import { SuccessDescription } from './descriptions';
 import type { createBlueprintsInstallationTasks } from '../../installation/tasks';
 import type { TaskStatus } from '../../installation/process';
 
-const t = StageUtils.getT('gettingStartedModal.summary.blueprint');
+const translate = StageUtils.getT('gettingStartedModal.summary.blueprint');
 
 type Props = {
     tasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
@@ -20,9 +20,9 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
         return null;
     }
     const getBlueprintTaskDescription = createTaskDescriptionGetter(
-        t('uploadingProgressMessageSuffix'),
-        t('uploadingDoneMessageSuffix'),
-        t('uploadingErrorMessageSuffix')
+        translate('uploadingProgressMessageSuffix'),
+        translate('uploadingDoneMessageSuffix'),
+        translate('uploadingErrorMessageSuffix')
     );
     return (
         <>
@@ -31,7 +31,7 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        <SuccessDescription message={t('alreadyUploadedMessageSuffix')} />
+                        <SuccessDescription message={translate('alreadyUploadedMessageSuffix')} />
                     </List.Item>
                 );
             })}
@@ -42,7 +42,7 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
                         {getBlueprintTaskDescription(
                             blueprint.blueprintName,
                             statuses,
-                            t('uploadScheduledMessageSuffix')
+                            translate('uploadScheduledMessageSuffix')
                         )}
                     </List.Item>
                 );
