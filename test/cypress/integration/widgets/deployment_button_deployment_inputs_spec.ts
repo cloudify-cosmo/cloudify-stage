@@ -67,14 +67,16 @@ describe('Create Deployment modal handles deployment inputs', () => {
             cy.get('div.dropdown').click();
         }
 
-        const contains = typedPrefix ? ` :contains("${typedPrefix}")` : '';
-        if (number === 0) {
-            cy.get('.menu').contains('No results found.').should('be.visible');
-        } else if (atLeast) {
-            cy.get(`.menu .item[role="option"]${contains}`).should('have.length.at.least', number);
-        } else {
-            cy.get(`.menu .item[role="option"]${contains}`).should('have.length', number);
-        }
+        cy.get('.menu').within(() => {
+            if (number === 0) {
+                cy.contains('No results found.');
+            } else {
+                cy.get(
+                    `.item[role="option"]:not(".disabled")${typedPrefix ? `:contains("${typedPrefix}")` : ''}`
+                ).should(`have.length${atLeast ? '.at.least' : ''}`, number);
+            }
+        });
+
         cy.get('label').click();
     };
 
