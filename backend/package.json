@@ -61,7 +61,7 @@
         "passport": "^0.6.0",
         "passport-cookie": "^1.0.9",
         "passport-unique-token": "^3.0.0",
-        "patch-package": "^6.4.7",
+        "patch-package": "^7.0.1",
         "pg": "^8.7.3",
         "pg-hstore": "^2.3.3",
         "query-string": "^7.0.1",
