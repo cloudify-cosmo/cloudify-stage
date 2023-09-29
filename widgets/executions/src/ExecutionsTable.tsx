@@ -90,38 +90,37 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
         }
     }
 
-    getActionMenuItemClickHandler(execution: Execution) {
-        return (): MenuItemProps['onClick'] =>
-            (_proxy, { name }) => {
-                const { MenuAction } = ExecutionsTable;
+    getActionMenuItemClickHandler =
+        (execution: Execution): MenuItemProps['onClick'] =>
+        (_proxy, { name }) => {
+            const { MenuAction } = ExecutionsTable;
 
-                switch (name) {
-                    case MenuAction.SHOW_EXECUTION_PARAMETERS:
-                        this.setState({ execution, executionParametersModalOpen: true });
-                        break;
+            switch (name) {
+                case MenuAction.SHOW_EXECUTION_PARAMETERS:
+                    this.setState({ execution, executionParametersModalOpen: true });
+                    break;
 
-                    case MenuAction.SHOW_UPDATE_DETAILS:
-                        this.setState({
-                            deploymentUpdateId: execution.parameters?.update_id,
-                            deploymentUpdateModalOpen: true
-                        });
-                        break;
+                case MenuAction.SHOW_UPDATE_DETAILS:
+                    this.setState({
+                        deploymentUpdateId: execution.parameters?.update_id,
+                        deploymentUpdateModalOpen: true
+                    });
+                    break;
 
-                    case MenuAction.SHOW_ERROR_DETAILS:
-                        this.setState({ execution, errorModalOpen: true });
-                        break;
+                case MenuAction.SHOW_ERROR_DETAILS:
+                    this.setState({ execution, errorModalOpen: true });
+                    break;
 
-                    case MenuAction.RESUME_EXECUTION:
-                    case MenuAction.CANCEL_EXECUTION:
-                    case MenuAction.FORCE_CANCEL_EXECUTION:
-                    case MenuAction.KILL_CANCEL_EXECUTION:
-                        this.actOnExecution(execution, name);
-                        break;
+                case MenuAction.RESUME_EXECUTION:
+                case MenuAction.CANCEL_EXECUTION:
+                case MenuAction.FORCE_CANCEL_EXECUTION:
+                case MenuAction.KILL_CANCEL_EXECUTION:
+                    this.actOnExecution(execution, name);
+                    break;
 
-                    default:
-                }
-            };
-    }
+                default:
+            }
+        };
 
     fetchGridData: DataTableProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
