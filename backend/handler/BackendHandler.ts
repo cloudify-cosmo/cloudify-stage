@@ -1,10 +1,7 @@
 import fs from 'fs-extra';
 import pathlib from 'path';
 import _ from 'lodash';
-import { NodeVM, VMScript } from 'vm2';
-import type { CompilerOptions } from 'typescript';
-import ts, { ModuleKind, ScriptTarget } from 'typescript';
-import tsConfig from '@tsconfig/node14/tsconfig.json';
+import ivm from 'isolated-vm';
 
 import type { NextFunction, Request, Response } from 'express';
 
@@ -25,17 +22,14 @@ const builtInWidgetsFolder = getResourcePath('widgets', false);
 const userWidgetsFolder = getResourcePath('widgets', true);
 const getServiceString = (widgetId: string, method: AllowedRequestMethod, serviceName: string) =>
     `widget=${widgetId} method=${method} name=${serviceName}`;
-const allowedModulesPaths = _.map(
-    getConfig().app.widgets.allowedModules,
-    module => `${process.cwd()}/node_modules/${module}`
-);
 
-// NOTE: TS configurations from @tsconfig are not compatible with CompilerOptions type
-// used in ts.transpile method's second argument type)
-const compilerOptions: CompilerOptions = {
-    ...tsConfig.compilerOptions,
-    module: ModuleKind.CommonJS,
-    target: ScriptTarget.ES2020
+const getPathCompatibleWithUnix = (path: string) => {
+    const windowsPathSeparator = pathlib.win32.sep;
+    const unixPathSeparator = pathlib.posix.sep;
+    if (path.includes(windowsPathSeparator)) {
+        return path.replaceAll(windowsPathSeparator, unixPathSeparator);
+    }
+    return path;
 };
 
 const BackendRegistrator = (
@@ -63,9 +57,6 @@ const BackendRegistrator = (
         if (!normalizedService) {
             return reject('Service body must be provided');
         }
-        if (!_.isFunction(normalizedService)) {
-            return reject('Service body must be a function (function(request, response, next, helper) {...})');
-        }
 
         logger.info(`--- registering service ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`);
 
@@ -91,7 +82,7 @@ const BackendRegistrator = (
                 );
                 return widgetBackend.update(
                     {
-                        script: <string>(<unknown>new VMScript(`module.exports = ${normalizedService!.toString()}`))
+                        script: <string>(`${normalizedService!.toString()}`)
                     },
                     { fields: ['script'] }
                 );
@@ -137,6 +128,13 @@ function getBuiltInWidgets() {
         );
 }
 
+/** host wrapper function  to register the script, service and method in the db using BackendRegistrator */
+function registerHostFunction(widgetId:string, serviceName: string, method: AllowedRequestMethod, service: string) {
+    return new Promise((resolve, reject) => {
+        BackendRegistrator(widgetId, resolve, reject).register(serviceName, method, service)
+    });
+}
+
 export function importWidgetBackend(widgetId: string, isCustom = true) {
     let widgetsFolder = userWidgetsFolder;
     if (!isCustom) {
@@ -144,7 +142,7 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
     }
     const backendFile = pathlib.resolve(widgetsFolder, widgetId, getConfig().app.widgets.backendFilename);
 
-    function importWidgetBackendFromFile(extensions: string[]): Promise<any> {
+   async function importWidgetBackendFromFile(extensions: string[]): Promise<any> {
         if (extensions.length === 0) {
             return Promise.resolve();
         }
@@ -159,36 +157,21 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
         logger.info(`-- initializing file ${backendFileWithExtension}`);
 
         try {
-            const vm = new NodeVM({
-                sandbox: {
-                    _,
-                    widgetId,
-                    BackendRegistrator
-                },
-                require: {
-                    context: 'sandbox',
-                    external: true,
-                    root: [backendFileWithExtension, ...allowedModulesPaths]
-                },
-                compiler: source => ts.transpile(source, compilerOptions),
-                sourceExtensions: getConfig().app.widgets.backendFilenameExtensions
-            });
+            
+            /**  read the file content of the uploaded script file
+             call the host function through synced function from isolated vm */
+             const backendPath = getPathCompatibleWithUnix(backendFileWithExtension);
+             const fileContent = fs.readFileSync(backendPath, 'utf8');
+             const isolate = new ivm.Isolate();
+             const context = isolate.createContextSync();
+             const sandbox = context.global;
+             /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
+              do not directly call not host function in host context, call it with setSync in isolated-vm */
+             sandbox.setSync('register', function (serviceName:string, method:AllowedRequestMethod, execute: string):any {
+                registerHostFunction(widgetId, serviceName, method, execute);
+             });
+             isolate.compileScriptSync(fileContent);
 
-            const script = `
-                    import backend from '${backendFileWithExtension.replace('\\', '\\\\')}';
-                    module.exports = new Promise((resolve, reject) => {
-                         try {
-                             if (_.isFunction(backend)) {
-                                 backend(BackendRegistrator(widgetId, resolve, reject));
-                             } else {
-                                 reject('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
-                             }
-                         } catch (error) {
-                             reject(error);
-                         }
-                     });`;
-
-            return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) });
         } catch (err: any) {
             logger.error('reject', backendFileWithExtension, err);
             return Promise.reject(
@@ -227,6 +210,49 @@ export function initWidgetBackends() {
         });
 }
 
+const runScriptInIsolate = async function (script: string, query: any, headers: any) {
+    const isolate = new ivm.Isolate();
+    const context = isolate.createContextSync();
+    const sandbox = context.global;
+    // Log function added for debugging purpose, can be removed
+    sandbox.setSync('log', function (...args: any[]) {
+        console.log(...args);
+    });
+    
+    // TODO: replace with utility function
+    sandbox.setSync(
+        'requestDoGet',
+        async function (url: string, params: string) {
+            const paramsObj = JSON.parse(params);
+            const data = await services.Request.doGet(url, { params: paramsObj });
+            return JSON.stringify(data);
+        },
+        { reference: true }
+    );
+
+    sandbox.setSync(
+        'managerDoGet',
+        async function (url: string, params: string, headers: string) {
+            const paramsObj = JSON.parse(params);
+            const headersObj = JSON.parse(headers);
+            const data = await services.Manager.doGet(url, { params: paramsObj, headers: headersObj });
+            return JSON.stringify(data);
+        },
+        { reference: true }
+    );
+
+    const compiledScript = await isolate.compileScript(script);
+    await compiledScript.run(context);
+    const executeFn = await context.global.get('execute', {
+        reference: true
+    });
+    const result: any = await executeFn.apply(undefined, [query, headers], {
+        arguments: { copy: true },
+        result: { promise: true, copy: true }
+    });
+    return result;
+};
+
 export function callService(
     serviceName: string,
     method: AllowedRequestMethod,
@@ -246,26 +272,25 @@ export function callService(
                 `There is no service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId} registered`
             );
         })
-        .then(widgetBackend => {
-            const script = _.get(widgetBackend, 'script.code', null);
+        .then(async widgetBackend => {
+           // TODO: Refactor the widgetBackend script and use it. Remove the hardcoded script.
+           let script = _.get(widgetBackend, 'script', null);
+           if (script) {
 
-            if (script) {
-                const vm = new NodeVM({
-                    require: {
-                        external: true,
-                        root: allowedModulesPaths
-                    }
-                });
-                return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) })(
-                    req,
-                    res,
-                    next,
-                    services
-                );
-            }
-            return Promise.reject(
-                `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
-            );
+               const { headers } = req;
+               const scriptResult = await runScriptInIsolate(script, req.query, headers);
+               try {
+                   const data = JSON.parse(scriptResult as string);
+                   res.send(data);
+               } catch {
+                   next;
+               }
+
+               return scriptResult;
+           }
+           return Promise.reject(
+               `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
+           );
         });
 }
 
