@@ -82,7 +82,7 @@ const BackendRegistrator = (
                 );
                 return widgetBackend.update(
                     {
-                        script: <string>(`${normalizedService!.toString()}`)
+                        script: <string>`${normalizedService!.toString()}`
                     },
                     { fields: ['script'] }
                 );
@@ -129,9 +129,9 @@ function getBuiltInWidgets() {
 }
 
 /** host wrapper function  to register the script, service and method in the db using BackendRegistrator */
-function registerHostFunction(widgetId:string, serviceName: string, method: AllowedRequestMethod, service: string) {
+function registerHostFunction(widgetId: string, serviceName: string, method: AllowedRequestMethod, service: string) {
     return new Promise((resolve, reject) => {
-        BackendRegistrator(widgetId, resolve, reject).register(serviceName, method, service)
+        BackendRegistrator(widgetId, resolve, reject).register(serviceName, method, service);
     });
 }
 
@@ -142,7 +142,7 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
     }
     const backendFile = pathlib.resolve(widgetsFolder, widgetId, getConfig().app.widgets.backendFilename);
 
-   async function importWidgetBackendFromFile(extensions: string[]): Promise<any> {
+    async function importWidgetBackendFromFile(extensions: string[]): Promise<any> {
         if (extensions.length === 0) {
             return Promise.resolve();
         }
@@ -157,27 +157,27 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
         logger.info(`-- initializing file ${backendFileWithExtension}`);
 
         try {
-            
             /**  read the file content of the uploaded script file
              call the host function through synced function from isolated vm */
-             const backendPath = getPathCompatibleWithUnix(backendFileWithExtension);
+            const backendPath = getPathCompatibleWithUnix(backendFileWithExtension);
             // TODO: temp fix to skip the executions/backend.ts until moved to stage-backend
-             if(!(backendFileWithExtension.includes('executions'))){
+            if (!backendFileWithExtension.includes('executions')) {
                 const fileContent = fs.readFileSync(backendPath, 'utf8');
                 const isolate = new ivm.Isolate();
                 const context = isolate.createContextSync();
                 const sandbox = context.global;
                 /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
                   do not directly call not host function in host context, call it with setSync in isolated-vm */
-                sandbox.setSync('register', function (serviceName:string, method:AllowedRequestMethod, execute: string):any {
-                    registerHostFunction(widgetId, serviceName, method, execute);
-                });
+                sandbox.setSync(
+                    'register',
+                    function (serviceName: string, method: AllowedRequestMethod, execute: string): any {
+                        registerHostFunction(widgetId, serviceName, method, execute);
+                    }
+                );
                 isolate.compileScriptSync(fileContent);
                 const complieScript = isolate.compileScriptSync(fileContent);
                 complieScript.runSync(context);
-             }
-             
-
+            }
         } catch (err: any) {
             logger.error('reject', backendFileWithExtension, err);
             return Promise.reject(
@@ -224,28 +224,25 @@ const runScriptInIsolate = async function (script: string, query: any, headers: 
     sandbox.setSync('log', function (...args: any[]) {
         console.log(...args);
     });
-    
-    // TODO: replace with utility function
-    sandbox.setSync(
-        'requestDoGet',
-        async function (url: string, params: string) {
-            const paramsObj = JSON.parse(params);
-            const data = await services.Request.doGet(url, { params: paramsObj });
-            return JSON.stringify(data);
-        },
-        { reference: true }
-    );
 
-    sandbox.setSync(
+    // TODO: replace with utility function
+    [
+        'requestCall',
+        'requestDoGet',
+        'requestDoPost',
+        'requestDoDelete',
+        'requestDoPut',
+        'requestDoPatch',
+        'managerCall',
         'managerDoGet',
-        async function (url: string, params: string, headers: string) {
-            const paramsObj = JSON.parse(params);
-            const headersObj = JSON.parse(headers);
-            const data = await services.Manager.doGet(url, { params: paramsObj, headers: headersObj });
-            return JSON.stringify(data);
-        },
-        { reference: true }
-    );
+        'managerDoGetFull',
+        'managerDoPost',
+        'managerDoDelete',
+        'managerDoPut',
+        'managerDoPatch'
+    ].forEach(method => {
+        sandbox.setSync(method, services.Sandbox[method as keyof typeof services.Sandbox], { reference: true });
+    });
 
     const compiledScript = await isolate.compileScript(script);
     await compiledScript.run(context);
@@ -279,23 +276,22 @@ export function callService(
             );
         })
         .then(async widgetBackend => {
-           let script = _.get(widgetBackend, 'script', null);
-           if (script) {
+            let script = _.get(widgetBackend, 'script', null);
+            if (script) {
+                const { headers } = req;
+                const scriptResult = await runScriptInIsolate(script, req.query, headers);
+                try {
+                    const data = JSON.parse(scriptResult as string);
+                    res.send(data);
+                } catch {
+                    next;
+                }
 
-               const { headers } = req;
-               const scriptResult = await runScriptInIsolate(script, req.query, headers);
-               try {
-                   const data = JSON.parse(scriptResult as string);
-                   res.send(data);
-               } catch {
-                   next;
-               }
-
-               return scriptResult;
-           }
-           return Promise.reject(
-               `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
-           );
+                return scriptResult;
+            }
+            return Promise.reject(
+                `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
+            );
         });
 }
 
