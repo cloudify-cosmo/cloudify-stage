@@ -54,6 +54,10 @@ pipeline {
               sh '''
                 jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
               '''
+              echo "Install isolated-vm deps"
+              sh """
+                apt-get install python g++ build-essential -y
+              """
             }
           }
           // Workaround for https://github.com/cypress-io/cypress/issues/20286
@@ -106,6 +110,10 @@ pipeline {
         stage('Build RPM'){
           steps {
             container('rpmbuild'){
+              echo "Install gcc 7"
+              sh """
+                apt-get install python g++ build-essential -y
+              """
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd ~/rpmbuild
@@ -127,6 +135,7 @@ pipeline {
 
               echo 'Download sources for RPM spec file & Build RPM'
               sh """
+                source /opt/rh/devtoolset-7/enable
                 cd ~/rpmbuild/BUILD
                 spectool \
                   -d "CLOUDIFY_VERSION ${env.VERSION}" \
