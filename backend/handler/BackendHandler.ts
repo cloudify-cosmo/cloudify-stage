@@ -161,16 +161,22 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
             /**  read the file content of the uploaded script file
              call the host function through synced function from isolated vm */
              const backendPath = getPathCompatibleWithUnix(backendFileWithExtension);
-             const fileContent = fs.readFileSync(backendPath, 'utf8');
-             const isolate = new ivm.Isolate();
-             const context = isolate.createContextSync();
-             const sandbox = context.global;
-             /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
-              do not directly call not host function in host context, call it with setSync in isolated-vm */
-             sandbox.setSync('register', function (serviceName:string, method:AllowedRequestMethod, execute: string):any {
-                registerHostFunction(widgetId, serviceName, method, execute);
-             });
-             isolate.compileScriptSync(fileContent);
+            // TODO: temp fix to skip the executions/backend.ts until moved to stage-backend
+             if(!(backendFileWithExtension.includes('executions'))){
+                const fileContent = fs.readFileSync(backendPath, 'utf8');
+                const isolate = new ivm.Isolate();
+                const context = isolate.createContextSync();
+                const sandbox = context.global;
+                /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
+                  do not directly call not host function in host context, call it with setSync in isolated-vm */
+                sandbox.setSync('register', function (serviceName:string, method:AllowedRequestMethod, execute: string):any {
+                    registerHostFunction(widgetId, serviceName, method, execute);
+                });
+                isolate.compileScriptSync(fileContent);
+                const complieScript = isolate.compileScriptSync(fileContent);
+                complieScript.runSync(context);
+             }
+             
 
         } catch (err: any) {
             logger.error('reject', backendFileWithExtension, err);
@@ -273,7 +279,6 @@ export function callService(
             );
         })
         .then(async widgetBackend => {
-           // TODO: Refactor the widgetBackend script and use it. Remove the hardcoded script.
            let script = _.get(widgetBackend, 'script', null);
            if (script) {
 
