@@ -225,23 +225,13 @@ const runScriptInIsolate = async function (script: string, query: any, headers: 
         console.log(...args);
     });
 
-    // TODO: replace with utility function
-    [
-        'requestCall',
-        'requestDoGet',
-        'requestDoPost',
-        'requestDoDelete',
-        'requestDoPut',
-        'requestDoPatch',
-        'managerCall',
-        'managerDoGet',
-        'managerDoGetFull',
-        'managerDoPost',
-        'managerDoDelete',
-        'managerDoPut',
-        'managerDoPatch'
-    ].forEach(method => {
+    // Utility function
+    services.Sandbox.methodsList.forEach((method: string) => {
         sandbox.setSync(method, services.Sandbox[method as keyof typeof services.Sandbox], { reference: true });
+    });
+
+    sandbox.setSync('logger', (method: 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly' | 'log', msg = '') => {
+        logger[method as keyof typeof logger](`${msg}`);
     });
 
     const compiledScript = await isolate.compileScript(script);
