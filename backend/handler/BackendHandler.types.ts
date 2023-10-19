@@ -11,5 +11,5 @@ interface Helper {
 export type BackendService = (req: Request, res: Response, next: NextFunction, helper: Helper) => void;
 
 export interface BackendServiceRegistrator {
-    register: (serviceName: string, method: AllowedRequestMethod | BackendService, service?: string |  BackendService) => void;
+    register: (serviceName: string, method: AllowedRequestMethod, service?: string) => void;
 }

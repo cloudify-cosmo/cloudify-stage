@@ -5,7 +5,7 @@ import { ALLOWED_METHODS_OBJECT } from '../../consts';
 const catchError = (err: { message: any }, serviceName: 'request' | 'manager', method: string) =>
     `Error while reuesting ${serviceName} - ${method} - ${err.message}`;
 
-const call = async function (serviceName: 'request' | 'manager', method: string, url: string, params = '{}') {
+const call = async (serviceName: 'request' | 'manager', method: string, url: string, params = '{}') => {
     try {
         const paramsObj = JSON.parse(params);
         const data =
@@ -25,7 +25,7 @@ const call = async function (serviceName: 'request' | 'manager', method: string,
         return catchError(err, serviceName, method);
     }
 };
-const doGet = async function (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) {
+const doGet = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
     try {
         const paramsObj = JSON.parse(params);
         const headersObj = headers && JSON.parse(headers);
@@ -38,14 +38,14 @@ const doGet = async function (serviceName: 'request' | 'manager', url: string, p
         return catchError(err, serviceName, 'doGet');
     }
 };
-const doGetFull = async function (
+const doGetFull = async (
     _serviceName: 'request' | 'manager' = 'manager',
     url: string,
     params: string,
     headers: string,
     fullData = JSON.stringify({ items: [] }),
     size = '0'
-) {
+) => {
     try {
         const paramsObj = JSON.parse(params);
         const headersObj = JSON.parse(headers);
@@ -60,7 +60,7 @@ const doGetFull = async function (
         return catchError(err, _serviceName, 'doGetFull');
     }
 };
-const doPost = async function (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) {
+const doPost = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
     try {
         const paramsObj = JSON.parse(params);
         const headersObj = headers && JSON.parse(headers);
@@ -73,7 +73,7 @@ const doPost = async function (serviceName: 'request' | 'manager', url: string, 
         return catchError(err, serviceName, 'doPost');
     }
 };
-const doDelete = async function (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) {
+const doDelete = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
     try {
         const paramsObj = JSON.parse(params);
         const headersObj = headers && JSON.parse(headers);
@@ -86,7 +86,7 @@ const doDelete = async function (serviceName: 'request' | 'manager', url: string
         return catchError(err, serviceName, 'doDelete');
     }
 };
-const doPut = async function (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) {
+const doPut = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
     try {
         const paramsObj = JSON.parse(params);
         const headersObj = headers && JSON.parse(headers);
@@ -99,7 +99,7 @@ const doPut = async function (serviceName: 'request' | 'manager', url: string, p
         return catchError(err, serviceName, 'doPut');
     }
 };
-const doPatch = async function (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) {
+const doPatch = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
     try {
         const paramsObj = JSON.parse(params);
         const headersObj = headers && JSON.parse(headers);
