@@ -15,6 +15,7 @@ import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
 import type { WidgetBackendsInstance } from '../db/models/WidgetBackendsModel';
 import type { BackendServiceRegistrator } from './BackendHandler.types';
+import { IncomingHttpHeaders } from 'http';
 
 
 const logger = getLogger('WidgetBackend');
@@ -90,7 +91,7 @@ const BackendRegistrator = (
                 );
                 return widgetBackend.update(
                     {
-                        script: <string>`${normalizedService!.toString()}`
+                        script: normalizedService!.toString()
                     },
                     { fields: ['script'] }
                 );
@@ -234,28 +235,18 @@ export function initWidgetBackends() {
         });
 }
 
-const runScriptInIsolate = async function (script: string, query: any, headers: any) {
+const runScriptInIsolate = async function (script: string, query: qs.ParsedQs, headers: IncomingHttpHeaders) {
     const isolate = new ivm.Isolate();
     const context = isolate.createContextSync();
     const sandbox = context.global;
 
-    // TODO: replace with utility function
-    [
-        'requestCall',
-        'requestDoGet',
-        'requestDoPost',
-        'requestDoDelete',
-        'requestDoPut',
-        'requestDoPatch',
-        'managerCall',
-        'managerDoGet',
-        'managerDoGetFull',
-        'managerDoPost',
-        'managerDoDelete',
-        'managerDoPut',
-        'managerDoPatch'
-    ].forEach(method => {
+    // Utility function
+    services.Sandbox.methodsList.forEach((method: string) => {
         sandbox.setSync(method, services.Sandbox[method as keyof typeof services.Sandbox], { reference: true });
+    });
+
+    sandbox.setSync('logger', (method: 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly' | 'log', msg = '') => {
+        logger[method as keyof typeof logger](`${msg}`);
     });
 
     const compiledScript = await isolate.compileScript(script);
@@ -267,7 +258,7 @@ const runScriptInIsolate = async function (script: string, query: any, headers: 
         arguments: { copy: true },
         result: { promise: true, copy: true }
     });
-    return result;
+    return result as string; // The sandbox returns the stringified result
 };
 
 export function callService(
@@ -292,16 +283,14 @@ export function callService(
         .then(async widgetBackend => {
             let script = _.get(widgetBackend, 'script', null);
             if (script) {
-                const { headers } = req;
-                const scriptResult = await runScriptInIsolate(script, req.query, headers);
+                const { headers, query } = req;
+                const scriptResult = await runScriptInIsolate(script, query, headers);
                 try {
-                    const data = JSON.parse(scriptResult as string);
+                    const data = JSON.parse(scriptResult);
                     res.send(data);
                 } catch {
                     next;
                 }
-
-                return scriptResult;
             }
             return Promise.reject(
                 `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
