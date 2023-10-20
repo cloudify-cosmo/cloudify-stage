@@ -25,14 +25,11 @@ const call = async (serviceName: 'request' | 'manager', method: string, url: str
         return catchError(err, serviceName, method);
     }
 };
-const doGet = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
+const doGet = async (serviceName: 'request' | 'manager', url: string, requestOptions: string) => {
     try {
-        const paramsObj = JSON.parse(params);
-        const headersObj = headers && JSON.parse(headers);
+        const parsedRO = JSON.parse(requestOptions);
         const data =
-            serviceName === 'manager'
-                ? await manager.doGet(url, { params: paramsObj, headers: headersObj })
-                : await request.doGet(url, { params: paramsObj });
+            serviceName === 'manager' ? await manager.doGet(url, parsedRO) : await request.doGet(url, parsedRO);
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, serviceName, 'doGet');
@@ -41,72 +38,53 @@ const doGet = async (serviceName: 'request' | 'manager', url: string, params: st
 const doGetFull = async (
     _serviceName: 'request' | 'manager' = 'manager',
     url: string,
-    params: string,
-    headers: string,
+    requestOptions: string,
     fullData = JSON.stringify({ items: [] }),
     size = '0'
 ) => {
     try {
-        const paramsObj = JSON.parse(params);
-        const headersObj = JSON.parse(headers);
-        const data = await manager.doGetFull(
-            url,
-            { params: paramsObj, headers: headersObj },
-            JSON.parse(fullData),
-            Number(size)
-        );
+        const parsedRO = JSON.parse(requestOptions);
+        const data = await manager.doGetFull(url, parsedRO, JSON.parse(fullData), Number(size));
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, _serviceName, 'doGetFull');
     }
 };
-const doPost = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
+const doPost = async (serviceName: 'request' | 'manager', url: string, requestOptions: string) => {
     try {
-        const paramsObj = JSON.parse(params);
-        const headersObj = headers && JSON.parse(headers);
+        const parsedRO = JSON.parse(requestOptions);
         const data =
-            serviceName === 'manager'
-                ? await manager.doPost(url, { params: paramsObj, headers: headersObj })
-                : await request.doPost(url, { params: paramsObj });
+            serviceName === 'manager' ? await manager.doPost(url, parsedRO) : await request.doPost(url, parsedRO);
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, serviceName, 'doPost');
     }
 };
-const doDelete = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
+const doDelete = async (serviceName: 'request' | 'manager', url: string, requestOptions: string) => {
     try {
-        const paramsObj = JSON.parse(params);
-        const headersObj = headers && JSON.parse(headers);
+        const parsedRO = JSON.parse(requestOptions);
         const data =
-            serviceName === 'manager'
-                ? await manager.doDelete(url, { params: paramsObj, headers: headersObj })
-                : await request.doDelete(url, { params: paramsObj });
+            serviceName === 'manager' ? await manager.doDelete(url, parsedRO) : await request.doDelete(url, parsedRO);
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, serviceName, 'doDelete');
     }
 };
-const doPut = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
+const doPut = async (serviceName: 'request' | 'manager', url: string, requestOptions: string) => {
     try {
-        const paramsObj = JSON.parse(params);
-        const headersObj = headers && JSON.parse(headers);
+        const parsedRO = JSON.parse(requestOptions);
         const data =
-            serviceName === 'manager'
-                ? await manager.doPut(url, { params: paramsObj, headers: headersObj })
-                : await request.doPut(url, { params: paramsObj });
+            serviceName === 'manager' ? await manager.doPut(url, parsedRO) : await request.doPut(url, parsedRO);
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, serviceName, 'doPut');
     }
 };
-const doPatch = async (serviceName: 'request' | 'manager', url: string, params: string, headers?: string) => {
+const doPatch = async (serviceName: 'request' | 'manager', url: string, requestOptions: string) => {
     try {
-        const paramsObj = JSON.parse(params);
-        const headersObj = headers && JSON.parse(headers);
+        const parsedRO = JSON.parse(requestOptions);
         const data =
-            serviceName === 'manager'
-                ? await manager.doPatch(url, { params: paramsObj, headers: headersObj })
-                : await request.doPatch(url, { params: paramsObj });
+            serviceName === 'manager' ? await manager.doPatch(url, parsedRO) : await request.doPatch(url, parsedRO);
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, serviceName, 'doPatch');
