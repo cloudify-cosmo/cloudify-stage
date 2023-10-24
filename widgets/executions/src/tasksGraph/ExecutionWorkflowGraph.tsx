@@ -3,9 +3,9 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { Toolbox } from 'app/utils/StageAPI';
 import type { LatestExecutionStatusIconProps } from 'app/widgets/common/executions/LatestExecutionStatusIcon';
-import type { ElkNode } from 'elkjs';
 import type { CancelablePromise } from 'app/utils/types';
 import { find, get, includes, noop } from 'lodash';
+import type { ExecutionGraphResponse } from 'backend/routes/Executions.types';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
@@ -45,7 +45,7 @@ export default function ExecutionWorkflowGraph({
     const { useState, useRef, useEffect, useCallback } = React;
     const { useBoolean, useResettableState, useWidthObserver } = Stage.Hooks;
 
-    const [graphData, setGraphData, clearGraphData] = useResettableState<ElkNode | null>(null);
+    const [graphData, setGraphData, clearGraphData] = useResettableState<ExecutionGraphResponse | null>(null);
     const [error, setError, clearError] = useResettableState('');
     const [isMaximized, maximize, minimize] = useBoolean();
     const [position, setPosition] = useState(INITIAL_POSITION);
@@ -53,7 +53,7 @@ export default function ExecutionWorkflowGraph({
     const [autoFocus, setAutoFocus] = useState<boolean>();
 
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const cancelablePromise = useRef<CancelablePromise<ElkNode> | null>(null);
+    const cancelablePromise = useRef<CancelablePromise<ExecutionGraphResponse> | null>(null);
     const modal = useRef<HTMLDivElement | null>(null);
 
     const [wrapperRef, getWrapperWidth] = useWidthObserver();
@@ -70,7 +70,7 @@ export default function ExecutionWorkflowGraph({
         const params = {
             execution_id: selectedExecution.id
         };
-        return toolbox.getInternal().doGet<ElkNode>('/executions/graph', { params });
+        return toolbox.getInternal().doGet<ExecutionGraphResponse>('/executions/graph', { params });
     }
 
     function startPolling() {
@@ -145,8 +145,8 @@ export default function ExecutionWorkflowGraph({
     }, [!!graphData]);
 
     function scrollToInProgress() {
-        const focusNode = graphData?.children?.find(containerNode =>
-            find(containerNode.children, subGraphNode => includes(states.inProgress, subGraphNode.labels?.[0].state))
+        const focusNode = graphData?.children.find(containerNode =>
+            find(containerNode.children, subGraphNode => includes(states.inProgress, subGraphNode.labels[0].state))
         );
         if (focusNode) {
             scrollTo(-focusNode.x! + GRAPH_MARGIN, -focusNode.y! + GRAPH_MARGIN);

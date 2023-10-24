@@ -1,11 +1,11 @@
+import type { Response } from 'express';
 import express from 'express';
 import { isEmpty, pick } from 'lodash';
-import type { ElkNode } from 'elkjs';
 import ELK from 'elkjs';
 import manager from '../handler/services/ManagerService';
 import type { GenericErrorResponse, PaginatedResponse } from '../types';
 import { getLogger } from '../handler/LoggerHandler';
-import type { Operation } from '../handler/ExecutionsHandler';
+import type { Operation } from '../handler/ExecutionsHandler.types';
 import {
     adjustingNodeSizes,
     cleanSubgraphsList,
@@ -13,6 +13,7 @@ import {
     constructSubgraphs,
     createELKTasksGraphs
 } from '../handler/ExecutionsHandler';
+import type { ExecutionGraphResponse } from './Executions.types';
 
 const logger = getLogger('Executions');
 const router = express.Router();
@@ -82,7 +83,7 @@ const operationsFetchUrl = '/operations';
  *
  * More information can be found here: https://github.com/OpenKieler/elkjs
  */
-router.get<never, ElkNode | GenericErrorResponse>('/graph', (req, res, next) => {
+router.get('/graph', (req, res: Response<ExecutionGraphResponse | GenericErrorResponse>, next) => {
     const params = { ...req.query };
     const headers = pick(req.headers, 'cookie', 'tenant') as Record<string, string>;
 
@@ -128,7 +129,7 @@ router.get<never, ElkNode | GenericErrorResponse>('/graph', (req, res, next) => 
             const graphs = createELKTasksGraphs(allSubgraphs, edges);
             const elkGraph = await elk.layout(graphs);
 
-            res.send(elkGraph);
+            res.send(elkGraph as ExecutionGraphResponse);
         })
         .catch((error: any) => {
             logger.error(error);
