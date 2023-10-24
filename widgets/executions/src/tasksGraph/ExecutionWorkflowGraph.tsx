@@ -70,7 +70,7 @@ export default function ExecutionWorkflowGraph({
         const params = {
             execution_id: selectedExecution.id
         };
-        return toolbox.getWidgetBackend().doGet<ElkNode>('get_tasks_graph', { params });
+        return toolbox.getInternal().doGet<ElkNode>('/executions/graph', { params });
     }
 
     function startPolling() {
