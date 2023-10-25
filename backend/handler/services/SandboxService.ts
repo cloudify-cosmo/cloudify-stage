@@ -5,7 +5,12 @@ import { ALLOWED_METHODS_OBJECT } from '../../consts';
 const catchError = (err: { message: any }, serviceName: 'request' | 'manager', method: string) =>
     `Error while reuesting ${serviceName} - ${method} - ${err.message}`;
 
-const call = async (serviceName: 'request' | 'manager', method: string, url: string, params = '{}') => {
+const call = async (
+    serviceName: 'request' | 'manager',
+    method: keyof typeof ALLOWED_METHODS_OBJECT,
+    url: string,
+    params = '{}'
+) => {
     try {
         const paramsObj = JSON.parse(params);
         const data =

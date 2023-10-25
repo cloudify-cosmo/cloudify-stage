@@ -10,7 +10,7 @@ import { getConfig } from '../config';
 import { ALLOWED_METHODS_ARRAY, ALLOWED_METHODS_OBJECT, WIDGET_ID_HEADER } from '../consts';
 import { db } from '../db/Connection';
 import { getResourcePath } from '../utils';
-import * as services from './services';
+import * as SandboxService from './services/SandboxService';
 
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
@@ -242,11 +242,11 @@ const runScriptInIsolate = async (script: string, query: qs.ParsedQs, headers: I
     const sandbox = context.global;
 
     // Utility function
-    services.Sandbox.methodsList.forEach((method: string) => {
-        sandbox.setSync(method, services.Sandbox[method as keyof typeof services.Sandbox], { reference: true });
+    SandboxService.methodsList.forEach((method: string) => {
+        sandbox.setSync(method, SandboxService[method as keyof typeof SandboxService], { reference: true });
     });
 
-    sandbox.setSync('logger', (method: 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly' | 'log', msg = '') => {
+    sandbox.setSync('logger', (method: keyof typeof logger, msg = '') => {
         logger[method as keyof typeof logger](`${msg}`);
     });
 
