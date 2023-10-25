@@ -7,7 +7,7 @@ jest.mock('handler/RequestHandler', () => ({
     )
 }));
 
-describe('RequestService', () => {
+describe('SandboxService', () => {
     it('performs GET request', () => {
         return doGet('request', '', '{}').then(response => {
             expect(request).toHaveBeenCalledWith('GET', '', { headers: {} });

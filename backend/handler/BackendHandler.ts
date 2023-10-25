@@ -176,28 +176,24 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
             /**  read the file content of the uploaded script file
              call the host function through synced function from isolated vm */
             const backendPath = getPathCompatibleWithUnix(backendFileWithExtension);
-            // TODO: temp fix to skip the executions/backend.ts until moved to stage-backend
-            if (!backendFileWithExtension.includes('executions')) {
-                const fileContent = fs.readFileSync(backendPath, 'utf8');
-                const isolate = new ivm.Isolate();
-                const context = isolate.createContextSync();
-                const sandbox = context.global;
-                return new Promise((resolve, reject) => {
-                    /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
+            const fileContent = fs.readFileSync(backendPath, 'utf8');
+            const isolate = new ivm.Isolate();
+            const context = isolate.createContextSync();
+            const sandbox = context.global;
+            return new Promise((resolve, reject) => {
+                /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
                       do not directly call not host function in host context, call it with setSync in isolated-vm */
-                    sandbox.setSync(
-                        'register',
-                        (serviceName: string, method: AllowedRequestMethod, execute: string): any => {
-                            registerHostFunction(widgetId, serviceName, method, execute).then(resolve).catch(reject);
-                        }
-                    );
-                    const complieScript = isolate.compileScriptSync(fileContent);
-                    complieScript.runSync(context);
-                }).catch(error => {
-                    return Promise.reject(error);
-                });
-            }
-            return Promise.resolve();
+                sandbox.setSync(
+                    'register',
+                    (serviceName: string, method: AllowedRequestMethod, execute: string): any => {
+                        registerHostFunction(widgetId, serviceName, method, execute).then(resolve).catch(reject);
+                    }
+                );
+                const complieScript = isolate.compileScriptSync(fileContent);
+                complieScript.runSync(context);
+            }).catch(error => {
+                return Promise.reject(error);
+            });
         } catch (err: any) {
             logger.error('reject', backendFileWithExtension, err);
             return Promise.reject(
@@ -247,7 +243,7 @@ const runScriptInIsolate = async (script: string, query: qs.ParsedQs, headers: I
     });
 
     sandbox.setSync('logger', (method: keyof typeof logger, msg = '') => {
-        logger[method as keyof typeof logger](`${msg}`);
+        logger[method](`${msg}`);
     });
 
     const compiledScript = await isolate.compileScript(script);

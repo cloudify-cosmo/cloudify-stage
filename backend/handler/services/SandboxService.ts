@@ -15,16 +15,8 @@ const call = async (
         const paramsObj = JSON.parse(params);
         const data =
             serviceName === 'manager'
-                ? await manager.call(
-                      ALLOWED_METHODS_OBJECT[method as keyof typeof ALLOWED_METHODS_OBJECT],
-                      url,
-                      paramsObj
-                  )
-                : await request.call(
-                      ALLOWED_METHODS_OBJECT[method as keyof typeof ALLOWED_METHODS_OBJECT],
-                      url,
-                      paramsObj
-                  );
+                ? await manager.call(ALLOWED_METHODS_OBJECT[method], url, paramsObj)
+                : await request.call(ALLOWED_METHODS_OBJECT[method], url, paramsObj);
         return JSON.stringify(data);
     } catch (err: any) {
         return catchError(err, serviceName, method);
@@ -40,19 +32,13 @@ const doGet = async (serviceName: 'request' | 'manager', url: string, requestOpt
         return catchError(err, serviceName, 'doGet');
     }
 };
-const doGetFull = async (
-    _serviceName: 'request' | 'manager' = 'manager',
-    url: string,
-    requestOptions: string,
-    fullData = JSON.stringify({ items: [] }),
-    size = '0'
-) => {
+const doGetFull = async (url: string, requestOptions: string, fullData = JSON.stringify({ items: [] }), size = '0') => {
     try {
         const parsedRO = JSON.parse(requestOptions);
         const data = await manager.doGetFull(url, parsedRO, JSON.parse(fullData), Number(size));
         return JSON.stringify(data);
     } catch (err: any) {
-        return catchError(err, _serviceName, 'doGetFull');
+        return catchError(err, 'manager', 'doGetFull');
     }
 };
 const doPost = async (serviceName: 'request' | 'manager', url: string, requestOptions: string) => {
