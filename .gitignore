@@ -16,6 +16,5 @@ test/cypress/screenshots
 test/cypress/videos
 test/cypress/results
 test/cypress/downloads
-widgets/*/backend.ts
 stage.tar.gz
 test/cypress/fixtures/blueprints/*/*

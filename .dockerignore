@@ -18,5 +18,4 @@ conf/me.json
 /tsc-dist
 userData
 node_modules
-widgets/*/backend.ts
 stage.tar.gz

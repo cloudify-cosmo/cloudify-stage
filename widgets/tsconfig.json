@@ -8,6 +8,5 @@
         }
     },
     "include": ["**/*", "**/*.json", "../app/typings", "../app/utils/consts.ts", "../backend/routes/*.types.ts"],
-    "exclude": ["*/backend.ts"],
     "references": [{ "path": "../app" }]
 }
