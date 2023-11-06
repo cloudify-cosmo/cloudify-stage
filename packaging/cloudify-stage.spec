@@ -14,9 +14,7 @@ Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
 BuildRequires:  nodejs >= 16.16.0, rsync
-%if "%{arch}" == "arm64"
 BuildRequires:  gcc-c++, gcc, libsass, libpng-devel
-%endif
 Requires:       nodejs >= 16.16.0, cloudify-rest-service, nginx, shadow-utils
 AutoReqProv:    no
 
@@ -30,8 +28,9 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 
 export LIBSASS_EXT="no"
 npm run beforebuild:no-tests
-%if "%{arch}" == "arm64"
 npm install -g node-gyp
+npm install isolated-vm --build-from-source --prefix backend
+%if "%{arch}" == "arm64"
 npm install sharp --build-from-source --prefix backend
 %endif
 
