@@ -189,10 +189,6 @@ export default (
                 new CopyWebpackPlugin({
                     patterns: _.compact([
                         {
-                            from: 'widgets/**/src/backend.{js,ts}',
-                            to: '[path]../backend.[ext]'
-                        },
-                        {
                             from: 'widgets',
                             to: 'widgets',
                             globOptions: {
@@ -235,11 +231,6 @@ export default (
                 _.compact([
                     new CopyWebpackPlugin({
                         patterns: [
-                            {
-                                from: `widgets/${widgetName}/src/backend.{js,ts}`,
-                                to: `widgets/${widgetName}/backend.[ext]`,
-                                noErrorOnMissing: true
-                            },
                             {
                                 from: `widgets/${widgetName}`,
                                 to: `widgets/${widgetName}`,

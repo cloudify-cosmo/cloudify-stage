@@ -1,6 +1,6 @@
-import type { ElkNode } from 'elkjs';
 import type { Toolbox } from 'app/utils/StageAPI';
 import { findKey, includes, isEmpty, size } from 'lodash';
+import type { ExecutionGraphNode } from 'backend/handler/ExecutionsHandler.types';
 import states from './States';
 
 const textHeight = 18;
@@ -15,9 +15,9 @@ const colors = {
 
 const translate = Stage.Utils.getT('widgets.executions.graph');
 
-const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbox }) => {
+const GraphNode = ({ graphNode, toolbox }: { graphNode: ExecutionGraphNode; toolbox: Toolbox }) => {
+    const labels = graphNode.labels[0];
     const { Icon } = Stage.Basic;
-    const labels = graphNode.labels![0];
 
     let currentTextPlacementY = 0;
 
@@ -68,7 +68,7 @@ const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbo
                         key={currentTextPlacementY}
                         className="text-tasks-graph-subgraph-title"
                         transform={
-                            graphNode.children && graphNode.children.length === 0 // Placing text according to subgraph tier
+                            graphNode.children.length === 0 // Placing text according to subgraph tier
                                 ? `translate(10, ${(currentTextPlacementY += textHeight)})`
                                 : 'translate(12, 18)'
                         }
