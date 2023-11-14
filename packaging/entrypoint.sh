@@ -15,7 +15,7 @@ cat <<EOF > /app/conf/app.json
     }
   },
   "maps": {
-    "accessToken": ""
+    "accessToken": "${MAPS_ACCESS_TOKEN}"
   }
 }
 EOF

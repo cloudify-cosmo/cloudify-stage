@@ -198,7 +198,7 @@ describe('Edit mode', () => {
             //     200,
             //     true
             // );
-            submitInvalidWidget('ModuleNotAllowed', "Cannot find module 'fs-extra'", 404);
+            submitInvalidWidget('SyntaxNotAllowed', "Unexpected token 'export'", 404);
         });
 
         it('install and manage a widget', () => {
@@ -244,7 +244,7 @@ describe('Edit mode', () => {
 
         it('install and use a widget with broken backend service', () => {
             cy.intercept('GET', '/console/wb/manager?endpoint=version').as('managerService');
-            submitWidget('ModuleNotAllowedInService', true);
+            submitWidget('MethodNotAllowedInService', true);
             cy.exitEditMode();
 
             cy.get('input[name="endpoint"]').type('version');
@@ -252,7 +252,7 @@ describe('Edit mode', () => {
 
             cy.wait('@managerService').its('response.statusCode').should('equal', 404);
 
-            cy.get('.message .content').should('contain.text', "404 - Cannot find module 'fs-extra'");
+            cy.get('.message .content').should('contain.text', '404 - doPostFull is not defined');
         });
 
         it('install and use a widget with working backend services', () => {
