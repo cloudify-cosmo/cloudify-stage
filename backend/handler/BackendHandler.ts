@@ -1,18 +1,16 @@
 import fs from 'fs-extra';
 import pathlib from 'path';
 import _ from 'lodash';
-import { NodeVM, VMScript } from 'vm2';
-import type { CompilerOptions } from 'typescript';
-import ts, { ModuleKind, ScriptTarget } from 'typescript';
-import tsConfig from '@tsconfig/node14/tsconfig.json';
+import ivm from 'isolated-vm';
 
 import type { NextFunction, Request, Response } from 'express';
 
+import type { IncomingHttpHeaders } from 'http';
 import { getConfig } from '../config';
 import { ALLOWED_METHODS_ARRAY, ALLOWED_METHODS_OBJECT, WIDGET_ID_HEADER } from '../consts';
 import { db } from '../db/Connection';
 import { getResourcePath } from '../utils';
-import * as services from './services';
+import * as SandboxService from './services/SandboxService';
 
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
@@ -25,17 +23,14 @@ const builtInWidgetsFolder = getResourcePath('widgets', false);
 const userWidgetsFolder = getResourcePath('widgets', true);
 const getServiceString = (widgetId: string, method: AllowedRequestMethod, serviceName: string) =>
     `widget=${widgetId} method=${method} name=${serviceName}`;
-const allowedModulesPaths = _.map(
-    getConfig().app.widgets.allowedModules,
-    module => `${process.cwd()}/node_modules/${module}`
-);
 
-// NOTE: TS configurations from @tsconfig are not compatible with CompilerOptions type
-// used in ts.transpile method's second argument type)
-const compilerOptions: CompilerOptions = {
-    ...tsConfig.compilerOptions,
-    module: ModuleKind.CommonJS,
-    target: ScriptTarget.ES2020
+const getPathCompatibleWithUnix = (path: string) => {
+    const windowsPathSeparator = pathlib.win32.sep;
+    const unixPathSeparator = pathlib.posix.sep;
+    if (path.includes(windowsPathSeparator)) {
+        return path.replaceAll(windowsPathSeparator, unixPathSeparator);
+    }
+    return path;
 };
 
 const BackendRegistrator = (
@@ -47,7 +42,14 @@ const BackendRegistrator = (
         if (!serviceName) {
             return reject('Service name must be provided');
         }
-
+        if (!hasExecuteFunctionWithAwait(service as string)) {
+            return reject(`Error registering service: ${service}.
+            Expected format:
+            async function execute(query, reqHeaders=optional) {
+                ....code to execute....
+                await helperFunction e.g., DoGet
+            }`);
+        }
         const normalizedServiceName = _.toUpper(serviceName);
         let normalizedMethod: AllowedRequestMethod = ALLOWED_METHODS_OBJECT.get;
         let normalizedService = service;
@@ -62,9 +64,6 @@ const BackendRegistrator = (
 
         if (!normalizedService) {
             return reject('Service body must be provided');
-        }
-        if (!_.isFunction(normalizedService)) {
-            return reject('Service body must be a function (function(request, response, next, helper) {...})');
         }
 
         logger.info(`--- registering service ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`);
@@ -91,7 +90,7 @@ const BackendRegistrator = (
                 );
                 return widgetBackend.update(
                     {
-                        script: <string>(<unknown>new VMScript(`module.exports = ${normalizedService!.toString()}`))
+                        script: normalizedService!.toString()
                     },
                     { fields: ['script'] }
                 );
@@ -137,6 +136,21 @@ function getBuiltInWidgets() {
         );
 }
 
+function hasExecuteFunctionWithAwait(script: string) {
+    // Regular expression pattern to match the desired function definition with "await" keyword
+    const pattern = /^async\s+function\s+execute\s*\([^)]*\)\s*{[\s\S]*\bawait\b/;
+    return pattern.test(script as string);
+}
+
+/** host wrapper function  to register the script, service and method in the db using BackendRegistrator */
+function registerHostFunction(widgetId: string, serviceName: string, method: AllowedRequestMethod, service: string) {
+    return new Promise((resolve, reject) => {
+        BackendRegistrator(widgetId, resolve, reject).register(serviceName, method, service);
+    }).catch(error => {
+        return Promise.reject(error);
+    });
+}
+
 export function importWidgetBackend(widgetId: string, isCustom = true) {
     let widgetsFolder = userWidgetsFolder;
     if (!isCustom) {
@@ -144,7 +158,7 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
     }
     const backendFile = pathlib.resolve(widgetsFolder, widgetId, getConfig().app.widgets.backendFilename);
 
-    function importWidgetBackendFromFile(extensions: string[]): Promise<any> {
+    async function importWidgetBackendFromFile(extensions: string[]): Promise<any> {
         if (extensions.length === 0) {
             return Promise.resolve();
         }
@@ -159,36 +173,27 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
         logger.info(`-- initializing file ${backendFileWithExtension}`);
 
         try {
-            const vm = new NodeVM({
-                sandbox: {
-                    _,
-                    widgetId,
-                    BackendRegistrator
-                },
-                require: {
-                    context: 'sandbox',
-                    external: true,
-                    root: [backendFileWithExtension, ...allowedModulesPaths]
-                },
-                compiler: source => ts.transpile(source, compilerOptions),
-                sourceExtensions: getConfig().app.widgets.backendFilenameExtensions
+            /**  read the file content of the uploaded script file
+             call the host function through synced function from isolated vm */
+            const backendPath = getPathCompatibleWithUnix(backendFileWithExtension);
+            const fileContent = fs.readFileSync(backendPath, 'utf8');
+            const isolate = new ivm.Isolate();
+            const context = isolate.createContextSync();
+            const sandbox = context.global;
+            return new Promise((resolve, reject) => {
+                /* Set sync the register function passed in custom script file to map to the function in host, i.e registerHostFunction
+                      do not directly call not host function in host context, call it with setSync in isolated-vm */
+                sandbox.setSync(
+                    'register',
+                    (serviceName: string, method: AllowedRequestMethod, execute: string): any => {
+                        registerHostFunction(widgetId, serviceName, method, execute).then(resolve).catch(reject);
+                    }
+                );
+                const complieScript = isolate.compileScriptSync(fileContent);
+                complieScript.runSync(context);
+            }).catch(error => {
+                return Promise.reject(error);
             });
-
-            const script = `
-                    import backend from '${backendFileWithExtension.replace('\\', '\\\\')}';
-                    module.exports = new Promise((resolve, reject) => {
-                         try {
-                             if (_.isFunction(backend)) {
-                                 backend(BackendRegistrator(widgetId, resolve, reject));
-                             } else {
-                                 reject('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
-                             }
-                         } catch (error) {
-                             reject(error);
-                         }
-                     });`;
-
-            return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) });
         } catch (err: any) {
             logger.error('reject', backendFileWithExtension, err);
             return Promise.reject(
@@ -227,6 +232,32 @@ export function initWidgetBackends() {
         });
 }
 
+const runScriptInIsolate = async (script: string, query: qs.ParsedQs, headers: IncomingHttpHeaders) => {
+    const isolate = new ivm.Isolate();
+    const context = isolate.createContextSync();
+    const sandbox = context.global;
+
+    // Utility function
+    SandboxService.methodsList.forEach((method: string) => {
+        sandbox.setSync(method, SandboxService[method as keyof typeof SandboxService], { reference: true });
+    });
+
+    sandbox.setSync('logger', (method: keyof typeof logger, msg = '') => {
+        logger[method](`${msg}`);
+    });
+
+    const compiledScript = await isolate.compileScript(script);
+    await compiledScript.run(context);
+    const executeFn = await context.global.get('execute', {
+        reference: true
+    });
+    const result = await executeFn.apply(undefined, [query, headers], {
+        arguments: { copy: true },
+        result: { promise: true, copy: true }
+    });
+    return result as string; // The sandbox returns the stringified result
+};
+
 export function callService(
     serviceName: string,
     method: AllowedRequestMethod,
@@ -246,22 +277,17 @@ export function callService(
                 `There is no service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId} registered`
             );
         })
-        .then(widgetBackend => {
-            const script = _.get(widgetBackend, 'script.code', null);
-
+        .then(async widgetBackend => {
+            const script = _.get(widgetBackend, 'script', null);
             if (script) {
-                const vm = new NodeVM({
-                    require: {
-                        external: true,
-                        root: allowedModulesPaths
-                    }
-                });
-                return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) })(
-                    req,
-                    res,
-                    next,
-                    services
-                );
+                const { headers, query } = req;
+                const scriptResult = await runScriptInIsolate(script, query, headers);
+                try {
+                    const data = JSON.parse(scriptResult);
+                    res.send(data);
+                } catch {
+                    res.send(next);
+                }
             }
             return Promise.reject(
                 `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
