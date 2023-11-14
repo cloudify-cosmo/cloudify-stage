@@ -7,6 +7,7 @@ FROM node:16
 
 ARG username=cfyuser
 ARG groupname=cfyuser
+ARG MAPS_ACCESS_TOKEN
 
 # envvars are used in the entrypoint script
 # db settings
@@ -14,6 +15,7 @@ ENV POSTGRES_DB=cloudify_db
 ENV POSTGRES_HOST=postgresql
 ENV POSTGRES_USER=cloudify
 ENV POSTGRES_PASSWORD=cloudify
+ENV MAPS_ACCESS_TOKEN=$MAPS_ACCESS_TOKEN
 
 # stage backend needs to be able to reach restservice at this address, port & proto
 ENV RESTSERVICE_ADDRESS=localhost
