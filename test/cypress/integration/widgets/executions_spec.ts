@@ -10,7 +10,7 @@ describe('Executions', () => {
             .uploadBlueprint('blueprints/simple.zip', blueprintName, { visibility: 'global' })
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
             .usePageMock(widgetId, {
-                fieldsToShow: ['Deployment', 'Deployment ID', 'Status', 'Workflow'],
+                fieldsToShow: ['Deployment', 'Deployment ID', 'Status', 'Workflow', 'Actions'],
                 pollingTime: 5
             })
             .mockLogin()
@@ -30,6 +30,15 @@ describe('Executions', () => {
                     expect(tableData).to.have.length(2);
                     expect(tableData[0].Deployment).to.eq('executions_test');
                 });
+        });
+
+        it('should show execution parameters modal dialog', () => {
+            cy.get('.menuAction').first().click();
+            cy.contains('Show Execution Parameters').click();
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Copy Parameters');
+                cy.contains('button', 'Close').click();
+            });
         });
 
         it('shows execution graph', () => {

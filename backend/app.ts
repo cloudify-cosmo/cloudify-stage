@@ -24,6 +24,7 @@ import BlueprintUserData from './routes/BlueprintUserData';
 import Config from './routes/Config';
 import ContactDetails from './routes/ContactDetails';
 import Environment from './routes/blueprints/Environment';
+import Executions from './routes/Executions';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
@@ -105,6 +106,7 @@ const cookieAuthenticatedApiRoutes: Record<string, Router> = {
     bud: BlueprintUserData,
     contactDetails: ContactDetails,
     environment: Environment,
+    executions: Executions,
     external: External,
     file: File,
     filters: Filters,
