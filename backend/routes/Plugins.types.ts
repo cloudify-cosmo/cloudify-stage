@@ -2,7 +2,7 @@
 
 export interface PluginWagonUrl {
     arch: string;
-    file_size: string;
+    file_size: number;
     release: string;
     url: string;
 }
