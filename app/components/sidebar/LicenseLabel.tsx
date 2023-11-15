@@ -7,7 +7,7 @@ import Consts from '../../utils/consts';
 import StageUtils from '../../utils/stageUtils';
 import { Label } from '../basic';
 
-const t = StageUtils.getT('sidebar.licenseTag');
+const translate = StageUtils.getT('sidebar.licenseTag');
 
 export default function LicenseLabel({ style, ...rest }: LabelProps) {
     const isCommunity = useSelector((state: ReduxState) => state.manager.version.edition === Consts.EDITION.COMMUNITY);
@@ -44,7 +44,7 @@ export default function LicenseLabel({ style, ...rest }: LabelProps) {
             }}
             {...rest}
         >
-            {t(licenseLabelKey)}
+            {translate(licenseLabelKey)}
         </Label>
     );
 

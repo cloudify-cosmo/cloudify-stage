@@ -5,7 +5,7 @@ const { Loading } = Stage.Basic;
 const { Graph } = Stage.Shared;
 
 const widgetId = 'executionsStatus';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, ExecutionsStatusWidget.Configuration>({
     id: widgetId,
@@ -33,7 +33,7 @@ Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, E
 
         if (_.isEmpty(data?.items)) {
             const { Message } = Stage.Basic;
-            return <Message content={t('noExecutions')} />;
+            return <Message content={translate('noExecutions')} />;
         }
 
         const formattedData = _.sortBy(
@@ -44,7 +44,9 @@ Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, E
             statusSum => statusSum.status
         );
 
-        const charts = [{ name: 'number_of_executions', label: t('charts.tooltip.label'), axisLabel: 'status' }];
+        const charts = [
+            { name: 'number_of_executions', label: translate('charts.tooltip.label'), axisLabel: 'status' }
+        ];
 
         return (
             <Graph

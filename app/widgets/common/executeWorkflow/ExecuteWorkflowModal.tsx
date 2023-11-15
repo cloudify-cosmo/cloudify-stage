@@ -17,7 +17,7 @@ import StageUtils from '../../../utils/stageUtils';
 import { useBoolean, useErrors, useInput, useOpenProp, useResettableState } from '../../../utils/hooks';
 import { ApproveButton, CancelButton, Form, Icon, Modal } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.common.deployments.execute');
+const translate = StageUtils.getT('widgets.common.deployments.execute');
 
 export interface ExecuteWorkflowModalProps {
     deploymentId?: string;
@@ -101,7 +101,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                             id: deploymentId,
                             displayName: deploymentName
                         });
-                        setErrors(t('errors.workflowError', deploymentNameAndId, workflowName));
+                        setErrors(translate('errors.workflowError', deploymentNameAndId, workflowName));
                     }
                 })
                 .catch(setMessageAsError)
@@ -162,7 +162,9 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                 setUserWorkflowParams(getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
             })
             .catch((err: string | { message: string }) =>
-                setErrors({ yamlFile: t('errors.yamlFileError', { message: _.isString(err) ? err : err.message }) })
+                setErrors({
+                    yamlFile: translate('errors.yamlFileError', { message: _.isString(err) ? err : err.message })
+                })
             )
             .finally(unsetFileLoading);
     }
@@ -219,7 +221,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
                 <Icon name="cogs" />{' '}
-                {t(headerKey, {
+                {translate(headerKey, {
                     workflowName,
                     deploymentId: StageUtils.formatDisplayName({
                         id: contextDeploymentId,
@@ -257,7 +259,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={onApprove} disabled={isLoading} content={t('execute')} icon="cogs" />
+                <ApproveButton onClick={onApprove} disabled={isLoading} content={translate('execute')} icon="cogs" />
             </Modal.Actions>
         </Modal>
     );

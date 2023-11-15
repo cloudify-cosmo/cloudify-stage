@@ -7,7 +7,7 @@ import { Divider, Label, List } from '../../../../basic';
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
 import type { TaskStatus } from '../../installation/process';
 
-const t = StageUtils.getT('gettingStartedModal.summary.secret');
+const translate = StageUtils.getT('gettingStartedModal.summary.secret');
 
 type Props = {
     tasks?: ReturnType<typeof createSecretsInstallationTasks>;
@@ -19,10 +19,10 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
         return null;
     }
     const getSecretTaskDescription = createSecretTaskDescriptionGetter(
-        t('settingProgressMessageSuffix'),
-        t('settingDoneMessageSuffix'),
-        t('settingErrorMessageSuffix'),
-        t('skipScheduledMessageSufix')
+        translate('settingProgressMessageSuffix'),
+        translate('settingDoneMessageSuffix'),
+        translate('settingErrorMessageSuffix'),
+        translate('skipScheduledMessageSufix')
     );
     return (
         <>
@@ -31,7 +31,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(createdSecret, statuses, t('creationScheduledMessageSuffix'))}
+                        {getSecretTaskDescription(createdSecret, statuses, translate('creationScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}
@@ -39,7 +39,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(updatedSecret, statuses, t('updateScheduledMessageSuffix'))}
+                        {getSecretTaskDescription(updatedSecret, statuses, translate('updateScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}

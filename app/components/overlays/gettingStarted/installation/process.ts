@@ -24,7 +24,7 @@ export enum TaskStatus {
     InstallationError = 'installation-error'
 }
 
-const t = StageUtils.getT('gettingStartedModal.messages');
+const translate = StageUtils.getT('gettingStartedModal.messages');
 const sleep = async (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 // TODO(RD-1874): use common api for backend requests
@@ -93,7 +93,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             params
         });
         if (uploadResponse.error) {
-            return t('blueprintUploadError', {
+            return translate('blueprintUploadError', {
                 blueprintName: blueprint.blueprintName,
                 uploadError: uploadResponse.error
             });
@@ -111,7 +111,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
             if (statusResponse) {
                 if (statusResponse.error) {
-                    return t('blueprintUploadError', {
+                    return translate('blueprintUploadError', {
                         blueprintName: blueprint.blueprintName,
                         uploadError: statusResponse.error
                     });
@@ -124,9 +124,9 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             log.error(e);
         }
     }
-    return t('blueprintUploadError', {
+    return translate('blueprintUploadError', {
         blueprintName: blueprint.blueprintName,
-        uploadError: t('timeoutExceededError')
+        uploadError: translate('timeoutExceededError')
     });
 };
 
@@ -173,7 +173,7 @@ export const createResourcesInstaller = (
                 if (destroyed) return;
                 if (!result) {
                     onError(
-                        t('pluginInstallError', {
+                        translate('pluginInstallError', {
                             pluginName: scheduledPlugin.name
                         })
                     );
@@ -193,7 +193,7 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    t('secretUpdateError', {
+                    translate('secretUpdateError', {
                         secretName: updatedSecret.name
                     })
                 );
@@ -212,7 +212,7 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    t('secretCreateError', {
+                    translate('secretCreateError', {
                         secretName: createdSecret.name
                     })
                 );

@@ -10,16 +10,16 @@ interface ParentButtonProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-const t = StageUtils.composeT(tDrillDownButtons, 'parent');
+const translate = StageUtils.composeT(tDrillDownButtons, 'parent');
 
 const ParentButton: FunctionComponent<ParentButtonProps> = ({ toolbox }) => {
     const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
     const showParentButton = useMemo(() => !isTopLevelPage(drilldownContext), [drilldownContext]);
 
     return showParentButton ? (
-        <DrilldownButton onClick={() => toolbox.goToParentPage()} title={t('title')}>
+        <DrilldownButton onClick={() => toolbox.goToParentPage()} title={translate('title')}>
             <Icon name="angle left" />
-            {t('label')}
+            {translate('label')}
         </DrilldownButton>
     ) : null;
 };

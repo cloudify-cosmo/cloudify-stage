@@ -1,31 +1,56 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { FullEventData } from '../../../app/widgets/common/events';
 import EventsTable from './EventsTable';
 import './widget.css';
 
 const widgetId = 'events';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 const fieldsToShowItemsTranslationPrefix = 'configuration.fieldsToShow.items';
 
-const fieldsToShowItems = Object.values(
-    t(fieldsToShowItemsTranslationPrefix, {
+const fieldsToShowItems: string[] = Object.values(
+    translate(fieldsToShowItemsTranslationPrefix, {
         returnObjects: true
     })
 );
 
 const fieldsToShowDefaultItems = [
-    t(`${fieldsToShowItemsTranslationPrefix}.icon`),
-    t(`${fieldsToShowItemsTranslationPrefix}.timestamp`),
-    t(`${fieldsToShowItemsTranslationPrefix}.blueprint`),
-    t(`${fieldsToShowItemsTranslationPrefix}.deployment`),
-    t(`${fieldsToShowItemsTranslationPrefix}.workflow`),
-    t(`${fieldsToShowItemsTranslationPrefix}.operation`),
-    t(`${fieldsToShowItemsTranslationPrefix}.nodeId`),
-    t(`${fieldsToShowItemsTranslationPrefix}.nodeInstanceId`),
-    t(`${fieldsToShowItemsTranslationPrefix}.message`)
+    translate(`${fieldsToShowItemsTranslationPrefix}.icon`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.timestamp`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.blueprint`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.deployment`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.workflow`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.operation`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.nodeId`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.nodeInstanceId`),
+    translate(`${fieldsToShowItemsTranslationPrefix}.message`)
 ];
 
-Stage.defineWidget({
+export interface EventsWidgetConfiguration extends DataTableConfiguration {
+    fieldsToShow: string[];
+    showLogs: boolean;
+    colorLogs: boolean;
+    maxMessageLength: number;
+}
+
+export interface EventsWidgetParams {
+    /* eslint-disable camelcase */
+    blueprint_id?: string[];
+    deployment_id?: string[];
+    node_id?: string[];
+    node_instance_id?: string[];
+    execution_id?: string[];
+    message?: string;
+    level?: string;
+    event_type?: string;
+    _range?: string;
+    type?: string;
+    operation?: string;
+    /* eslint-enable camelcase */
+}
+
+export type EventsWidgetData = Stage.Types.PaginatedResponse<FullEventData>;
+
+Stage.defineWidget<EventsWidgetParams, EventsWidgetData, EventsWidgetConfiguration>({
     id: widgetId,
     initialWidth: 12,
     initialHeight: 18,
@@ -41,39 +66,39 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'fieldsToShow',
-            name: t('configuration.fieldsToShow.name'),
-            placeHolder: t('configuration.fieldsToShow.placeholder'),
+            name: translate('configuration.fieldsToShow.name'),
+            placeHolder: translate('configuration.fieldsToShow.placeholder'),
             items: fieldsToShowItems,
             default: fieldsToShowDefaultItems.join(','),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'colorLogs',
-            name: t('configuration.colorLogs.name'),
+            name: translate('configuration.colorLogs.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'maxMessageLength',
-            name: t('configuration.maxMessageLength.name'),
+            name: translate('configuration.maxMessageLength.name'),
             default: EventsTable.MAX_MESSAGE_LENGTH,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 10
         }
     ],
 
-    fetchParams(widget, toolbox) {
-        const params = {};
+    fetchParams(_widget, toolbox) {
+        const params: EventsWidgetParams = {};
 
         const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
         const blueprintId = toolbox.getContext().getValue('blueprintId');
-        if (!_.isEmpty(blueprintId)) {
+        if (blueprintId && !_.isEmpty(blueprintId)) {
             params.blueprint_id = _.castArray(blueprintId);
         }
 
         const deploymentId = toolbox.getContext().getValue('deploymentId');
-        if (!_.isEmpty(deploymentId)) {
+        if (deploymentId && !_.isEmpty(deploymentId)) {
             params.deployment_id = _.castArray(deploymentId);
         }
 
@@ -126,10 +151,10 @@ Stage.defineWidget({
         return params;
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
@@ -137,7 +162,7 @@ Stage.defineWidget({
         const SELECTED_LOG_ID = toolbox.getContext().getValue('logId');
         const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
-        const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
+        const CONTEXT_PARAMS = this.fetchParams!(widget, toolbox);
 
         const blueprintId = CONTEXT_PARAMS.blueprint_id;
         const deploymentId = CONTEXT_PARAMS.deployment_id;
@@ -146,21 +171,17 @@ Stage.defineWidget({
         const executionId = CONTEXT_PARAMS.execution_id;
 
         const formattedData = {
-            items: _.map(data.items, item => {
+            items: data.items.map(item => {
                 // eslint-disable-next-line no-underscore-dangle
                 const id = item._storage_id;
                 return {
                     ...item,
                     id,
-                    timestamp: Stage.Utils.Time.formatTimestamp(
-                        item.reported_timestamp,
-                        'DD-MM-YYYY HH:mm:ss.SSS',
-                        moment.ISO_8601
-                    ),
+                    timestamp: Stage.Common.Events.Utils.getFormattedTimestamp(item),
                     isSelected: id === SELECTED_EVENT_ID || (widget.configuration.showLogs && id === SELECTED_LOG_ID)
                 };
             }),
-            total: _.get(data, 'metadata.pagination.total', 0),
+            total: data.metadata.pagination.total,
             blueprintId,
             deploymentId,
             nodeId,

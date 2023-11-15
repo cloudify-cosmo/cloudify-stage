@@ -1,6 +1,15 @@
-export interface ScanningItem {
+interface ScanningItemCommon {
     key: string;
     title: string;
-    isDir: boolean;
-    children?: ScanningItem[];
 }
+
+export interface ScanningDir extends ScanningItemCommon {
+    isDir: true;
+    children: ScanningItem[];
+}
+
+export interface ScanningFile extends ScanningItemCommon {
+    isDir: false;
+}
+
+export type ScanningItem = ScanningDir | ScanningFile;

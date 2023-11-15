@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import { isEqual, map } from 'lodash';
 
 const { Dropdown } = Stage.Basic;
@@ -26,7 +26,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     showGenerateInComposerButton = false
 }) => {
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
-    const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
+    const [terraformModalVisible, _showTerraformModal, hideTerraformModal] = useBoolean();
 
     const redirectToMarketplacePage = () => {
         const widget = toolbox.getWidget();
@@ -38,8 +38,9 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     const menuItems = useMemo(() => {
         const baseMenuItems = {
             uploadFromMarketplace: redirectToMarketplacePage,
-            uploadFromPackage: showUploadModal,
-            uploadFromTerraformTemplate: showTerraformModal
+            uploadFromPackage: showUploadModal
+            // TODO: RND-292 - remove as part of dedicated ticket once confirmed
+            // uploadFromTerraformTemplate: showTerraformModal
         };
 
         if (showGenerateInComposerButton) {

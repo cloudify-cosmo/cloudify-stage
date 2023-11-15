@@ -13,7 +13,7 @@ import type { SortOrder } from '../inputs/SortOrderIcons';
 import SortOrderIcons from '../inputs/SortOrderIcons';
 import IconButtonsGroup from '../components/IconButtonsGroup';
 
-const t = StageUtils.getT('widgets.common.deployments.execute');
+const translate = StageUtils.getT('widgets.common.deployments.execute');
 
 function renderActionCheckbox(name: string, checked: boolean, onChange: OnCheckboxChange) {
     const { Checkbox } = Form;
@@ -21,8 +21,8 @@ function renderActionCheckbox(name: string, checked: boolean, onChange: OnCheckb
         <Checkbox
             name={name}
             toggle
-            label={t(`actions.${name}.label`)}
-            help={t(`actions.${name}.help`)}
+            label={translate(`actions.${name}.label`)}
+            help={translate(`actions.${name}.help`)}
             checked={checked}
             onChange={onChange}
         />
@@ -95,7 +95,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                     />
                 </IconButtonsGroup>
             ) : (
-                <Message content={t('noParams')} />
+                <Message content={translate('noParams')} />
             )}
 
             <InputFields
@@ -110,7 +110,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">
-                        <Header size="tiny">{t('actionsHeader')}</Header>
+                        <Header size="tiny">{translate('actionsHeader')}</Header>
                     </Form.Divider>
 
                     {renderCheckboxField('force', force, onForceChange)}

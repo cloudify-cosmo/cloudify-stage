@@ -128,9 +128,12 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
             });
         }
 
-        const blueprints = await searchActions.doListBlueprints<keyof Blueprint>(filterRules, {
-            _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-            ...params
+        const blueprints = await searchActions.doListBlueprints<keyof Blueprint>({
+            filterRules,
+            params: {
+                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+                ...params
+            }
         });
 
         result.blueprints = blueprints;

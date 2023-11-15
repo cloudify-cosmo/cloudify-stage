@@ -6,7 +6,7 @@ import { addErrors } from '../inputs/utils/errors';
 import getInputsMap from '../inputs/utils/getInputsMap';
 import StageUtils from '../../../utils/stageUtils';
 
-const t = StageUtils.getT('widgets.common.deployments.execute');
+const translate = StageUtils.getT('widgets.common.deployments.execute');
 
 export function getWorkflowName(workflow: Workflow | string) {
     return typeof workflow === 'string' ? workflow : workflow.name;
@@ -61,14 +61,14 @@ export const executeWorkflow = ({
 
     const name = getWorkflowName(workflow);
     if (!name) {
-        return Promise.reject(t('errors.missingWorkflow'));
+        return Promise.reject(translate('errors.missingWorkflow'));
     }
 
     const inputsWithoutValue = getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState, 'workflow');
     addErrors(inputsWithoutValue, validationErrors);
 
     if (schedule && !isValidScheduledTime(scheduledTime)) {
-        validationErrors.scheduledTime = t('errors.scheduleTimeError');
+        validationErrors.scheduledTime = translate('errors.scheduleTimeError');
     }
 
     if (!_.isEmpty(validationErrors)) {
@@ -89,7 +89,7 @@ export const executeWorkflow = ({
     }
 
     if (_.isEmpty(deploymentsList)) {
-        return Promise.reject(t('errors.missingDeployment'));
+        return Promise.reject(translate('errors.missingDeployment'));
     }
 
     setLoading();

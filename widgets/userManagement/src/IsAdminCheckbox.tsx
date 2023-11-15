@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import type { UserViewItem } from './widget';
 import getWidgetT from './getWidgetT';
 
-const t = getWidgetT();
+const translate = getWidgetT();
 
 interface BasicIsAdminCheckboxProps {
     user: UserViewItem;
@@ -56,7 +56,7 @@ const IsAdminCheckbox: FunctionComponent<IsAdminCheckboxProps> = ({
                         onDefaultUserChange={onDefaultUserChange}
                     />
                 </Popup.Trigger>
-                <Popup.Content>{t('removeAdminPrivilagesNote')}</Popup.Content>
+                <Popup.Content>{translate('removeAdminPrivilagesNote')}</Popup.Content>
             </Popup>
         );
     }
