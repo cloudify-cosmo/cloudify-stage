@@ -4,7 +4,7 @@ import type { TenantItem, TenantsDropdownProps } from '../../../app/widgets/comm
 import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 import type { Role } from '../../../app/widgets/common/roles/RolesPicker';
 
-const t = Stage.Utils.getT('widgets.userGroups.modals.create');
+const translate = Stage.Utils.getT('widgets.userGroups.modals.create');
 
 interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
@@ -70,7 +70,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
     function submitCreate() {
         if (isEmpty(groupName)) {
-            const validationMessage = t('validation.groupName');
+            const validationMessage = translate('validation.groupName');
             setErrors({ groupName: validationMessage });
             return;
         }
@@ -104,29 +104,34 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
     const { groupName, isAdmin, ldapGroup } = inputs;
 
-    const addButton = <Button content={t('buttons.add')} icon="add user" labelPosition="left" />;
+    const addButton = <Button content={translate('buttons.add')} icon="add user" labelPosition="left" />;
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
                 <Icon name="add user" />
-                {t('header')}
+                {translate('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.groupName} label={t('fields.groupName')}>
+                    <Form.Field error={errors.groupName} label={translate('fields.groupName')}>
                         <Form.Input name="groupName" value={groupName} onChange={setInput} />
                     </Form.Field>
 
                     {isLdapEnabled && (
-                        <Form.Field error={errors.ldapGroup} label={t('fields.ldapGroup')}>
+                        <Form.Field error={errors.ldapGroup} label={translate('fields.ldapGroup')}>
                             <Form.Input name="ldapGroup" value={ldapGroup} onChange={setInput} />
                         </Form.Field>
                     )}
 
                     <Form.Field error={errors.isAdmin}>
-                        <Form.Checkbox label={t('fields.admin')} name="isAdmin" checked={isAdmin} onChange={setInput} />
+                        <Form.Checkbox
+                            label={translate('fields.admin')}
+                            name="isAdmin"
+                            checked={isAdmin}
+                            onChange={setInput}
+                        />
                     </Form.Field>
                     <TenantsDropdown
                         value={Object.keys(tenants)}
@@ -144,7 +149,12 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={submitCreate} disabled={isLoading} content={t('buttons.add')} icon="add user" />
+                <ApproveButton
+                    onClick={submitCreate}
+                    disabled={isLoading}
+                    content={translate('buttons.add')}
+                    icon="add user"
+                />
             </Modal.Actions>
         </Modal>
     );

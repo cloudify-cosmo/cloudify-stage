@@ -1,21 +1,45 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { FetchDataFunction } from 'cloudify-ui-components';
+import type { EventsWidgetConfiguration } from 'widgets/events/src/widget';
 import DetailsIcon from './DetailsIcon';
-import DetailsModal from './DetailsModal';
-import ErrorCausesPropType from './props/ErrorCausesPropType';
+import type { FullEventData, CloudifyEventPart } from '../../../app/widgets/common/events';
 
-const t = Stage.Utils.getT('widgets.events');
+const translate = Stage.Utils.getT('widgets.events');
 
-export default class EventsTable extends React.Component {
+type Event = FullEventData & {
+    id: FullEventData['_storage_id'];
+    timestamp: string;
+    isSelected: boolean;
+};
+
+function isEventType(event: Event): event is Event & CloudifyEventPart {
+    return event.type === Stage.Common.Events.Utils.eventType;
+}
+
+export interface EventsTableProps {
+    data: {
+        items: Event[];
+        total: number;
+        blueprintId: string[] | undefined;
+        deploymentId: string[] | undefined;
+        nodeId: string[] | undefined;
+        nodeInstanceId: string[] | undefined;
+        executionId: string[] | undefined;
+        eventFilter: any;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<EventsWidgetConfiguration>;
+}
+
+export interface EventsTableState {
+    event?: Event;
+}
+export default class EventsTable extends React.Component<EventsTableProps, EventsTableState> {
     static MAX_MESSAGE_LENGTH = 200;
 
-    constructor(props, context) {
+    constructor(props: EventsTableProps, context: unknown) {
         super(props, context);
 
-        this.state = {
-            error: null,
-            showDetailsModal: false
-        };
+        this.state = {};
     }
 
     componentDidMount() {
@@ -23,7 +47,7 @@ export default class EventsTable extends React.Component {
         toolbox.getEventBus().on('events:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: EventsTableProps, nextState: EventsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget.configuration, nextProps.widget.configuration) ||
@@ -37,7 +61,7 @@ export default class EventsTable extends React.Component {
         toolbox.getEventBus().off('events:refresh', this.refreshData);
     }
 
-    getHighlightedText(text, parameterName, highlightColor = 'yellow') {
+    getHighlightedText(text: string, parameterName: string, highlightColor = 'yellow') {
         const { toolbox } = this.props;
         const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
         const highlightedTextFragment = eventFilter[parameterName];
@@ -67,17 +91,17 @@ export default class EventsTable extends React.Component {
         return <span>{strText}</span>;
     }
 
-    fetchGridData = fetchParams => {
+    fetchGridData: FetchDataFunction = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
 
-    isOneElementLike = (collection: unknown): boolean => {
+    isOneElementLike = (collection: Parameters<typeof _.size>[0]): boolean => {
         return _.size(collection) === 1;
     };
 
     hideDetailsModal = () => {
-        this.setState({ showDetailsModal: false });
+        this.setState({ event: undefined });
     };
 
     refreshData() {
@@ -85,22 +109,22 @@ export default class EventsTable extends React.Component {
         toolbox.refresh();
     }
 
-    selectEvent(eventId) {
+    selectEvent(eventId: string) {
         const { toolbox } = this.props;
         const selectedEventId = toolbox.getContext().getValue('eventId');
         toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
     }
 
-    showDetailsModal(event) {
-        this.setState({ event, showDetailsModal: true });
+    showDetailsModal(event: Event) {
+        this.setState({ event });
     }
 
     render() {
-        const { error, event, showDetailsModal } = this.state;
+        const { event } = this.state;
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Events/Logs available. Probably there's no deployment created, yet.";
-        const { CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Popup } = Stage.Basic;
-        const { EventUtils } = Stage.Common;
+        const { DataTable, Icon, Popup } = Stage.Basic;
+        const { ErrorCausesModal, Utils } = Stage.Common.Events;
         const { Json } = Stage.Utils;
         const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
 
@@ -110,8 +134,6 @@ export default class EventsTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <DataTable
                     fetchData={this.fetchGridData}
                     totalSize={data.total}
@@ -123,84 +145,93 @@ export default class EventsTable extends React.Component {
                 >
                     <DataTable.Column label="" width="40px" show={fieldsToShow.includes('Icon')} />
                     <DataTable.Column
-                        label={t('columns.timestamp')}
+                        label={translate('columns.timestamp')}
                         name="timestamp"
                         width="10%"
-                        show={fieldsToShow.includes(t('columns.timestamp'))}
+                        show={fieldsToShow.includes(translate('columns.timestamp'))}
                     />
                     <DataTable.Column
-                        label={t('columns.type')}
+                        label={translate('columns.type')}
                         name="event_type"
-                        show={fieldsToShow.includes(t('columns.type'))}
+                        show={fieldsToShow.includes(translate('columns.type'))}
                     />
                     <DataTable.Column
-                        label={t('columns.blueprint')}
+                        label={translate('columns.blueprint')}
                         name="blueprint_id"
                         show={
                             !this.isOneElementLike(data.blueprintId) &&
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes(t('columns.blueprint'))
+                            fieldsToShow.includes(translate('columns.blueprint'))
                         }
                     />
                     <DataTable.Column
-                        label={t('columns.deployment')}
+                        label={translate('columns.deployment')}
                         name="deployment_display_name"
                         show={
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes(t('columns.deployment'))
+                            fieldsToShow.includes(translate('columns.deployment'))
                         }
                     />
                     <DataTable.Column
-                        label={t('columns.deploymentId')}
+                        label={translate('columns.deploymentId')}
                         name="deployment_id"
                         show={
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes(t('columns.deploymentId'))
+                            fieldsToShow.includes(translate('columns.deploymentId'))
                         }
                     />
                     <DataTable.Column
-                        label={t('columns.nodeId')}
+                        label={translate('columns.nodeId')}
                         name="node_name"
-                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes(t('columns.nodeId'))}
+                        show={
+                            !this.isOneElementLike(data.nodeInstanceId) &&
+                            fieldsToShow.includes(translate('columns.nodeId'))
+                        }
                     />
                     <DataTable.Column
-                        label={t('columns.nodeInstanceId')}
+                        label={translate('columns.nodeInstanceId')}
                         name="node_instance_id"
                         show={
                             !this.isOneElementLike(data.nodeInstanceId) &&
-                            fieldsToShow.includes(t('columns.nodeInstanceId'))
+                            fieldsToShow.includes(translate('columns.nodeInstanceId'))
                         }
                     />
                     <DataTable.Column
-                        label={t('columns.workflow')}
+                        label={translate('columns.workflow')}
                         name="workflow_id"
-                        show={!this.isOneElementLike(data.executionId) && fieldsToShow.includes(t('columns.workflow'))}
+                        show={
+                            !this.isOneElementLike(data.executionId) &&
+                            fieldsToShow.includes(translate('columns.workflow'))
+                        }
                     />
                     <DataTable.Column
-                        label={t('columns.operation')}
+                        label={translate('columns.operation')}
                         name="operation"
-                        show={fieldsToShow.includes(t('columns.operation'))}
+                        show={fieldsToShow.includes(translate('columns.operation'))}
                     />
-                    <DataTable.Column label={t('columns.message')} show={fieldsToShow.includes(t('columns.message'))} />
+                    <DataTable.Column
+                        label={translate('columns.message')}
+                        show={fieldsToShow.includes(translate('columns.message'))}
+                    />
                     {data.items.map(item => {
-                        const isEventType = item.type === EventUtils.eventType;
                         const messageText = Json.stringify(item.message, false);
                         const showDetailsIcon = !_.isEmpty(item.error_causes) || messageText.length > maxMessageLength;
 
-                        const eventOptions = isEventType
-                            ? EventUtils.getEventTypeOptions(item.event_type)
-                            : EventUtils.getLogLevelOptions(item.level);
+                        const eventOptions = isEventType(item)
+                            ? Utils.getEventTypeOptions(item.event_type)
+                            : Utils.getLogLevelOptions(item.level);
                         const eventName =
-                            eventOptions.text || _.capitalize(_.lowerCase(isEventType ? item.event_type : item.level));
+                            eventOptions.text ||
+                            _.capitalize(_.lowerCase(isEventType(item) ? item.event_type : item.level));
                         const EventIcon = () => (
                             <span style={{ color: '#2c4b68', lineHeight: 1 }}>
-                                {isEventType ? (
+                                {'iconChar' in eventOptions ? (
                                     <i
                                         style={{ fontFamily: 'cloudify', fontSize: 26 }}
                                         className={`icon ${eventOptions.iconClass}`}
@@ -208,13 +239,7 @@ export default class EventsTable extends React.Component {
                                         {eventOptions.iconChar}
                                     </i>
                                 ) : (
-                                    <Icon
-                                        name={eventOptions.icon}
-                                        color={eventOptions.color}
-                                        circular
-                                        inverted
-                                        className={eventOptions.class}
-                                    />
+                                    <Icon name={eventOptions.icon} color={eventOptions.color} circular inverted />
                                 )}
                             </span>
                         );
@@ -273,39 +298,8 @@ export default class EventsTable extends React.Component {
                         );
                     })}
                 </DataTable>
-                {showDetailsModal && <DetailsModal event={event} onClose={this.hideDetailsModal} />}
+                {event && <ErrorCausesModal event={event} onClose={this.hideDetailsModal} />}
             </div>
         );
     }
 }
-
-EventsTable.propTypes = {
-    data: PropTypes.shape({
-        blueprintId: PropTypes.arrayOf(PropTypes.string),
-        deploymentId: PropTypes.arrayOf(PropTypes.string),
-        executionId: PropTypes.arrayOf(PropTypes.string),
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                blueprint_id: PropTypes.string,
-                deployment_id: PropTypes.string,
-                deployment_display_name: PropTypes.string,
-                error_causes: ErrorCausesPropType,
-                event_type: PropTypes.string,
-                id: PropTypes.number,
-                isSelected: PropTypes.bool,
-                level: PropTypes.string,
-                message: PropTypes.string,
-                node_instance_id: PropTypes.string,
-                node_name: PropTypes.string,
-                operation: PropTypes.string,
-                type: PropTypes.string,
-                workflow_id: PropTypes.string
-            })
-        ),
-        nodeInstanceId: PropTypes.arrayOf(PropTypes.string),
-        timestamp: PropTypes.string,
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

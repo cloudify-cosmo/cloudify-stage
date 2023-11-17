@@ -1,3 +1,4 @@
+import { AccordionSection } from 'cloudify-ui-components';
 import ButtonLink from './ButtonLink';
 import DeleteConfirm from './DeleteConfirm';
 import DynamicDropdown from './DynamicDropdown';
@@ -8,11 +9,10 @@ import IconButtonsGroup from './IconButtonsGroup';
 import NoDataMessage from './NoDataMessage';
 import RevertToDefaultIcon from './RevertToDefaultIcon';
 import SemanticColorDropdown from './SemanticColorDropdown';
-import Accordion from './accordion';
 import Parameter from './parameter';
 
 export default {
-    Accordion,
+    AccordionSection,
     ButtonLink,
     DeleteConfirm,
     DynamicDropdown,

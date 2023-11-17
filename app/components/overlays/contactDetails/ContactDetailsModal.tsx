@@ -4,14 +4,14 @@ import { Modal } from '../../basic';
 import ContactDetailsModalContent from './ContactDetailsModalContent';
 import useModalOpenState from './useModalOpenState';
 
-const t = StageUtils.getT('contactDetailsModal');
+const translate = StageUtils.getT('contactDetailsModal');
 
 const ContactDetailsModal = () => {
     const { isModalOpen, closeModal } = useModalOpenState();
 
     return (
         <Modal open={isModalOpen}>
-            <Modal.Header>{t('header')}</Modal.Header>
+            <Modal.Header>{translate('header')}</Modal.Header>
             <ContactDetailsModalContent closeModal={closeModal} />
         </Modal>
     );

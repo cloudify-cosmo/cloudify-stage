@@ -136,7 +136,10 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.popupMenu > .menu').contains('a:not(.disabled)', 'Deploy On').click();
 
             cy.get('.modal').within(() => {
-                cy.setSearchableDropdownValue('Blueprint', blueprintName);
+                cy.getField('Blueprint').within(() => {
+                    cy.get('input').type(blueprintName);
+                    cy.contains(blueprintName).click();
+                });
                 cy.typeToFieldInput('Deployment name', `${deploymentId}_child`);
 
                 cy.getField('Deploy On').should('not.exist');

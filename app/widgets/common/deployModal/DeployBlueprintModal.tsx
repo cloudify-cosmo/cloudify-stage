@@ -9,7 +9,7 @@ import type { WorkflowParameters } from '../executeWorkflow';
 import GenericDeployModal from './GenericDeployModal';
 import { getErrorObject } from '../inputs/utils/errors';
 
-const t = (key: string, options?: Record<string, any>) =>
+const translate = (key: string, options?: Record<string, any>) =>
     i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
 
 type DeployBlueprintModalProps = Pick<
@@ -38,7 +38,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({
         return deploymentActions
             .waitUntilCreated(deploymentId)
             .then(() => deploymentId)
-            .catch(error => Promise.reject(t('errors.deploymentCreationFailed', { deploymentName, error })));
+            .catch(error => Promise.reject(translate('errors.deploymentCreationFailed', { deploymentName, error })));
     }
 
     function installDeployment(
@@ -54,7 +54,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({
             .then(() => deploymentId)
             .catch(error =>
                 Promise.reject({
-                    errors: t('errors.deploymentInstallationFailed', {
+                    errors: translate('errors.deploymentInstallationFailed', {
                         deploymentName,
                         error: error.message
                     })
@@ -88,16 +88,19 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({
             showDeployButton
             showInstallOptions
             showSitesInput
-            deployValidationMessage={t('steps.deploy.validatingData')}
+            deployValidationMessage={translate('steps.deploy.validatingData')}
             deploySteps={[
-                { message: t('steps.deploy.deployingBlueprint'), executeStep: deployBlueprint },
+                { message: translate('steps.deploy.deployingBlueprint'), executeStep: deployBlueprint },
                 { executeStep: finalizeDeploy }
             ]}
-            deployAndInstallValidationMessage={t('steps.deployAndInstall.validatingData')}
+            deployAndInstallValidationMessage={translate('steps.deployAndInstall.validatingData')}
             deployAndInstallSteps={[
-                { message: t('steps.deployAndInstall.deployingBlueprint'), executeStep: deployBlueprint },
-                { message: t('steps.deployAndInstall.waitingForDeployment'), executeStep: waitForDeploymentIsCreated },
-                { message: t('steps.deployAndInstall.installingDeployment'), executeStep: installDeployment },
+                { message: translate('steps.deployAndInstall.deployingBlueprint'), executeStep: deployBlueprint },
+                {
+                    message: translate('steps.deployAndInstall.waitingForDeployment'),
+                    executeStep: waitForDeploymentIsCreated
+                },
+                { message: translate('steps.deployAndInstall.installingDeployment'), executeStep: installDeployment },
                 { executeStep: finalizeDeployAndInstall }
             ]}
         />

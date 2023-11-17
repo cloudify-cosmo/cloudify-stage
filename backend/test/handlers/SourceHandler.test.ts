@@ -25,8 +25,9 @@ jest.mock('fs-extra');
 describe('SourceHandler', () => {
     it('generates archive tree', () => {
         // @ts-ignore Passing mocked request
-        return browseArchiveTree({ params: {} }).then(archiveTree =>
-            expect(archiveTree?.children?.[0]?.children?.[0].key).toEqual('subdir/fileNameSpecial%3F%23Characters')
-        );
+        return browseArchiveTree({ params: {} }).then(archiveTree => {
+            const tree = archiveTree?.children?.[0];
+            expect(tree?.isDir && tree.children[0].key).toEqual('subdir/fileNameSpecial%3F%23Characters');
+        });
     });
 });

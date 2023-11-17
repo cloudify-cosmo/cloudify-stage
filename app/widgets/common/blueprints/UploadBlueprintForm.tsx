@@ -10,7 +10,7 @@ import { Form } from '../../../components/basic';
 import type { PutSourceListYamlResponse } from '../../../../backend/routes/SourceBrowser.types';
 import type { Field } from '../types';
 
-const t = StageUtils.getT('widgets.common.blueprintUpload.inputs');
+const translate = StageUtils.getT('widgets.common.blueprintUpload.inputs');
 
 interface UploadBlueprintFormProps {
     blueprintUrl?: string;
@@ -233,19 +233,19 @@ export default class UploadBlueprintForm extends React.Component<
                 uploadState={uploadState}
                 formLoading={loadingState}
                 blueprintUploading={loadingProp}
-                yamlFileHelp={t('blueprintYamlFile.label')}
+                yamlFileHelp={translate('blueprintYamlFile.label')}
                 onInputChange={this.handleInputChange}
                 onErrorsDismiss={clearErrors}
                 firstFormField={
                     <Form.Field
-                        label={t('blueprintPackage.label')}
+                        label={translate('blueprintPackage.label')}
                         required
                         error={errors.blueprintUrl}
-                        help={t('blueprintPackage.help')}
+                        help={translate('blueprintPackage.help')}
                     >
                         <Form.UrlOrFile
                             name="blueprint"
-                            placeholder={t('blueprintPackage.placeholder')}
+                            placeholder={translate('blueprintPackage.placeholder')}
                             onChangeUrl={this.onBlueprintUrlChange}
                             onBlurUrl={this.onBlueprintUrlBlur}
                             onChangeFile={this.onBlueprintFileChange}
@@ -253,10 +253,10 @@ export default class UploadBlueprintForm extends React.Component<
                     </Form.Field>
                 }
                 lastFormField={
-                    <Form.Field label="Blueprint icon" error={errors.imageUrl} help={t('blueprintIcon.help')}>
+                    <Form.Field label="Blueprint icon" error={errors.imageUrl} help={translate('blueprintIcon.help')}>
                         <Form.UrlOrFile
                             name="image"
-                            placeholder={t('blueprintIcon.placeholder')}
+                            placeholder={translate('blueprintIcon.placeholder')}
                             onChangeUrl={this.onBlueprintImageUrlChange}
                             onChangeFile={this.onBlueprintImageChange}
                             onBlurUrl={noop}

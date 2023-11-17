@@ -17,7 +17,7 @@ const FieldsRow = styled.div`
     gap: 16px;
 `;
 
-const t = StageUtils.getT('contactDetailsModal.form');
+const translate = StageUtils.getT('contactDetailsModal.form');
 
 interface ContactDetailsModalContentProps {
     closeModal: () => void;
@@ -64,7 +64,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
             const formFieldLabel = removeHtmlTagsFromString(formField.label);
 
             if (formField.isRequired && isFieldEmpty(formField)) {
-                validationErrors[formField.name] = `${formFieldLabel} - ${t('validation.isFieldRequired')}`;
+                validationErrors[formField.name] = `${formFieldLabel} - ${translate('validation.isFieldRequired')}`;
             } else if (!isFieldValid(formField)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 validationErrors[formField.name] = `${formFieldLabel} - ${formField.validation!.errorMessage}`;
@@ -99,8 +99,8 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
             <Modal.Content>
                 {hasSubmittingError && (
                     <ErrorMessage
-                        header={t('submittingError.title')}
-                        error={t('submittingError.description')}
+                        header={translate('submittingError.title')}
+                        error={translate('submittingError.description')}
                         onDismiss={hideSubmittingError}
                     />
                 )}
@@ -143,7 +143,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
             </Modal.Content>
             <Modal.Actions>
                 <ApproveButton onClick={handleSubmit} loading={loading} disabled={loading}>
-                    {t('buttons.submit')}
+                    {translate('buttons.submit')}
                 </ApproveButton>
             </Modal.Actions>
         </>

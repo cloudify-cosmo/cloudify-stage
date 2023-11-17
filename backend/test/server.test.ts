@@ -2,14 +2,17 @@ import serverStart from 'server';
 
 jest.mock('handler/ManagerHandler');
 
-jest.mock('vm2', () => {
+jest.mock('isolated-vm', () => {
+    const mockIsolate = {
+        compileScript: jest.fn(),
+        createSnapshot: jest.fn(),
+        createReference: jest.fn(),
+        release: jest.fn()
+    };
+
     return {
-        NodeVM: jest.fn().mockImplementation(() => {
-            return {
-                run: () => Promise.resolve()
-            };
-        }),
-        VMScript: () => {}
+        createContext: jest.fn(),
+        isolate: jest.fn().mockReturnValue(mockIsolate)
     };
 });
 

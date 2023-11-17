@@ -5,15 +5,22 @@
 
 FROM node:16
 
+ARG username=cfyuser
+ARG groupname=cfyuser
+ARG MAPS_ACCESS_TOKEN
+
 # envvars are used in the entrypoint script
 # db settings
 ENV POSTGRES_DB=cloudify_db
 ENV POSTGRES_HOST=postgresql
 ENV POSTGRES_USER=cloudify
 ENV POSTGRES_PASSWORD=cloudify
+ENV MAPS_ACCESS_TOKEN=$MAPS_ACCESS_TOKEN
 
-# stage backend needs to be able to reach restservice at this address, port 53333
+# stage backend needs to be able to reach restservice at this address, port & proto
 ENV RESTSERVICE_ADDRESS=localhost
+ENV RESTSERVICE_PROTOCOL=https
+ENV RESTSERVICE_PORT=443
 
 # by default, listen on all interfaces
 ENV LISTEN_HOST="0.0.0.0"
@@ -44,5 +51,18 @@ RUN --mount=type=cache,target=/app/node_modules \
 COPY . /app
 RUN --mount=type=cache,target=/app/node_modules \
     npm run build
+
+RUN mkdir -p \
+    /etc/cloudify \
+    /var/log/cloudify/stage
+
+RUN groupadd $groupname && useradd -u 1500 -m -g $groupname $username
+
+RUN chown -R $username:$groupname \
+    /app \
+    /etc/cloudify \
+    /var/log/cloudify
+
+USER 1500
 
 ENTRYPOINT /app/packaging/entrypoint.sh

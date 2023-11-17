@@ -6,7 +6,7 @@ import type { GenericFieldProps } from 'cloudify-ui-components';
 import { getToolbox } from '../../../utils/Toolbox';
 
 import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from '../../basic';
-import type { WidgetConfigurationDefinition, Widget } from '../../../utils/StageAPI';
+import type { Widget, WidgetConfigurationDefinition } from '../../../utils/StageAPI';
 import type { WidgetOwnProps } from '../content/widgets/Widget';
 
 type Fields = Record<string, any>;
@@ -35,7 +35,7 @@ const EditWidgetGenericField: FunctionComponent<EditWidgetGenericFieldProps> = (
     const handleInputChange: GenericFieldProps['onChange'] = (_proxy, field) => {
         const { name } = field;
         const value = GenericField.formatValue(
-            restProps.type,
+            restProps.type!,
             restProps.type === GenericField.BOOLEAN_TYPE ? field.checked : field.value
         );
 

@@ -1,11 +1,8 @@
 import styled from 'styled-components';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
 import { StyledIcon, StyledLabel } from './styles';
-import terraformLogo from '../../../../app/images/terraform_logo.png';
 
 const {
-    Hooks: { useBoolean },
-    Common: { TerraformModal },
     Utils: { getT },
     Basic: { Grid }
 } = Stage;
@@ -37,7 +34,7 @@ const IconWrapper = styled.div`
 `;
 
 const { drilldownPage } = Stage.Common.Consts;
-const t = getT('widgets.deployments.firstJourney');
+const translate = getT('widgets.deployments.firstJourney');
 const defaultMarketplaceTab = 'Getting Started';
 
 interface FirstUserJourneyButtonsProps {
@@ -45,7 +42,8 @@ interface FirstUserJourneyButtonsProps {
 }
 
 const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
-    const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
+    // TODO: RND-292 - remove as part of dedicated ticket once confirmed
+    // const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
     const handleDeploymentsClick = () => {
         const widget = toolbox.getWidget();
@@ -54,9 +52,10 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
         });
     };
 
-    const handleTerraformClick = () => {
-        showTerraformModal();
-    };
+    // TODO: RND-292 - remove as part of dedicated ticket once confirmed
+    // const handleTerraformClick = () => {
+    //     showTerraformModal();
+    // };
 
     return (
         <Wrapper>
@@ -65,23 +64,27 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
                     <IconWrapper>
                         <StyledIcon name="home" />
                     </IconWrapper>
-                    <StyledLabel>{t('header')}</StyledLabel>
+                    <StyledLabel>{translate('header')}</StyledLabel>
                 </StyledColumn>
             </RowWrapper>
             <RowWrapper>
                 <FirstUserJourneyButton
                     onClick={handleDeploymentsClick}
                     icon="rocket"
-                    label={t('buttons.createDeployment')}
+                    label={translate('buttons.createDeployment')}
                 />
-                <FirstUserJourneyButton
-                    onClick={handleTerraformClick}
-                    image={terraformLogo}
-                    label={t('buttons.uploadFromTerraform')}
-                />
+                {/* TODO: RND-292 - remove as part of dedicated ticket once confirmed */}
+                {/* <FirstUserJourneyButton */}
+                {/*    onClick={handleTerraformClick} */}
+                {/*    image={terraformLogo} */}
+                {/*    label={translate('buttons.uploadFromTerraform')} */}
+                {/* /> */}
             </RowWrapper>
 
-            {isTerraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
+            {
+                // TODO: RND-292 - remove as part of dedicated ticket once confirmed
+                // isTerraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />
+            }
         </Wrapper>
     );
 };

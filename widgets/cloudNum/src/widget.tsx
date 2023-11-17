@@ -2,7 +2,7 @@ import React from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 
 const widgetId = 'cloudNum';
-const t = Stage.Utils.getT('widgets.cloudNum');
+const translate = Stage.Utils.getT('widgets.cloudNum');
 
 interface CloudNumWidgetConfiguration {
     icon: SemanticICONS;
@@ -21,16 +21,16 @@ Stage.defineWidget<unknown, unknown, CloudNumWidgetConfiguration>({
     initialConfiguration: [
         {
             id: 'icon',
-            name: t('configuration.icon.name'),
-            description: t('configuration.icon.description'),
+            name: translate('configuration.icon.name'),
+            description: translate('configuration.icon.description'),
             default: 'cloud',
             component: Stage.Shared.SemanticIconDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
             id: 'imageSrc',
-            name: t('configuration.imageSrc.name'),
-            description: t('configuration.imageSrc.description'),
+            name: translate('configuration.imageSrc.name'),
+            description: translate('configuration.imageSrc.description'),
             default: '',
             type: Stage.Basic.GenericField.STRING_TYPE
         }

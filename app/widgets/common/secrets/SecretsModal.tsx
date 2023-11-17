@@ -20,7 +20,7 @@ type secretInputsType = {
     [key: string]: string;
 };
 
-const t = StageUtils.getT('widgets.common.deployments.secretsModal');
+const translate = StageUtils.getT('widgets.common.deployments.secretsModal');
 
 const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, open, secretKeys, onAdd }) => {
     if (!Array.isArray(secretKeys)) {
@@ -56,7 +56,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         const keys = Object.keys(secretInputs);
 
         if (keys.some(key => secretInputs[key].trim() === '')) {
-            setMessageAsError({ message: t('errors.noSecretValues') });
+            setMessageAsError({ message: translate('errors.noSecretValues') });
             return;
         }
 
@@ -79,7 +79,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     };
     return (
         <Modal open={open} onClose={onClose} className="secretsModal">
-            <Modal.Header>{t('header')}</Modal.Header>
+            <Modal.Header>{translate('header')}</Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
@@ -87,7 +87,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                         <Grid.Row>
                             <Grid.Column width={14} />
                             <Grid.Column width={2} style={{ paddingLeft: '50px', marginBottom: '-20px' }}>
-                                <p>{t('checkboxLabel')}</p>
+                                <p>{translate('checkboxLabel')}</p>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
@@ -99,7 +99,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                                     showMultilineInput={secretCheckboxes[field]}
                                     name={field}
                                     value={secretInputs[field]}
-                                    placeholder={t('placeholder')}
+                                    placeholder={translate('placeholder')}
                                     onChange={setSecretInputs}
                                     width={15}
                                 />
@@ -116,7 +116,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
 
             <Modal.Actions>
                 <CancelButton onClick={onClose} disabled={isLoading} />
-                <ApproveButton onClick={onSave} disabled={isLoading} content={t('buttons.add')} icon="plus" />
+                <ApproveButton onClick={onSave} disabled={isLoading} content={translate('buttons.add')} icon="plus" />
             </Modal.Actions>
         </Modal>
     );

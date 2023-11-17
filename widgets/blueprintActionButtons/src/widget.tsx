@@ -6,7 +6,7 @@ export interface BlueprintActionButtonsConfiguration {
     showEditCopyInComposerButton: boolean;
 }
 
-const t = Utils.getWidgetTranslation();
+const translate = Utils.getWidgetTranslation();
 
 Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     id: Consts.WIDGET_ID,
@@ -18,7 +18,7 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
         {
             id: 'showEditCopyInComposerButton',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: t('configuration.showEditCopyInComposerButton'),
+            name: translate('configuration.showEditCopyInComposerButton'),
             default: true
         }
     ],

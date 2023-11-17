@@ -4,7 +4,7 @@ import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } 
 
 type PluginsCatalogResponse = PluginDescriptionWithVersion[];
 
-const t = Stage.Utils.getT('widgets.pluginsCatalog');
+const translate = Stage.Utils.getT('widgets.pluginsCatalog');
 
 Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidgetConfiguration>({
     id: 'pluginsCatalog',
@@ -15,15 +15,15 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
     initialConfiguration: [
         {
             id: 'jsonPath',
-            name: t('configuration.jsonPath.name'),
-            placeHolder: t('configuration.jsonPath.placeholder'),
+            name: translate('configuration.jsonPath.name'),
+            placeHolder: translate('configuration.jsonPath.placeholder'),
             default: Stage.i18n.t('urls.pluginsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'sortByName',
-            name: t('configuration.sortByName.name'),
-            description: t('configuration.sortByName.description'),
+            name: translate('configuration.sortByName.name'),
+            description: translate('configuration.sortByName.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }

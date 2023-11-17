@@ -29,8 +29,9 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
     const [executionStarted, setExecutionStarted] = useBoolean();
     const environmentToDeployOn: GenericDeployModalProps['environmentToDeployOn'] = selectedDeployment
         ? {
+              id: selectedDeployment.id,
               displayName: selectedDeployment.display_name,
-              id: selectedDeployment.id
+              capabilities: selectedDeployment.capabilities
           }
         : undefined;
 

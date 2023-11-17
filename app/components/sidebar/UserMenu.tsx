@@ -17,7 +17,7 @@ import PasswordModal from '../common/PasswordModal';
 import UserInitialsIcon from './UserInitialsIcon';
 import type { SystemMenuGroupItemProps } from './SystemMenu';
 
-const t = StageUtils.getT('users');
+const translate = StageUtils.getT('users');
 
 const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onModalOpen, onGroupClick }) => {
     const [resetModalVisible, showResetModal, closeResetModal] = useBoolean();
@@ -84,21 +84,31 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
             {expanded && (
                 <>
                     {canEnterEditMode && (
-                        <SideBarItem icon="pencil" label={t('enterEditMode')} subItem onClick={handleEditModeClick} />
+                        <SideBarItem
+                            icon="pencil"
+                            label={translate('enterEditMode')}
+                            subItem
+                            onClick={handleEditModeClick}
+                        />
                     )}
                     {canEnterTemplateManagement && (
                         <SideBarItem
                             icon="list layout"
-                            label={t('templateManagement')}
+                            label={translate('templateManagement')}
                             subItem
                             onClick={() => dispatch(push('/template_management'))}
                         />
                     )}
-                    <SideBarItem icon="undo" label={t('resetTemplates.label')} subItem onClick={handleResetModalOpen} />
+                    <SideBarItem
+                        icon="undo"
+                        label={translate('resetTemplates.label')}
+                        subItem
+                        onClick={handleResetModalOpen}
+                    />
                     {canEnterLicenseManagement && (
                         <SideBarItem
                             icon="key"
-                            label={t('licenseManagement')}
+                            label={translate('licenseManagement')}
                             subItem
                             onClick={() => dispatch(push(Consts.PAGE_PATH.LICENSE))}
                         />
@@ -106,14 +116,14 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
                     {canChangePassword && (
                         <SideBarItem
                             icon="lock"
-                            label={t('changePassword')}
+                            label={translate('changePassword')}
                             subItem
                             onClick={handlePasswordModalOpen}
                         />
                     )}
                     <SideBarItem
                         icon="log out"
-                        label={t('logout')}
+                        label={translate('logout')}
                         subItem
                         onClick={() => dispatch(push(Consts.PAGE_PATH.LOGOUT))}
                     />

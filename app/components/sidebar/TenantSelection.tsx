@@ -11,7 +11,7 @@ import type { ReduxState } from '../../reducers';
 import StageUtils from '../../utils/stageUtils';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
-const t = StageUtils.getT('users');
+const translate = StageUtils.getT('users');
 
 const TenantSelection: FunctionComponent = () => {
     const [search, setSearch, clearSearch] = useResettableState('');
@@ -44,11 +44,11 @@ const TenantSelection: FunctionComponent = () => {
     return (
         <SideBarDropdownItem
             icon="cloudify-user-cog"
-            label={selectedTenant || t('noTenants')}
+            label={selectedTenant || translate('noTenants')}
             onClose={clearSearch}
             onOpen={refreshTenants}
         >
-            <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
+            <Dropdown.Header>{translate('tenantsHeader')}</Dropdown.Header>
             <Dropdown.Menu scrolling>
                 {isLoadingTenants ? (
                     <Loading style={{ height: 80 }} />
