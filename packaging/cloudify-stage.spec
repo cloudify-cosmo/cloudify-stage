@@ -27,7 +27,7 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 %prep
 
 export LIBSASS_EXT="no"
-source /opt/rh/devtoolset-7/enable
+source /opt/rh/devtoolset-7/enable || source /opt/rh/gcc-toolset-9/enable
 npm install -g node-gyp --location=global
 npm run beforebuild:no-tests
 npm install isolated-vm --build-from-source --prefix backend
