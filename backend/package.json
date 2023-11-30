@@ -51,7 +51,7 @@
         "fs-extra": "^3.0.1",
         "isbinaryfile": "^5.0.0",
         "isolated-vm": "^4.6.0",
-        "js-beautify": "1.14.7",
+        "js-beautify": "1.14.10",
         "js-yaml": "^4.1.0",
         "lodash": "^4.17.21",
         "mime-types": "^2.1.35",
