@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, AxiosRequestHeaders, Method } from 'axios';
+import type { AxiosRequestConfig, Method } from 'axios';
 import bytes from 'bytes';
 import type { Request, Response } from 'express';
 import express from 'express';
@@ -17,7 +17,7 @@ router.use(express.raw({ inflate: false, type: () => true, limit: maxBodySize })
 async function proxyRequest(req: Request, res: Response) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
     const token = getTokenFromCookies(req);
-    let headers = req.headers as AxiosRequestHeaders;
+    let { headers } = req;
     if (token) {
         headers = getHeadersWithAuthenticationTokenFromRequest(req, headers);
     }

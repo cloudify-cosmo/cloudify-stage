@@ -18,7 +18,7 @@ describe('RequestHandler', () => {
             headers: { 'content-type': 'image/png' },
             status: 200,
             statusText: '',
-            config: {}
+            config: {} as any
         } as AxiosResponse;
         const expressResponse = {
             status: (_code: number) => expressResponse,
@@ -35,7 +35,7 @@ describe('RequestHandler', () => {
             headers: { 'content-type': 'text/html' },
             status: 200,
             statusText: '',
-            config: {}
+            config: {} as any
         } as AxiosResponse;
         const expressResponse = {
             status: jest.fn().mockReturnThis() as (_code: number) => Response,

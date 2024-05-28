@@ -1,6 +1,5 @@
 import { get, isEmpty, isUndefined, set } from 'lodash';
 import type { Request, Response, NextFunction } from 'express';
-import type { AxiosRequestHeaders } from 'axios';
 import { requestAndForwardResponse } from './RequestHandler';
 import { jsonRequest } from './ManagerHandler';
 import { getLogger } from './LoggerHandler';
@@ -63,12 +62,12 @@ export function setAuthorizationHeader(
             jsonRequest<SecretsResponse>(
                 'GET',
                 `/secrets/${userSecret}`,
-                getHeadersWithAuthenticationTokenFromRequest(req, req.headers as AxiosRequestHeaders)
+                getHeadersWithAuthenticationTokenFromRequest(req, req.headers)
             ),
             jsonRequest<SecretsResponse>(
                 'GET',
                 `/secrets/${passSecret}`,
-                getHeadersWithAuthenticationTokenFromRequest(req, req.headers as AxiosRequestHeaders)
+                getHeadersWithAuthenticationTokenFromRequest(req, req.headers)
             )
         ])
             .then(([username, password]) => {
