@@ -1,4 +1,4 @@
-import axios, { AxiosHeaders } from 'axios';
+import axios from 'axios';
 import type { AxiosResponse } from 'axios';
 import { request as requestHandler, forward } from 'handler/RequestHandler';
 import type { Response } from 'express';
@@ -18,9 +18,7 @@ describe('RequestHandler', () => {
             headers: { 'content-type': 'image/png' },
             status: 200,
             statusText: '',
-            config: {
-                headers: new AxiosHeaders({})
-            }
+            config: {} as any
         } as AxiosResponse;
         const expressResponse = {
             status: (_code: number) => expressResponse,
@@ -37,9 +35,7 @@ describe('RequestHandler', () => {
             headers: { 'content-type': 'text/html' },
             status: 200,
             statusText: '',
-            config: {
-                headers: new AxiosHeaders({})
-            }
+            config: {} as any
         } as AxiosResponse;
         const expressResponse = {
             status: jest.fn().mockReturnThis() as (_code: number) => Response,
