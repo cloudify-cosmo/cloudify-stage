@@ -19,7 +19,7 @@ describe('RequestHandler', () => {
             status: 200,
             statusText: '',
             config: {
-                headers: new AxiosHeaders({}),
+                headers: new AxiosHeaders({})
             }
         } as AxiosResponse;
         const expressResponse = {
