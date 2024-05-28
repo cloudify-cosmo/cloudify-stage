@@ -1,6 +1,6 @@
-import type { AxiosRequestHeaders } from 'axios';
 import type { Request } from 'express';
 import pathlib from 'path';
+import type { AxiosHeaderValue } from 'axios';
 import * as Consts from './consts';
 import { TOKEN_COOKIE_NAME } from './consts';
 
@@ -26,11 +26,14 @@ function getAuthenticationTokenHeader(token: string) {
     return { 'Authentication-Token': token };
 }
 
-export function getHeadersWithAuthenticationTokenFromRequest(req: Request, headers: AxiosRequestHeaders = {}) {
+export function getHeadersWithAuthenticationTokenFromRequest(
+    req: Request,
+    headers: Record<string, AxiosHeaderValue | undefined> = {}
+) {
     const token = getTokenFromCookies(req);
     return { ...headers, ...getAuthenticationTokenHeader(token) };
 }
 
-export function getHeadersWithAuthenticationToken(token: string, headers: AxiosRequestHeaders = {}) {
+export function getHeadersWithAuthenticationToken(token: string, headers = {}) {
     return { ...headers, ...getAuthenticationTokenHeader(token) };
 }
