@@ -5,7 +5,7 @@ import multer from 'multer';
 import pathlib from 'path';
 import sanitize from 'sanitize-filename';
 
-import type { AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders, RawAxiosRequestHeaders } from 'axios';
 import type { Request, Response } from 'express';
 // eslint-disable-next-line import/no-unresolved,node/no-missing-import
 import type { ParamsDictionary, Query } from 'express-serve-static-core';
@@ -99,7 +99,7 @@ function extractFilename(contentDisposition: string) {
     return match[1];
 }
 
-const userAgentHeader: AxiosRequestHeaders = { 'User-Agent': 'Node.js' };
+const userAgentHeader: RawAxiosRequestHeaders = { 'User-Agent': 'Node.js' };
 
 export function saveDataFromUrl(url: string, targetDir: string, req?: Request) {
     return new Promise<ArchiveFromUrl>((resolve, reject) => {
