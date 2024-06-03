@@ -3,6 +3,7 @@ import _ from 'lodash';
 import fs, { readdirSync, readJsonSync } from 'fs-extra';
 
 import moment from 'moment';
+import sanitizeFilename from 'sanitize-filename';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
 import { getLogger } from '../LoggerHandler';
 import type { CreatePageGroupData, PageGroup, PageGroupFileContent } from './types';
@@ -45,7 +46,7 @@ export function listPageGroups() {
 }
 
 function getUserPageGroupPath(id: string) {
-    return pathlib.resolve(userPageGroupsFolder, `${id}.json`);
+    return pathlib.resolve(userPageGroupsFolder, `${sanitizeFilename(id)}.json`);
 }
 
 export function checkPageGroupExists(pageGroup: CreatePageGroupData) {
