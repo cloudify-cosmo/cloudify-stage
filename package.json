@@ -233,7 +233,7 @@
         "webpack-dev-server": "^4.0.0"
     },
     "engines": {
-        "node": "16.x"
+        "node": "18.20.x"
     },
     "nyc": {
         "report-dir": "coverage-cypress"
