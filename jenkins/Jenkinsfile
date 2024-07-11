@@ -56,7 +56,7 @@ pipeline {
               '''
               echo "Install isolated-vm deps"
               sh """
-                apt-get install python g++ build-essential -y
+                apt-get install python-is-python3 g++ build-essential -y
               """
             }
           }
