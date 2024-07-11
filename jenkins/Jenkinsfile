@@ -110,6 +110,12 @@ pipeline {
         stage('Build RPM'){
           steps {
             container('rpmbuild'){
+              // See https://serverfault.com/questions/1161816/mirrorlist-centos-org-no-longer-resolve#answer-1161847
+              echo "Fix mirrorlist no longer available"
+              sh "sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo"
+              sh "sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo"
+              sh "sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo"
+
               echo "Install gcc 7"
               sh """
                 yum update -y && yum install centos-release-scl -y && yum install devtoolset-7-gcc* -y
