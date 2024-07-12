@@ -34,7 +34,7 @@ pipeline {
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
 
-    CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-16.16.0-1nodesource.x86_64.rpm'
+    NODE_RPM = 'https://rpm.nodesource.com/pub_18.x/nodistro/nodejs/x86_64/nodejs-18.20.4-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
     VERSION = getVersion("cloudify-manager","${env.MAIN_BRANCH}").trim()
     PRERELEASE = getPreRelease("cloudify-manager","${env.MAIN_BRANCH}").trim()
@@ -130,7 +130,8 @@ pipeline {
               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
               echo 'Install NodeJS'
-              sh "yum install -y ${CFY_NODE_RPM}"
+              sh "yum install -y ${NODE_RPM}"
+              sh "node -v"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''
