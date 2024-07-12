@@ -116,9 +116,9 @@ pipeline {
               sh "sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo"
               sh "sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo"
 
-              echo "Install gcc 7"
+              echo "Install gcc 8"
               sh """
-                yum update -y && yum install devtoolset-7-gcc* -y
+                yum update -y && yum install devtoolset-8-gcc* -y
               """
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
