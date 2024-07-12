@@ -118,7 +118,7 @@ pipeline {
 
               echo "Install gcc 7"
               sh """
-                yum update -y && yum install centos-release-scl -y && yum install devtoolset-7-gcc* -y
+                yum update -y && yum install devtoolset-7-gcc* -y
               """
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
