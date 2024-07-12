@@ -232,6 +232,11 @@
         "webpack-dev-middleware": "^4.3.0",
         "webpack-dev-server": "^4.0.0"
     },
+    "overrides": {
+        "webpack-dev-server": {
+            "express": "^4.19.2"
+        }
+    },
     "engines": {
         "node": "16.x"
     },
