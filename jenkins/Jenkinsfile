@@ -149,7 +149,7 @@ pipeline {
                 source /opt/rh/gcc-toolset-9/enable
 
                 cd ~/rpmbuild/BUILD
-
+                
                 spectool \
                   -d "CLOUDIFY_VERSION ${env.VERSION}" \
                   -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
@@ -221,15 +221,15 @@ pipeline {
                 }
               }
             }
-            stage('Size & check-types') {
+            stage('check-types & size') {
               steps {
                 container('node'){
                   sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
                   dir("size") {
-                    echo 'Check bundle size'
-                    sh 'npm run size'
                     echo 'Check TypeScript types'
                     sh 'npm run check-types'
+                    echo 'Check bundle size'
+                    sh 'npm run size'
                   }
                   sh "rm -rf ${WORKSPACE}/size"
                 }
