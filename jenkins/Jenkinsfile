@@ -116,31 +116,35 @@ pipeline {
               sh "sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo"
               sh "sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo"
 
-              echo "Install gcc 8"
+              echo "Install gcc"
               sh """
-                yum update -y && yum install devtoolset-8-gcc* -y
+                yum update -y && yum install gcc-toolset-9-gcc* -y
               """
+
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd ~/rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
               """
 
-              echo 'Check for cache'
+              echo "Check for cache"
               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
-              echo 'Install NodeJS'
+              echo "Install NodeJS"
               sh "yum install -y ${NODE_RPM}"
               sh "node -v"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
-              sh '''
+              sh """
                 cd ~/rpmbuild/BUILD
-                rpmlint --info packaging/cloudify-stage.spec
+                rpmspec \
+                  -d "CLOUDIFY_VERSION ${env.VERSION}" \
+                  -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+                  -P packaging/cloudify-stage.spec | rpmlint --info -
                 for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
-              '''
+              """
 
-              echo 'Download sources for RPM spec file & Build RPM'
+              echo "Download sources for RPM spec file & Build RPM"
               sh """
                 source /opt/rh/devtoolset-7/enable
                 cd ~/rpmbuild/BUILD
@@ -156,8 +160,8 @@ pipeline {
                   -bb packaging/cloudify-stage.spec
               """
 
-              echo 'Save Artifacts'
-              sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
+              echo "Save Artifacts"
+              sh "mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm"
               dir("${WORKSPACE}/rpm") {
                 archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
               }
