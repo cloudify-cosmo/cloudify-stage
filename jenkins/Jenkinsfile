@@ -146,8 +146,10 @@ pipeline {
 
               echo "Download sources for RPM spec file & Build RPM"
               sh """
-                source /opt/rh/devtoolset-7/enable
+                source /opt/rh/gcc-toolset-9/enable
+
                 cd ~/rpmbuild/BUILD
+
                 spectool \
                   -d "CLOUDIFY_VERSION ${env.VERSION}" \
                   -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
