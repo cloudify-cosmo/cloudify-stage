@@ -221,7 +221,7 @@ pipeline {
                 }
               }
             }
-            stage('check-types & size') {
+            stage('Size & check-types') {
               steps {
                 container('node'){
                   sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
