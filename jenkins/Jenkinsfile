@@ -217,6 +217,22 @@ pipeline {
                 }
               }
             }
+          }
+        }
+        stage('Run Stage-UI System-tests') {
+          when {
+            branch pattern: ".+-build|master", comparator: "REGEXP"
+          }
+          steps {
+            echo 'Trigger Stage-UI System-tests'
+            build(job: 'Stage-UI-System-Test', parameters: [
+              string(name: 'BRANCH', value: "${env.MAIN_BRANCH}"),
+              string(name: 'STAGE_BRANCH', value: "${BRANCH}")
+            ])
+          }
+        }
+        stage('Run type-check, docs and size') {
+          stages {
             stage('Size & check-types') {
               steps {
                 container('node'){
@@ -242,18 +258,6 @@ pipeline {
                 }
               }
             }
-          }
-        }
-        stage('Run Stage-UI System-tests') {
-          when {
-            branch pattern: ".+-build|master", comparator: "REGEXP"
-          }
-          steps {
-            echo 'Trigger Stage-UI System-tests'
-            build(job: 'Stage-UI-System-Test', parameters: [
-              string(name: 'BRANCH', value: "${env.MAIN_BRANCH}"),
-              string(name: 'STAGE_BRANCH', value: "${BRANCH}")
-            ])
           }
         }
       }
