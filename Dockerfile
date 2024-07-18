@@ -5,7 +5,7 @@
 # and then only serve them using a simple busybox http server.
 # Build this with e.g.: `docker build . -t stage_frontend`
 
-FROM node:16 as builder
+FROM node:18.20.4 as builder
 
 WORKDIR /app
 
