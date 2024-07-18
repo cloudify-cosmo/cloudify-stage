@@ -232,6 +232,18 @@ pipeline {
             }
           }
         }
+        stage('Size & check-types') {
+          steps {
+            container('node'){
+              dir("${STAGE_DIR}") {
+                echo 'Check TypeScript types'
+                sh 'npm run check-types'
+                echo 'Check bundle size'
+                sh 'npm run size'
+              }
+            }
+          }
+        }
         stage('Run Stage-UI System-tests') {
           when {
             branch pattern: ".+-build|master", comparator: "REGEXP"
@@ -242,22 +254,6 @@ pipeline {
               string(name: 'BRANCH', value: "${env.MAIN_BRANCH}"),
               string(name: 'STAGE_BRANCH', value: "${BRANCH}")
             ])
-          }
-        }
-        stage('Run type-check, docs and size') {
-          stages {
-            stage('Size & check-types') {
-              steps {
-                container('node'){
-                  dir("${STAGE_DIR}") {
-                    echo 'Check TypeScript types'
-                    sh 'npm run check-types'
-                    echo 'Check bundle size'
-                    sh 'npm run size'
-                  }
-                }
-              }
-            }
           }
         }
       }
