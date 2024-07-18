@@ -217,6 +217,19 @@ pipeline {
                 }
               }
             }
+            stage('Docs'){
+              steps {
+                container('node'){
+                  dir("${STAGE_DIR}") {
+                    echo 'Generate widgets documentation'
+                    sh 'npm run docWidgets'
+
+                    echo 'Check if widgets documentation is up to date'
+                    sh 'git diff --exit-code ./widgets'
+                  }
+                }
+              }
+            }
           }
         }
         stage('Run Stage-UI System-tests') {
@@ -241,19 +254,6 @@ pipeline {
                     sh 'npm run check-types'
                     echo 'Check bundle size'
                     sh 'npm run size'
-                  }
-                }
-              }
-            }
-            stage('Docs'){
-              steps {
-                container('node'){
-                  dir("${STAGE_DIR}") {
-                    echo 'Generate widgets documentation'
-                    sh 'npm run docWidgets'
-
-                    echo 'Check if widgets documentation is up to date'
-                    sh 'git diff --exit-code ./widgets'
                   }
                 }
               }
