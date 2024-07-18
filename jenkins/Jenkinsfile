@@ -95,6 +95,10 @@ pipeline {
                 sh 'test ${WORKSPACE}/${STAGE_DIR}/dist/executions.zip'
                 echo "Build application"
                 sh 'npm run build'
+              }
+              echo 'Prepare test folder'
+              sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
+              dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
                 echo 'Validate JSON files'
@@ -182,7 +186,7 @@ pipeline {
             stage('Test frontend unit'){
               steps{
                 container('node'){
-                  dir("${STAGE_DIR}"){
+                  dir("${WORKSPACE}/test"){
                     echo 'Run frontend unit tests'
                     sh 'npm run test:frontend:unit'
                   }
@@ -192,7 +196,7 @@ pipeline {
             stage('Test frontend components'){
               steps{
                 container('node'){
-                  dir("${STAGE_DIR}"){
+                  dir("${WORKSPACE}/test"){
                     echo 'Run frontend component tests'
                     sh 'npm run test:frontend:components'
                   }
@@ -202,7 +206,7 @@ pipeline {
             stage('Test backend'){
               steps{
                 container('node'){
-                  dir("${STAGE_DIR}"){
+                  dir("${WORKSPACE}/test"){
                     echo 'Run backend tests'
                     sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                     sh 'npm run test:backend'
@@ -220,7 +224,8 @@ pipeline {
             stage('Docs'){
               steps {
                 container('node'){
-                  dir("${STAGE_DIR}") {
+                  sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
+                  dir("docs") {
                     echo 'Generate widgets documentation'
                     sh 'npm run docWidgets'
 
@@ -235,12 +240,14 @@ pipeline {
         stage('Size & check-types') {
           steps {
             container('node'){
-              dir("${STAGE_DIR}") {
+              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
+              dir("size") {
                 echo 'Check TypeScript types'
                 sh 'npm run check-types'
                 echo 'Check bundle size'
                 sh 'npm run size'
               }
+              sh "rm -rf ${WORKSPACE}/size"
             }
           }
         }
