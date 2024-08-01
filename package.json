@@ -1,6 +1,6 @@
 {
     "name": "cloudify-stage",
-    "version": "7.0.4buildbuild-None",
+    "version": "7.0.5-.dev1buildbuild-None",
     "description": "Cloudify Console",
     "homepage": "https://github.com/cloudify-cosmo/cloudify-stage#readme",
     "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
