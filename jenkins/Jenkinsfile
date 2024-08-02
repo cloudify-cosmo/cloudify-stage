@@ -34,7 +34,7 @@ pipeline {
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
 
-    CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-16.16.0-1nodesource.x86_64.rpm'
+    NODE_RPM = 'https://rpm.nodesource.com/pub_18.x/nodistro/nodejs/x86_64/nodejs-18.20.4-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
     VERSION = getVersion("cloudify-manager","${env.MAIN_BRANCH}").trim()
     PRERELEASE = getPreRelease("cloudify-manager","${env.MAIN_BRANCH}").trim()
@@ -47,7 +47,7 @@ pipeline {
     stage('Install required packages'){
       steps {
         container('node'){
-          sh "rm -rf /var/lib/apt/lists/* &&  rm /etc/apt/sources.list.d/google-chrome.list && ls -la /usr/share/keyrings/ && sed -i '/dl.google.com/d' /etc/apt/sources.list && echo 'deb [trusted=yes] https://dl.google.com/linux/chrome/deb/ stable main' | tee -a /etc/apt/sources.list && apt update && apt-get -y install postgresql-client jq git"
+          sh "rm -rf /var/lib/apt/lists/* && rm /etc/apt/sources.list.d/google-chrome.list && ls -la /usr/share/keyrings/ && echo 'deb [trusted=yes] https://dl.google.com/linux/chrome/deb/ stable main' | tee -a /etc/apt/sources.list && apt update && apt-get -y install postgresql-client jq git"
           echo "Set maps access token"
           dir("${STAGE_DIR}/conf") {
             withVault([configuration: configuration, vaultSecrets: secrets]) {
@@ -56,7 +56,7 @@ pipeline {
               '''
               echo "Install isolated-vm deps"
               sh """
-                apt-get install python g++ build-essential -y
+                apt-get install python-is-python3 g++ build-essential -y
               """
             }
           }
@@ -110,33 +110,46 @@ pipeline {
         stage('Build RPM'){
           steps {
             container('rpmbuild'){
-              echo "Install gcc 7"
+              // See https://serverfault.com/questions/1161816/mirrorlist-centos-org-no-longer-resolve#answer-1161847
+              echo "Fix mirrorlist no longer available"
+              sh "sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo"
+              sh "sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo"
+              sh "sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo"
+
+              echo "Install gcc"
               sh """
-                yum update -y && yum install centos-release-scl -y && yum install devtoolset-7-gcc* -y
+                yum update -y && yum install gcc-toolset-9-gcc* -y
               """
+
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd ~/rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
               """
 
-              echo 'Check for cache'
+              echo "Check for cache"
               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
-              echo 'Install NodeJS'
-              sh "yum install -y ${CFY_NODE_RPM}"
+              echo "Install NodeJS"
+              sh "yum install -y ${NODE_RPM}"
+              sh "node -v"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
-              sh '''
-                cd ~/rpmbuild/BUILD
-                rpmlint --info packaging/cloudify-stage.spec
-                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
-              '''
-
-              echo 'Download sources for RPM spec file & Build RPM'
               sh """
-                source /opt/rh/devtoolset-7/enable
                 cd ~/rpmbuild/BUILD
+                rpmspec \
+                  -d "CLOUDIFY_VERSION ${env.VERSION}" \
+                  -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+                  -P packaging/cloudify-stage.spec | rpmlint --info -
+                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
+              """
+
+              echo "Download sources for RPM spec file & Build RPM"
+              sh """
+                source /opt/rh/gcc-toolset-9/enable
+
+                cd ~/rpmbuild/BUILD
+                
                 spectool \
                   -d "CLOUDIFY_VERSION ${env.VERSION}" \
                   -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
@@ -149,8 +162,8 @@ pipeline {
                   -bb packaging/cloudify-stage.spec
               """
 
-              echo 'Save Artifacts'
-              sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
+              echo "Save Artifacts"
+              sh "mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm"
               dir("${WORKSPACE}/rpm") {
                 archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
               }
@@ -208,20 +221,6 @@ pipeline {
                 }
               }
             }
-            stage('Size & check-types') {
-              steps {
-                container('node'){
-                  sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
-                  dir("size") {
-                    echo 'Check bundle size'
-                    sh 'npm run size'
-                    echo 'Check TypeScript types'
-                    sh 'npm run check-types'
-                  }
-                  sh "rm -rf ${WORKSPACE}/size"
-                }
-              }
-            }
             stage('Docs'){
               steps {
                 container('node'){
@@ -235,6 +234,20 @@ pipeline {
                   }
                 }
               }
+            }
+          }
+        }
+        stage('Size & check-types') {
+          steps {
+            container('node'){
+              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
+              dir("size") {
+                echo 'Check TypeScript types'
+                sh 'npm run check-types'
+                echo 'Check bundle size'
+                sh 'npm run size'
+              }
+              sh "rm -rf ${WORKSPACE}/size"
             }
           }
         }

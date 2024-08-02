@@ -54,7 +54,7 @@
         "@dnd-kit/modifiers": "^4.0.0",
         "@dnd-kit/sortable": "^5.0.0",
         "@dnd-kit/utilities": "^2.0.0",
-        "axios": "^0.26.0",
+        "axios": "^1.7.2",
         "better-console": "^0.2.4",
         "blueimp-md5": "^2.7.0",
         "cloudify-blueprint-topology": "^4.1.0",
@@ -127,7 +127,7 @@
         "compression-webpack-plugin": "^6.1.1",
         "copy-webpack-plugin": "^6.3.2",
         "cross-env": "^7.0.3",
-        "css-loader": "^3.3.2",
+        "css-loader": "^6.11.0",
         "file-loader": "^5.1.0",
         "fork-ts-checker-webpack-plugin": "^6.1.0",
         "glob": "^7.1.2",
@@ -232,8 +232,13 @@
         "webpack-dev-middleware": "^4.3.0",
         "webpack-dev-server": "^4.0.0"
     },
+    "overrides": {
+        "webpack-dev-server": {
+            "express": "^4.19.2"
+        }
+    },
     "engines": {
-        "node": "16.x"
+        "node": "18.20.x"
     },
     "nyc": {
         "report-dir": "coverage-cypress"

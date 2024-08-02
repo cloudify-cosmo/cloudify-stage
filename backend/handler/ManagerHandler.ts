@@ -2,7 +2,7 @@ import _ from 'lodash';
 import fs from 'fs-extra';
 import https from 'https';
 
-import type { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import type { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 
 import { getLogger } from './LoggerHandler';
 import { getConfig } from '../config';
@@ -54,7 +54,7 @@ export function request(method: string, url: string, requestOptions: AxiosReques
 export function jsonRequest<ResponseBody>(
     method: string,
     url: string,
-    headers: AxiosRequestHeaders,
+    headers: RawAxiosRequestHeaders,
     data?: any,
     timeout?: number
 ) {
