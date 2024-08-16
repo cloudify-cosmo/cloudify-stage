@@ -54,7 +54,7 @@
         "@dnd-kit/modifiers": "^4.0.0",
         "@dnd-kit/sortable": "^5.0.0",
         "@dnd-kit/utilities": "^2.0.0",
-        "axios": "^1.7.2",
+        "axios": "^1.7.3",
         "better-console": "^0.2.4",
         "blueimp-md5": "^2.7.0",
         "cloudify-blueprint-topology": "^4.1.0",
