@@ -82,7 +82,7 @@ loadMeJson();
 
 export function getConfig(mode?: Mode): Config {
     const config = {
-        app: merge(app, root, logging, { db: { options: dbOptions } }, userConfig, { backend: { port: 8088 } }),
+        app: merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
         manager,
         mode,
         managerUrl: `${manager.protocol}://${manager.ip}:${manager.port}`
