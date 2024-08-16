@@ -14,6 +14,7 @@ export type AppConfig = typeof app &
     typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig & {
         backend: {
             host?: string;
+            port: number;
         };
     };
 
