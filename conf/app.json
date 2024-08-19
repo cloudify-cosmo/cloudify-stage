@@ -1,6 +1,5 @@
 {
   "backend": {
-    "host": "localhost",
     "port": 8088
   },
   "db": {
