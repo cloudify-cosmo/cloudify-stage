@@ -11,7 +11,12 @@ export type UserConfig = typeof userConfig;
 
 export type AppConfig = typeof app &
     typeof root &
-    typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig;
+    typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig & {
+        backend: {
+            host?: string;
+            port: number;
+        };
+    };
 
 export interface Config {
     app: AppConfig;
