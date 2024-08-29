@@ -25,7 +25,7 @@ spec:
     image: cypress/browsers:node-18.20.3-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
     resources:
       requests:
-        cpu: 3.5
+        cpu: 2.5
         memory: 8Gi
         ephemeral-storage: "15Gi"
       limits:
