@@ -8,6 +8,7 @@ import { CONTEXT_PATH } from './backend/consts';
 import { getBackendConfig } from './backend/config';
 
 const backend = getBackendConfig();
+backend.host = backend.host ?? 'localhost';
 
 const webpackConfig = getWebpackConfig({}, { mode: 'development' });
 
