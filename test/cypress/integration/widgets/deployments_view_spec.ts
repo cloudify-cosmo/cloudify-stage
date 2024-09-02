@@ -1192,8 +1192,8 @@ describe('Deployments View widget', () => {
 
                 cy.openAccordionSection('Deployment Metadata');
                 cy.getField('Labels').find('.selection').click();
-                cy.get('div[name=labelKey] > input').type(labelKey);
-                cy.get('div[name=labelValue] > input').type(labelValue);
+                cy.get('div[name=labelKey] > input').type(labelKey, { force: true });
+                cy.get('div[name=labelValue] > input').type(labelValue, { force: true });
                 cy.get('[aria-label=Add]').click();
                 cy.get('a.label').should('be.visible');
 
