@@ -105,30 +105,28 @@ export default (
             {
                 // eslint-disable-next-line security/detect-unsafe-regex
                 test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
-                use: [
-                    {
-                        loader: 'url-loader',
-
-                        options: {
-                            limit: 100000,
-                            name: `${isProduction ? '/' : ''}static/fonts/[name].[ext]`
-                        }
+                type: 'asset/resource',
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 10000
                     }
-                ]
+                },
+                generator: {
+                    filename: `${isProduction ? '/' : ''}static/fonts/[name][ext]`
+                }
             },
             {
                 // eslint-disable-next-line security/detect-unsafe-regex
                 test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/,
-                use: [
-                    {
-                        loader: 'url-loader',
-
-                        options: {
-                            limit: 100000,
-                            name: `${isProduction ? '/' : ''}static/images/[name].[ext]`
-                        }
+                type: 'asset/resource',
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 10000
                     }
-                ]
+                },
+                generator: {
+                    filename: `${isProduction ? '/' : ''}static/images/[name][ext]`
+                }
             }
         ])
     };
