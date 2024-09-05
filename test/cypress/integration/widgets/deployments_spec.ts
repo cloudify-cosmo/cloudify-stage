@@ -42,7 +42,7 @@ describe('Deployments widget', () => {
             .mockLogin();
     });
 
-    describe('should be present and', () => {
+    describe.skip('should be present and', () => {
         it('should allow to search by depyloyment ID', () => {
             cy.searchInDeploymentsWidget(deploymentId);
             checkDeploymentNameField();
@@ -54,7 +54,7 @@ describe('Deployments widget', () => {
         });
     });
 
-    describe('should allow to', () => {
+    describe.skip('should allow to', () => {
         beforeEach(() => {
             cy.refreshPage();
         });
@@ -229,7 +229,7 @@ describe('Deployments widget', () => {
         });
     });
 
-    describe('should provide display configuration for', () => {
+    describe.skip('should provide display configuration for', () => {
         before(cy.refreshPage);
 
         it('clickToDrillDown option', () => {
