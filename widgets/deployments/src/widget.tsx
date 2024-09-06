@@ -33,6 +33,13 @@ type DeploymentsParams = {
     blueprint_id: string;
     site_name?: string;
     created_by?: string;
+    /**
+     * In order to get is_available property on deployment workflow from list of
+     * workflows endpoint, we need this parameter, otherwise is_available is not
+     * computed in manager. Please see the comment here:
+     * https://jira.cec.lab.emc.com/browse/NE-36089?focusedId=17198164&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-17198164
+     */
+    _get_data?: boolean;
     /* eslint-enable camelcase */
 };
 
@@ -92,7 +99,8 @@ Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>
         blueprintId = isEmpty(widget.configuration.blueprintIdFilter)
             ? blueprintId
             : widget.configuration.blueprintIdFilter;
-        const obj: DeploymentsParams = { blueprint_id: blueprintId };
+        // setting _get_data to get is_available property in deployments' workflows
+        const obj: DeploymentsParams = { blueprint_id: blueprintId, _get_data: true };
 
         const siteName = toolbox.getContext().getValue('siteName');
         if (siteName) {
