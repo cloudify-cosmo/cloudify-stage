@@ -56,13 +56,16 @@ function downloadFile(url: string) {
 function zipFiles(
     wagonFile: string | Buffer,
     wagonFilename: string,
-    yamlFile: string | Buffer,
+    yamlFiles: Record<string, string | Buffer>,
     iconFile: string | Buffer,
     onError: (err: any) => void
 ) {
     const archive = archiver('zip');
     archive.append(wagonFile, { name: wagonFilename });
-    archive.append(yamlFile, { name: 'plugin.yaml' });
+    Object.entries(yamlFiles).forEach(([yamlFileName, content]) => {
+        archive.append(content, { name: yamlFileName });
+    });
+
     if (iconFile) {
         archive.append(iconFile, { name: 'icon.png' });
     }
@@ -125,7 +128,7 @@ router.put(
 
 router.post<never, any | GenericErrorResponse, any, PostPluginsUploadQueryParams & Record<string, string>>(
     '/upload',
-    upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
+    upload.fields(_.map(['wagon_file', 'yaml_files', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
     (req, res) => {
         const files = getFiles(req);
@@ -155,8 +158,8 @@ router.post<never, any | GenericErrorResponse, any, PostPluginsUploadQueryParams
         }
 
         Promise.all(promises)
-            .then(([wagonFile, yamlFile, iconFile]) => {
-                const zipStream = zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
+            .then(([wagonFile, yamlFiles, iconFile]) => {
+                const zipStream = zipFiles(wagonFile, wagonFilename, yamlFiles, iconFile, err =>
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` })
                 );
 
