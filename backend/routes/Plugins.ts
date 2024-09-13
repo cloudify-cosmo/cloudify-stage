@@ -6,12 +6,14 @@ import express from 'express';
 import yaml from 'js-yaml';
 import _ from 'lodash';
 import multer from 'multer';
+import path from 'path';
 
 import { getLogger } from '../handler/LoggerHandler';
 import * as ManagerHandler from '../handler/ManagerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 import type {
+    FileDetails,
     PostPluginsUploadQueryParams,
     PutPluginsTitleRequestQueryParams,
     PutPluginsTitleResponse
@@ -23,17 +25,43 @@ const upload = multer();
 const logger = getLogger('Plugins');
 const getFiles = (req: Request<any, any, any, any, any>) => req.files as { [fieldname: string]: Express.Multer.File[] };
 
+const getYamlUrls = (yamlUrl?: string | string[]) => {
+    if (typeof yamlUrl === 'string' && yamlUrl) {
+        return [yamlUrl];
+    }
+
+    return Array.isArray(yamlUrl) ? yamlUrl : [];
+};
+
+const getFilename = (yamlUrl: string) => path.basename(yamlUrl);
+
+const getFileDetails = async (fileSource: Buffer | string, filename = '') => {
+    if (fileSource instanceof Buffer) {
+        return {
+            file: fileSource,
+            name: filename
+        };
+    }
+
+    const fileBuffer: Buffer = await downloadFile(fileSource);
+
+    return {
+        file: fileBuffer,
+        name: filename || getFilename(fileSource)
+    };
+};
+
 function checkParams(req: Request, res: Response, next: NextFunction) {
     const files = getFiles(req);
     const noWagon = files && _.isEmpty(files.wagon_file) && !req.query.wagonUrl;
-    const noYaml = files && _.isEmpty(files.yaml_file) && !req.query.yamlUrl;
+    const noYamls = files && _.isEmpty(files.yaml_file) && !req.query.yamlUrl;
 
     if (noWagon) {
         const errorMessage = 'Must provide a wagon file or url.';
         logger.error(errorMessage);
         res.status(500).send({ message: errorMessage });
-    } else if (noYaml) {
-        const errorMessage = 'Must provide a yaml file or url.';
+    } else if (noYamls) {
+        const errorMessage = 'Must provide a yaml file or url(s).';
         logger.error(errorMessage);
         res.status(500).send({ message: errorMessage });
     } else {
@@ -54,17 +82,23 @@ function downloadFile(url: string) {
 }
 
 function zipFiles(
-    wagonFile: string | Buffer,
-    wagonFilename: string,
-    yamlFile: string | Buffer,
-    iconFile: string | Buffer,
-    onError: (err: any) => void
+    wagonFile: FileDetails,
+    yamlFiles: Array<FileDetails>,
+    iconFile: FileDetails,
+    onError: (err: unknown) => void
 ) {
     const archive = archiver('zip');
-    archive.append(wagonFile, { name: wagonFilename });
-    archive.append(yamlFile, { name: 'plugin.yaml' });
+
+    if (wagonFile) {
+        archive.append(wagonFile.file, { name: wagonFile.name });
+    }
+
+    if (!_.isEmpty(_.compact(yamlFiles))) {
+        yamlFiles.forEach(fileDetails => archive.append(fileDetails!.file, { name: fileDetails!.name }));
+    }
+
     if (iconFile) {
-        archive.append(iconFile, { name: 'icon.png' });
+        archive.append(iconFile.file, { name: iconFile.name });
     }
 
     archive.on('error', onError);
@@ -130,45 +164,48 @@ router.post<never, any | GenericErrorResponse, any, PostPluginsUploadQueryParams
     (req, res) => {
         const files = getFiles(req);
         const promises = [];
-        let wagonFilename = '';
 
         if (req.query.wagonUrl) {
-            promises.push(downloadFile(req.query.wagonUrl));
-            wagonFilename = _.last(req.query.wagonUrl.split('/')) || '';
+            promises.push(getFileDetails(req.query.wagonUrl));
         } else {
-            promises.push(Promise.resolve(files.wagon_file[0].buffer));
-            wagonFilename = files.wagon_file[0].originalname;
-        }
-
-        if (req.query.yamlUrl) {
-            promises.push(downloadFile(req.query.yamlUrl));
-        } else {
-            promises.push(Promise.resolve(files.yaml_file[0].buffer));
+            promises.push(getFileDetails(files.wagon_file[0].buffer, files.wagon_file[0].originalname));
         }
 
         if (req.query.iconUrl) {
-            promises.push(downloadFile(req.query.iconUrl));
+            promises.push(getFileDetails(req.query.iconUrl, 'icon.png'));
         } else if (_.get(req.files, 'icon_file')) {
-            promises.push(Promise.resolve(files.icon_file[0].buffer));
+            promises.push(getFileDetails(files.icon_file[0].buffer, 'icon.png'));
         } else {
-            promises.push(null);
+            promises.push(undefined);
+        }
+
+        const yamlUrls = getYamlUrls(req.query.yamlUrl);
+        if (!_.isEmpty(yamlUrls)) {
+            yamlUrls.forEach(yamlUrl => promises.push(getFileDetails(yamlUrl)));
+        } else {
+            promises.push(getFileDetails(files.yaml_file[0].buffer, 'plugin.yaml'));
         }
 
         Promise.all(promises)
-            .then(([wagonFile, yamlFile, iconFile]) => {
-                const zipStream = zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
+            .then(([wagonFile, iconFile, ...yamlFiles]) => {
+                const zipStream = zipFiles(wagonFile, yamlFiles, iconFile, err =>
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` })
                 );
 
-                ManagerHandler.request('post', `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`, {
-                    headers: getHeadersWithAuthenticationTokenFromRequest(req, {
-                        tenant: req.headers.tenant as string,
-                        'content-type': 'application/zip'
-                    }),
-                    responseType: 'stream',
-                    data: zipStream,
-                    maxBodyLength: Infinity
-                })
+                ManagerHandler.request(
+                    'post',
+                    `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`,
+                    {
+                        headers: getHeadersWithAuthenticationTokenFromRequest(req, {
+                            tenant: req.headers.tenant as string,
+                            'content-type': 'application/zip'
+                        }),
+                        responseType: 'stream',
+                        data: zipStream,
+                        maxBodyLength: Infinity
+                    },
+                    60000
+                )
                     .then(getResponseForwarder(res))
                     .catch(err =>
                         err.response ? forward(err.response, res) : res.status(500).send({ message: err.message })
