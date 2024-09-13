@@ -46,7 +46,7 @@
         "ejs": "^3.1.10",
         "elkjs": "^0.8.2",
         "express": "^4.19.2",
-        "express-static-gzip": "^2.1.7",
+        "express-static-gzip": "^2.1.8",
         "flat": "^5.0.2",
         "fs-extra": "^3.0.1",
         "isbinaryfile": "^5.0.0",
