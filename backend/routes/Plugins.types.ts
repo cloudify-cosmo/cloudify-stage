@@ -42,5 +42,12 @@ export interface PostPluginsUploadQueryParams {
     title: string;
     visibility: string;
     wagonUrl?: string;
-    yamlUrl?: string;
+    yamlUrl?: string | string[];
 }
+
+export type PluginFileDetails =
+    | {
+          file: Buffer;
+          name: string;
+      }
+    | undefined;

@@ -1,5 +1,5 @@
 import log from 'loglevel';
-
+import isEmpty from 'lodash/isEmpty';
 import type { PostPluginsUploadQueryParams } from 'backend/routes/Plugins.types';
 import StageUtils from '../../../../utils/stageUtils';
 import type Internal from '../../../../utils/Internal';
@@ -29,14 +29,14 @@ const sleep = async (milliseconds: number) => new Promise(resolve => setTimeout(
 
 // TODO(RD-1874): use common api for backend requests
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
-    if (!plugin.yamlUrl || !plugin.wagonUrl) {
+    if (isEmpty(plugin.yamlUrls) || !plugin.wagonUrl) {
         return false;
     }
     const params = {
         visibility: 'tenant',
         title: plugin.title,
         iconUrl: plugin.icon,
-        yamlUrl: plugin.yamlUrl,
+        yamlUrl: plugin.yamlUrls,
         wagonUrl: plugin.wagonUrl
     };
     try {
@@ -167,7 +167,7 @@ export const createResourcesInstaller = (
 
         const runInstallPluginStep = async (scheduledPlugin: PluginInstallationTask) => {
             let result = false;
-            if (scheduledPlugin.yamlUrl && scheduledPlugin.wagonUrl) {
+            if (!isEmpty(scheduledPlugin.yamlUrls) && scheduledPlugin.wagonUrl) {
                 triggerProgressEvent(TaskType.Plugin, scheduledPlugin.name, TaskStatus.InstallationProgress);
                 result = await installPlugin(internal, scheduledPlugin);
                 if (destroyed) return;

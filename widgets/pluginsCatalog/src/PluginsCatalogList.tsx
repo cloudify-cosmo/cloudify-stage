@@ -1,15 +1,10 @@
 import type { ComponentProps, ComponentType, FunctionComponent } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { compact, find, map, without } from 'lodash';
+import { find, without } from 'lodash';
 
 import Actions from './Actions';
-import type {
-    PluginDescriptionWithVersion,
-    PluginsCatalogWidgetConfiguration,
-    PluginUploadData,
-    PluginDescription
-} from './types';
+import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration, PluginDescription } from './types';
 
 interface PluginsCatalogListProps {
     items: PluginDescriptionWithVersion[];
@@ -24,12 +19,19 @@ export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagon_urls'
 
 const translate = Stage.Utils.getT('widgets.pluginsCatalog');
 
-function toUploadData(item: PluginsCatalogItem) {
+const getPluginKey = (plugin: PluginsCatalogItem) => {
+    const pluginName = plugin.display_name.replaceAll(' ', '').toLowerCase();
+    const pluginVersion = plugin.uploadedVersion;
+
+    return `${pluginName}_${pluginVersion}`;
+};
+
+function getPluginUploadData(plugin: PluginsCatalogItem) {
     return {
-        url: item.wagonUrl,
-        title: item.display_name,
-        icon: item.logo_url,
-        yamlUrl: Stage.Utils.Plugin.getYamlUrl(item)
+        url: plugin.wagonUrl,
+        title: plugin.display_name,
+        icon: plugin.logo_url,
+        yamlUrls: Stage.Utils.Plugin.getYamlUrls(plugin)
     };
 }
 
@@ -55,7 +57,6 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     const [errorMessages, setErrorMessages] = useState<string[] | null>(null);
     // Temporal state to hold uploaded plugin urls until plugins list is refreshed
     const [uploadedPlugins, setUploadedPlugins] = useState<Record<string, boolean>>({});
-
     const { useRefreshEvent, useEventListener } = Stage.Hooks;
     useRefreshEvent(toolbox, refreshEvent);
     useEventListener(toolbox, refreshEvent, () => setUploadedPlugins({}));
@@ -70,52 +71,55 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     const uploadingPlugins = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.plugins?.uploading ?? {});
     const { PluginActions } = Stage.Shared;
 
-    function doUpload(plugin: PluginUploadData) {
+    function doUpload(plugin: PluginsCatalogItem) {
         const eventBus = toolbox.getEventBus();
         return new Actions(toolbox, widget.configuration.jsonPath)
-            .doUpload(plugin)
+            .doUpload(getPluginUploadData(plugin))
             .then(() => {
                 eventBus.trigger(refreshEvent);
-                eventBus.trigger(uploadSucceededEvent, translate('successMessage', { pluginTitle: plugin.title }));
-                setUploadedPlugins(prevState => ({ ...prevState, [plugin.yamlUrl]: true }));
+                eventBus.trigger(
+                    uploadSucceededEvent,
+                    translate('successMessage', { pluginTitle: plugin.display_name })
+                );
+                setUploadedPlugins(prevState => ({ ...prevState, [getPluginKey(plugin)]: true }));
             })
             .catch(err => {
                 eventBus.trigger(uploadFailedEvent, err.message);
             })
-            .finally(() => dispatch(PluginActions.unsetPluginUploading(plugin.yamlUrl)));
+            .finally(() => dispatch(PluginActions.unsetPluginUploading(getPluginKey(plugin))));
     }
 
-    function isAvailableForUpload(item: PluginsCatalogItem) {
-        return !uploadingPlugins[Stage.Utils.Plugin.getYamlUrl(item)] && item.version !== item.uploadedVersion;
+    function isAvailableForUpload(plugin: PluginsCatalogItem) {
+        return !uploadingPlugins[getPluginKey(plugin)] && plugin.version !== plugin.uploadedVersion;
     }
 
     function onUploadAll(plugins: PluginsCatalogItem[]) {
         let promise = Promise.resolve();
         plugins.forEach(plugin => {
-            const pluginUrl = Stage.Utils.Plugin.getYamlUrl(plugin);
             if (isAvailableForUpload(plugin)) {
-                dispatch(PluginActions.setPluginUploading(pluginUrl));
-                promise = promise.then(() => doUpload(toUploadData(plugin)));
+                dispatch(PluginActions.setPluginUploading(getPluginKey(plugin)));
+                promise = promise.then(() => doUpload(plugin));
             }
         });
     }
 
-    function getActionColumnContent(item: PluginsCatalogItem) {
-        const pluginUploadData = toUploadData(item);
-
+    function getActionColumnContent(plugin: PluginsCatalogItem) {
         const pluginUploading =
-            !!uploadingPlugins[pluginUploadData.yamlUrl] ||
-            (uploadedPlugins[pluginUploadData.yamlUrl] && !item.uploadedVersion);
-        const recentVersionUploaded = item.version === item.uploadedVersion;
+            Boolean(uploadingPlugins[getPluginKey(plugin)]) ||
+            (uploadedPlugins[getPluginKey(plugin)] && !plugin.uploadedVersion);
+        const recentVersionUploaded = plugin.version === plugin.uploadedVersion;
 
-        let titleKey;
-        if (pluginUploading) {
-            titleKey = 'uploading';
-        } else if (recentVersionUploaded) {
-            titleKey = 'disabled';
-        } else {
-            titleKey = 'enabled';
-        }
+        const getUploadPluginButtonTitle = () => {
+            if (pluginUploading) {
+                return translate('uploadButton.uploading');
+            }
+
+            if (recentVersionUploaded) {
+                return translate('uploadButton.disabled');
+            }
+
+            return translate('uploadButton.enabled');
+        };
 
         return (
             <UploadPluginButton
@@ -123,10 +127,10 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
                 icon="upload"
                 onClick={event => {
                     event.preventDefault();
-                    dispatch(PluginActions.setPluginUploading(Stage.Utils.Plugin.getYamlUrl(item)));
-                    doUpload(pluginUploadData);
+                    dispatch(PluginActions.setPluginUploading(getPluginKey(plugin)));
+                    doUpload(plugin);
                 }}
-                title={translate(`uploadButton.${titleKey}`)}
+                title={getUploadPluginButtonTitle()}
                 disabled={recentVersionUploaded || pluginUploading}
             />
         );
@@ -137,15 +141,21 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     const { FeedbackMessages } = Stage.Common.Components;
     const PluginIcon = Stage.Common.Plugins.Icon;
 
-    const distro = toolbox.getManager().getDistribution();
-    const plugins: PluginsCatalogItem[] = compact(
-        map(itemsProp, item => {
-            const wagonUrl = Stage.Utils.Plugin.getWagon(item.pluginDescription, distro)?.url;
-            return wagonUrl
-                ? { ...item.pluginDescription, wagonUrl, uploadedVersion: item.uploadedVersion }
-                : undefined;
-        })
-    );
+    const plugins: PluginsCatalogItem[] = useMemo(() => {
+        const distribution = toolbox.getManager().getDistribution();
+
+        return itemsProp.reduce((result: PluginsCatalogItem[], item) => {
+            const wagonUrl = Stage.Utils.Plugin.getWagon(item.pluginDescription, distribution)?.url;
+            if (wagonUrl) {
+                result.push({
+                    ...item.pluginDescription,
+                    wagonUrl,
+                    uploadedVersion: item.uploadedVersion
+                });
+            }
+            return result;
+        }, []);
+    }, [itemsProp, toolbox]);
 
     return (
         <div>
