@@ -1,5 +1,4 @@
 import Consts from 'app/utils/consts';
-import PluginUtils from 'app/utils/shared/PluginUtils';
 import { escapeRegExp, find } from 'lodash';
 import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
@@ -99,7 +98,7 @@ function interceptPluginsUpload(plugins: string[]) {
                     title: catalogEntry.display_name,
                     visibility: 'tenant',
                     iconUrl: catalogEntry.logo_url,
-                    yamlUrl: PluginUtils.getYamlUrl(catalogEntry),
+                    yamlUrl: '*',
                     wagonUrl: RegExp(catalogEntry.wagon_urls.map(wagon => escapeRegExp(wagon.url)).join('|'))
                 }
             }).as(toAlias(plugin));
