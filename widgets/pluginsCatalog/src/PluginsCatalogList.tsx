@@ -20,7 +20,10 @@ export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagon_urls'
 const translate = Stage.Utils.getT('widgets.pluginsCatalog');
 
 const getPluginKey = (plugin: PluginsCatalogItem) => {
-    return `${plugin.display_name.replaceAll(' ', '')}_${plugin.uploadedVersion}`.toLowerCase();
+    const pluginName = plugin.display_name.replaceAll(' ', '').toLowerCase();
+    const pluginVersion = plugin.uploadedVersion;
+
+    return `${pluginName}_${pluginVersion}`;
 };
 
 function getPluginUploadData(plugin: PluginsCatalogItem) {

@@ -7,13 +7,14 @@ import yaml from 'js-yaml';
 import _ from 'lodash';
 import multer from 'multer';
 import path from 'path';
-
+import isEmpty from 'lodash/isEmpty';
+import compact from 'lodash/compact';
 import { getLogger } from '../handler/LoggerHandler';
 import * as ManagerHandler from '../handler/ManagerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 import type {
-    FileDetails,
+    PluginFileDetails,
     PostPluginsUploadQueryParams,
     PutPluginsTitleRequestQueryParams,
     PutPluginsTitleResponse
@@ -43,7 +44,7 @@ const getFileDetails = async (fileSource: Buffer | string, filename = '') => {
         };
     }
 
-    const fileBuffer: Buffer = await downloadFile(fileSource);
+    const fileBuffer = await downloadFile(fileSource);
 
     return {
         file: fileBuffer,
@@ -69,7 +70,7 @@ function checkParams(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-function downloadFile(url: string) {
+function downloadFile(url: string): Promise<Buffer> {
     return axios(url, { responseType: 'arraybuffer' })
         .then(({ data }) => {
             logger.info(`Finished downloading ${url}`);
@@ -82,9 +83,9 @@ function downloadFile(url: string) {
 }
 
 function zipFiles(
-    wagonFile: FileDetails,
-    yamlFiles: Array<FileDetails>,
-    iconFile: FileDetails,
+    wagonFile: PluginFileDetails,
+    yamlFiles: Array<PluginFileDetails>,
+    iconFile: PluginFileDetails,
     onError: (err: unknown) => void
 ) {
     const archive = archiver('zip');
@@ -93,7 +94,7 @@ function zipFiles(
         archive.append(wagonFile.file, { name: wagonFile.name });
     }
 
-    if (!_.isEmpty(_.compact(yamlFiles))) {
+    if (!isEmpty(compact(yamlFiles))) {
         yamlFiles.forEach(fileDetails => archive.append(fileDetails!.file, { name: fileDetails!.name }));
     }
 
@@ -180,7 +181,7 @@ router.post<never, any | GenericErrorResponse, any, PostPluginsUploadQueryParams
         }
 
         const yamlUrls = getYamlUrls(req.query.yamlUrl);
-        if (!_.isEmpty(yamlUrls)) {
+        if (!isEmpty(yamlUrls)) {
             yamlUrls.forEach(yamlUrl => promises.push(getFileDetails(yamlUrl)));
         } else {
             promises.push(getFileDetails(files.yaml_file[0].buffer, 'plugin.yaml'));

@@ -45,7 +45,7 @@ export interface PostPluginsUploadQueryParams {
     yamlUrl?: string | string[];
 }
 
-export type FileDetails =
+export type PluginFileDetails =
     | {
           file: Buffer;
           name: string;
