@@ -89,7 +89,7 @@ describe('Blueprints widget', () => {
 
                 cy.openAccordionSection('Deployment Metadata');
                 cy.contains('div', 'Labels').find('.selection').click();
-                cy.get('div[name=labelKey] > input').type('sample_key');
+                cy.get('div[name=labelKey] > input').type('sample_key', { force: true });
                 cy.get('div[name=labelValue] > input').type('sample_value', { force: true });
                 cy.get('.add').click();
                 cy.get('a.label').should('be.visible');

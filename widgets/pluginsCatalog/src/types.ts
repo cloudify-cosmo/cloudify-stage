@@ -15,6 +15,6 @@ export interface PluginsCatalogWidgetConfiguration {
 export interface PluginUploadData {
     title: string;
     url: string;
-    yamlUrl: string;
+    yamlUrls: string[];
     icon: string;
 }

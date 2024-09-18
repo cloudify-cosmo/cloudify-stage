@@ -1,12 +1,8 @@
-import { find, last } from 'lodash';
+import { find } from 'lodash';
 import type { PluginCatalogEntry } from 'backend/routes/Plugins.types';
 
-const latestDslVersion = 'cloudify_dsl_1_5';
-export function getYamlUrl(plugin: Pick<PluginCatalogEntry, 'yaml_urls'>) {
-    const latestDslYamlUrl = find(plugin.yaml_urls, { dsl_version: latestDslVersion })?.url;
-    const fallbackYamlUrl = last(plugin.yaml_urls)!.url;
-
-    return latestDslYamlUrl || fallbackYamlUrl;
+export function getYamlUrls(plugin: Pick<PluginCatalogEntry, 'yaml_urls'>) {
+    return plugin.yaml_urls.map(item => item.url);
 }
 
 const fallbackDistributionPrefix = 'manylinux';
@@ -19,5 +15,5 @@ export function getWagon(plugin: Pick<PluginCatalogEntry, 'wagon_urls'>, current
 
 export default {
     getWagon,
-    getYamlUrl
+    getYamlUrls
 };

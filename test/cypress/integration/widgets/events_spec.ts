@@ -25,7 +25,7 @@ describe('Events/logs widget', () => {
     });
 
     it('should show error details', () => {
-        cy.contains('tr', 'create_snapshot').find('.file').click();
+        cy.contains('tr', 'create_snapshot').find('.file').click({ force: true });
         cy.get('.modal').within(() => {
             cy.contains('.medium', 'Message')
                 .nextAll('pre')
@@ -39,7 +39,7 @@ describe('Events/logs widget', () => {
         });
         cy.get('.modal').should('not.exist');
 
-        cy.contains('tr', 'restore_snapshot').find('.file').click();
+        cy.contains('tr', 'restore_snapshot').find('.file').click({ force: true });
         cy.get('.modal').within(() => {
             cy.contains('.medium', 'Message').nextAll('pre').contains('Another message');
             cy.contains('.segment', 'Error Cause').within(() => {

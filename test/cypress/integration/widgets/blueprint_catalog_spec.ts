@@ -1,7 +1,7 @@
 import { minutesToMs } from '../../support/resource_commons';
 
 describe('Blueprints catalog widget', () => {
-    const blueprintName = 'AWS-Basics-VM-Setup';
+    const blueprintName = 'GCP-Basics-VM-Setup';
 
     function uploadBlueprint(timeout?: number) {
         cy.contains('.segment', blueprintName).contains('Upload').click();

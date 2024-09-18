@@ -12,7 +12,7 @@ import type { SecretsHook } from '../secrets/useFetchSecrets';
 import type { BlueprintsHook } from '../blueprints/useFetchBlueprints';
 import useFetchBlueprints from '../blueprints/useFetchBlueprints';
 import type { BlueprintResponse } from '../blueprints/model';
-import { getWagon, getYamlUrl } from '../../../../utils/shared/PluginUtils';
+import { getWagon, getYamlUrls } from '../../../../utils/shared/PluginUtils';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.
@@ -89,7 +89,7 @@ const findScheduledPluginCandidate = (
         title: catalogPlugin.display_name ?? expectedPluginName,
         version: catalogPlugin.version,
         distribution: wagon.release,
-        yamlUrl: getYamlUrl(catalogPlugin),
+        yamlUrls: getYamlUrls(catalogPlugin),
         wagonUrl: wagon.url
     };
 };
@@ -123,7 +123,7 @@ export type PluginInstallationTask = {
     title: string;
     version: string;
     distribution?: string;
-    yamlUrl?: URLString;
+    yamlUrls?: URLString[];
     wagonUrl?: URLString;
 };
 

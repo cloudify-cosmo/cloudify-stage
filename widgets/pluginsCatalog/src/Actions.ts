@@ -50,11 +50,11 @@ export default class Actions {
             .then(response => response.json());
     }
 
-    doUpload({ url: wagonUrl, yamlUrl, icon: iconUrl, title }: PluginUploadData) {
+    doUpload({ url: wagonUrl, yamlUrls, icon: iconUrl, title }: PluginUploadData) {
         const params = {
             visibility: Stage.Common.Consts.defaultVisibility,
             wagonUrl,
-            yamlUrl,
+            yamlUrl: yamlUrls,
             iconUrl,
             title
         };
