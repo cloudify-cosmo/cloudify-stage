@@ -45,7 +45,7 @@
         "directory-tree": "^3.2.2",
         "ejs": "^3.1.10",
         "elkjs": "^0.8.2",
-        "express": "^4.19.2",
+        "express": "^4.20.0",
         "express-static-gzip": "^2.1.7",
         "flat": "^5.0.2",
         "fs-extra": "^3.0.1",
