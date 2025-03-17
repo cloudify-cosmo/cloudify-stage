@@ -30,7 +30,7 @@
     },
     "dependencies": {
         "@evops/hcl-terraform-parser": "^1.0.0",
-        "@node-saml/passport-saml": "^4.0.3",
+        "@node-saml/passport-saml": "^5.0.1",
         "@tsconfig/node14": "^1.0.1",
         "archiver": "^5.3.0",
         "axios": "^1.7.3",
