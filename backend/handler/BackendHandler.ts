@@ -284,9 +284,9 @@ export function callService(
                 const scriptResult = await runScriptInIsolate(script, query, headers);
                 try {
                     const data = JSON.parse(scriptResult);
-                    res.send(data);
+                    return res.send(data);
                 } catch {
-                    res.send(next);
+                    return res.send(next);
                 }
             }
             return Promise.reject(

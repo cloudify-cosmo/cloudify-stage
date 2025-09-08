@@ -1,3 +1,4 @@
+import fs from 'fs-extra';
 import * as request from './RequestService';
 import manager from './ManagerService';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
@@ -82,7 +83,15 @@ const doPatch = async (serviceName: 'request' | 'manager', url: string, requestO
     }
 };
 
-// list all function to be exposed to sandbox
-const methodsList = ['call', 'doGet', 'doGetFull', 'doPost', 'doDelete', 'doPut', 'doPatch'];
+const readFile = async (path: string, encoding: BufferEncoding | string = 'utf-8') => {
+    return fs.readFile(path, encoding);
+};
 
-export { methodsList, call, doGet, doGetFull, doPost, doDelete, doPut, doPatch };
+const readdir = async (path: string, encoding: BufferEncoding | string = 'utf-8') => {
+    return fs.readdir(path, { encoding, withFileTypes: true });
+};
+
+// list all function to be exposed to sandbox
+const methodsList = ['call', 'doGet', 'doGetFull', 'doPost', 'doDelete', 'doPut', 'doPatch', 'readFile', 'readdir'];
+
+export { methodsList, call, doGet, doGetFull, doPost, doDelete, doPut, doPatch, readFile, readdir };
