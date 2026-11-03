@@ -1,6 +1,6 @@
 {
     "name": "stage-backend",
-    "version": "7.0.5.1",
+    "version": "7.0.5.2",
     "description": "Cloudify Console Backend",
     "repository": "https://github.com/cloudify-cosmo/cloudify-stage/backend",
     "license": "Apache-2.0",
@@ -50,7 +50,7 @@
         "flat": "^5.0.2",
         "fs-extra": "^3.0.1",
         "isbinaryfile": "^5.0.0",
-        "isolated-vm": "^4.6.0",
+        "isolated-vm": "^5.0.4",
         "js-beautify": "1.14.7",
         "js-yaml": "^4.1.0",
         "lodash": "^4.17.21",
@@ -107,7 +107,7 @@
         }
     },
     "engines": {
-        "node": "18.20.x"
+        "node": "22.23.x"
     },
     "files": [
         "**",

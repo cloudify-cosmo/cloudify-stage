@@ -1,6 +1,6 @@
 {
     "name": "cloudify-stage",
-    "version": "7.0.5.1",
+    "version": "7.0.5.2",
     "description": "Cloudify Console",
     "homepage": "https://github.com/cloudify-cosmo/cloudify-stage#readme",
     "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
@@ -238,7 +238,7 @@
         }
     },
     "engines": {
-        "node": "18.20.x"
+        "node": "22.23.x"
     },
     "nyc": {
         "report-dir": "coverage-cypress"
