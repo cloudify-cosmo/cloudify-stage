@@ -25,7 +25,7 @@
         "build:coverage": "cross-env COVERAGE_CHECK=1 npm run build",
         "build:widget": "scripts/buildWidget.sh",
         "ci:frontend": "npm ci --prefer-offline",
-        "ci:backend": "npm ci --prefix backend --prefer-offline",
+        "ci:backend": "NODE_OPTIONS=--no-node-snapshot npm ci --prefix backend --prefer-offline",
         "check-types": "npm run check-types:frontend && npm run check-types:backend && npm run check-types:scripts",
         "check-types:frontend": "tsc --build",
         "check-types:backend": "npm run --prefix backend check-types",

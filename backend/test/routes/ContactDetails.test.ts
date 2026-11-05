@@ -4,6 +4,9 @@ import { jsonRequest } from 'handler/ManagerHandler';
 
 jest.mock('handler/ManagerHandler');
 jest.mock('fs');
+jest.mock('handler/BackendHandler', () => ({
+    default: {}
+}));
 
 describe('/contactDetails endpoint', () => {
     beforeEach(() => (<jest.Mock>jsonRequest).mockReset());
