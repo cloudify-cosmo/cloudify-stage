@@ -12,7 +12,7 @@ License:        Apache 2.0
 URL:            https://github.com/cloudify-cosmo/cloudify-stage
 Vendor:         Cloudify Platform Ltd.
 
-BuildRequires:  nodejs >= 18.20.0, rsync, gcc-c++, gcc, python3, make, libsass, libpng-devel
+BuildRequires:  nodejs >= 18.20.0, rsync, gcc-c++, gcc, python3 >= 3.12, make, libsass, libpng-devel
 Requires:       nodejs >= 18.20.0, cloudify-rest-service, nginx, shadow-utils
 AutoReqProv:    no
 
