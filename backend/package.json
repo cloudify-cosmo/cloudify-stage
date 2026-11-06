@@ -50,7 +50,7 @@
         "flat": "^5.0.2",
         "fs-extra": "^3.0.1",
         "isbinaryfile": "^5.0.0",
-        "isolated-vm": "^6.0.2",
+        "isolated-vm": "^5.0.4",
         "js-beautify": "1.14.7",
         "js-yaml": "^4.1.0",
         "lodash": "^4.17.21",
