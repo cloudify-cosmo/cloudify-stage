@@ -12,7 +12,7 @@ License:        Apache 2.0
 URL:            https://github.com/cloudify-cosmo/cloudify-stage
 Vendor:         Cloudify Platform Ltd.
 
-BuildRequires:  nodejs >= 18.20.0, rsync, gcc-c++, gcc, python3, make, libsass, libpng-devel
+BuildRequires:  nodejs >= 18.20.0, rsync, gcc-c++, gcc, python3 >= 3.9, make, libsass, libpng-devel
 Requires:       nodejs >= 18.20.0, cloudify-rest-service, nginx, shadow-utils
 AutoReqProv:    no
 
@@ -26,7 +26,7 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 
 export LIBSASS_EXT="no"
 [ -f /opt/rh/devtoolset-7/enable ] && source /opt/rh/devtoolset-7/enable || echo "devtoolset-7 not installed"
-npm install -g node-gyp --location=global
+npm install -g node-gyp@9.4.1 --location=global
 npm run beforebuild:no-tests
 npm install isolated-vm --build-from-source --prefix backend
 %if "%{arch}" == "arm64"
